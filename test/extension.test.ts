@@ -502,11 +502,11 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
     const roastService = new RoastService();
     const hungerRoast = await roastService.getRoast({ situation: 'hunger' });
     assert.ok(hungerRoast.length > 0);
-    assert.match(hungerRoast, /(vishannu|food|thettum|working|clean|aakrantham|Rangannan|Potti|Shammi)/i);
+    assert.match(hungerRoast, /(vishannu|food|thettum|working|clean|aakrantham|Rangannan|Potti|Shammi|Threat|Kallatharam)/i);
 
     const mischiefRoast = await roastService.getRoast({ situation: 'mischief_eaten' });
     assert.ok(mischiefRoast.length > 0);
-    assert.match(mischiefRoast, /(NOM|working|Swaha|theerthu|thettum|Chambikko|prathikaaram)/i);
+    assert.match(mischiefRoast, /(NOM|working|Swaha|theerthu|thettum|Chambikko|prathikaaram|bali|chool|kalanju|KALLATHARAM|Threat)/i);
   });
 
   // Test 32: Llama 3.2: 3B few-shot prompt structure

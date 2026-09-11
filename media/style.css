@@ -27,6 +27,7 @@ body.dusty-body {
   padding: 10px;
   overflow-x: hidden;
   user-select: none;
+  transition: background 0.4s ease, color 0.3s ease;
 }
 
 /* Optional CRT Scanlines Effect */
@@ -59,13 +60,102 @@ body.dusty-body {
   position: relative;
   background: rgba(0, 0, 0, 0.25);
   border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border-radius: 8px;
   padding: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 130px;
+  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* State-Reactive Panel Ambiance & Colors */
+body.dusty-body.state-idle {
+  background: radial-gradient(circle at 50% 12%, rgba(210, 166, 121, 0.08), transparent 70%), var(--bg-color);
+}
+body.dusty-body.state-idle .stage {
+  border-color: rgba(210, 166, 121, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+body.dusty-body.state-hunting {
+  background: radial-gradient(circle at 50% 12%, rgba(230, 126, 34, 0.15), transparent 70%), var(--bg-color);
+}
+body.dusty-body.state-hunting .stage {
+  border-color: rgba(230, 126, 34, 0.6);
+  background: rgba(230, 126, 34, 0.06);
+  box-shadow: 0 0 10px rgba(230, 126, 34, 0.2);
+}
+
+body.dusty-body.state-approaching,
+body.dusty-body.state-eating {
+  background: radial-gradient(circle at 50% 12%, rgba(231, 76, 60, 0.2), transparent 70%), var(--bg-color);
+}
+body.dusty-body.state-approaching .stage,
+body.dusty-body.state-eating .stage {
+  border-color: rgba(231, 76, 60, 0.7);
+  background: rgba(231, 76, 60, 0.08);
+  box-shadow: 0 0 12px rgba(231, 76, 60, 0.3);
+}
+
+body.dusty-body.state-hunger {
+  background: radial-gradient(circle at 50% 15%, rgba(211, 84, 0, 0.25), rgba(44, 15, 0, 0.1) 60%, transparent 85%), var(--bg-color);
+}
+body.dusty-body.state-hunger .stage {
+  border-color: #e67e22;
+  background: rgba(211, 84, 0, 0.12);
+  box-shadow: 0 0 14px rgba(230, 126, 34, 0.35);
+}
+body.dusty-body.state-hunger .speech-bubble {
+  border-color: #e67e22;
+  box-shadow: 0 3px 10px rgba(230, 126, 34, 0.25);
+}
+
+body.dusty-body.state-mischief {
+  background: radial-gradient(circle at 50% 15%, rgba(142, 68, 173, 0.26), rgba(30, 5, 45, 0.12) 60%, transparent 85%), var(--bg-color);
+}
+body.dusty-body.state-mischief .stage {
+  border-color: #9b59b6;
+  background: rgba(142, 68, 173, 0.12);
+  box-shadow: 0 0 14px rgba(155, 89, 182, 0.4);
+}
+body.dusty-body.state-mischief .speech-bubble {
+  border-color: #9b59b6;
+  box-shadow: 0 3px 10px rgba(155, 89, 182, 0.3);
+}
+
+body.dusty-body.state-clogged {
+  background: radial-gradient(circle at 50% 12%, rgba(142, 68, 173, 0.2), transparent 75%), var(--bg-color);
+}
+body.dusty-body.state-clogged .stage {
+  border-color: #8e44ad;
+  box-shadow: 0 0 12px rgba(142, 68, 173, 0.35);
+}
+
+body.dusty-body.state-tantrum {
+  background: radial-gradient(circle at 50% 12%, rgba(192, 57, 43, 0.25), transparent 75%), var(--bg-color);
+}
+body.dusty-body.state-tantrum .stage {
+  border-color: #c0392b;
+  box-shadow: 0 0 14px rgba(192, 57, 43, 0.4);
+}
+
+body.dusty-body.state-crashout {
+  background: radial-gradient(circle at 50% 15%, rgba(255, 0, 85, 0.3), rgba(60, 0, 20, 0.18) 60%, transparent 85%), var(--bg-color);
+}
+body.dusty-body.state-crashout .stage {
+  border-color: #ff0055;
+  box-shadow: 0 0 18px rgba(255, 0, 85, 0.6);
+}
+body.dusty-body.state-crashout .speech-bubble {
+  border-color: #ff0055;
+  box-shadow: 0 3px 12px rgba(255, 0, 85, 0.4);
+}
+
+body.dusty-body.state-disabled {
+  filter: grayscale(0.7);
+  opacity: 0.75;
 }
 
 .vacuum-canvas-wrap {

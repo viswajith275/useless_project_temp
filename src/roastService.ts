@@ -341,6 +341,9 @@ Response: Python-il maryadakku space idaan ariyillengil poyi valla chayakadayum 
 
 Context: File: UserCard.tsx Line 88 Error: Unterminated JSX Situation: hunger
 Response: Eda mone vishannittu vayya, valla thettum thaa allenkil ninte working JSX njan choolukond adichuvaari kalayum!<|eot_id|><|start_header_id|>user<|end_header_id|>
+
+THESE ARE ONLY EXAMPLES, DONT USE THEM DIRECTLY!!
+
 Context:
 - File: ${fn} (${lang}) ${lineInfo}
 - ${err}

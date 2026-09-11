@@ -22,6 +22,14 @@ When you write buggy code, Dusty doesn't offer gentle auto-complete. He marches 
 
 If you dare to type while he is sweeping, he aggressively deletes what you just typed to teach you keyboard discipline. If his dustpan fills with 5 syntax crumbs, he chokes and halts your editor until you manually unclog him. And if his Rage Meter hits 100%, he enters full "Rangannan Crashout Mode", strobes your editor with an emergency apocalypse theme, and deletes random chunks of code out of pure vengeance while screaming in Manglish.
 
+### Key Chaotic Features
+- **Hunger & Mischief Engine**: Writing bug-free code for too long? Dusty gets bored and hungry! After a randomized 35–45s without any syntax errors, Dusty issues a menacing Manglish threat (*"Enikku vishakkunnu! 10 second tharaam, valla thettum undakki thaa... allenkil ninte favourite working function njan chavachu thinnu kalayum!"*). If ignored for another 11–21s, Dusty commits petty sabotage, eating a working functional code line with a mischievous cackle!
+- **State-Reactive Side Panel Ambiance**: The side panel background, borders, and glows dynamically morph to match Dusty's emotional state—from gentle Kerala bamboo coir warmth (`IDLE`), to alert amber (`HUNTING`), fiery crimson (`EATING`), menacing dark pumpkin (`HUNGER`), villainous ultraviolet (`MISCHIEF`), choking dust purple (`CLOGGED`), and full neon red catastrophe (`CRASHOUT`).
+- **Animated Kerala Murram (മുറം)**: A traditional woven bamboo dustpan beside the broom with authentic reed texture, dynamic dust crumb accumulation, and animated forward-tilting to catch fallen syntax crumbs.
+- **Local LLM Integration**: Built-in few-shot prompt structure engineered specifically for Ollama running `llama3.2:3b` (could use any other non thinking model) at temperature 0.7 to generate almost, personalized Manglish roasts with zero English leakage.
+- **LRU Dialogue De-Duplication**: Integrated history ring buffer ensures roasts, rage baits, and threats never repeat consecutively.
+- **Viral Malayalam Cinema Meme Bank**: 60+ curated savage trolls referencing *Aavesham, Premalu, Bramayugam, CID Moosa, Sandesham, Kumbalangi Nights, Romancham, Lucifer*, and *Kalyanaraman*.
+
 ## Technical Details
 ### Technologies/Components Used
 For Software:

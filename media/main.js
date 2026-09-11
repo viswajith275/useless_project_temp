@@ -136,9 +136,13 @@
     bagCapacity = stateSnapshot.bagCapacity;
     rageMeter = stateSnapshot.rageMeter || 0;
 
-    // Update State Badge
+    // Update State Badge and Panel Ambiance
     stateBadge.textContent = currentState.toUpperCase();
     stateBadge.className = 'state-badge ' + currentState;
+    document.body.className = 'dusty-body state-' + currentState;
+    if (appContainer) {
+      appContainer.dataset.state = currentState;
+    }
 
     // Engine Button Text
     btnEngineText.textContent = isEnabled ? 'STOP' : 'START';
