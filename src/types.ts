@@ -75,7 +75,8 @@ export type HostToWebviewMessage =
   | { type: 'sound'; name: SoundName }
   | { type: 'shake'; intensity: number }
   | { type: 'graffiti'; text: string }
-  | { type: 'reducedMotion'; enabled: boolean };
+  | { type: 'reducedMotion'; enabled: boolean }
+  | { type: 'customSounds'; files: string[]; soundsBaseUri: string };
 
 export type WebviewToHostMessage =
   | { type: 'toggleEngine' }

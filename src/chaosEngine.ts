@@ -100,8 +100,8 @@ export class ChaosEngine implements vscode.Disposable {
             }
             if (this.digestTicksRemaining <= 0) {
               this.unclog();
-              this.stateStore.setRoast('*BELCH* Dusty ചൂലുകൊണ്ട് വാരിയ കട്ട ചവറ് ദഹിപ്പിച്ച് തുപ്പി കളഞ്ഞു!');
-              void vscode.window.showInformationMessage('Dusty: *BELCH* മുറം വൃത്തിയായി! ചൂല് വീണ്ടും വേട്ട തുടങ്ങി.');
+              this.stateStore.setRoast('*BELCH* Dusty choolukond vaariya katta chavaru dahippichu thuppi kalanju!');
+              void vscode.window.showInformationMessage('Dusty: *BELCH* Muram vrithiyaayi! Choolu veendum thettu vetaan thudangi.');
             }
           } else {
             const state = this.stateStore.getState();
@@ -134,16 +134,16 @@ export class ChaosEngine implements vscode.Disposable {
 
   private async triggerIdleRageBait(): Promise<void> {
     const rageBaitRoasts = [
-      "എന്തിനാ മോനേ വെറുതെ സ്ക്രീനിലേക്ക് നോക്കിയിരിക്കുന്നത്? കോഡിങ് മറന്നുപോയോ?",
-      "10 സെക്കൻഡായി ഒരു syntax error പോലുമില്ല... നീ സീറ്റിൽ നിന്ന് എണീറ്റു പോയോ അതോ തലച്ചോർ ഫ്രീസ് ആയോ?",
-      "എനിക്ക് വിശന്നിട്ട് വയ്യ! വല്ല പൊട്ടിയ സിന്റാക്സും അടിക്ക്, എനിക്ക് ചൂലുകൊണ്ട് തൂത്തുവാരാൻ!",
-      "ജീവിതം എങ്ങോട്ട് എന്ന് ചിന്തിക്കുവാണോ അതോ div എങ്ങനെ സെന്റർ ചെയ്യാം എന്ന് വീണ്ടും ഗൂഗിളിൽ തപ്പുവാണോ?",
-      "കർസർ ഒരേ സ്ഥലത്ത് കിടന്ന് മിന്നുന്നു... ദാസാ, എന്തൊരു നാണക്കേടാ ഇത്!",
-      "കീബോർഡിൽ കുഞ്ഞുപിള്ളേര് ചാടിക്കളിച്ചാൽ പോലും നിന്നെക്കാൾ വേഗത്തിൽ കോഡടിക്കും!",
-      "ഇതാണോ നിന്റെ സീനിയർ എൻജിനീയറിങ്? 5 ലൈൻ കോഡിലേക്ക് നോക്കി കണ്ണുതള്ളി ഇരിക്കൽ?",
-      "ധൈര്യമുണ്ടെങ്കിൽ ഒരു സെമികോളനോ ബ്രാക്കറ്റോ തെറ്റിച്ചു നോക്ക്! എനിക്ക് ചൂലുകൊണ്ട് അടിച്ചുമാറ്റാൻ വല്ലതും താ!",
-      "എത്ര നേരമായി ഞാൻ ചൂലുകൊണ്ട് ഒന്നും തൂത്തിട്ട്! വല്ല തെറ്റും വരുത്ത് മനുഷ്യാ!",
-      "സാരമില്ല, സാവധാനം മതി. വെറുപ്പീര് കോഡ് എഴുതാൻ ഭയങ്കര ഏകാഗ്രത വേണമല്ലോ!"
+      "Enthina mone veruthe screen-ilekku nokki irikkunne? Coding marannu poyo?",
+      "10 second aayi oru syntax error polum illa... Nee seat-il ninnu eneettu poyo atho thalachor freeze aayo?",
+      "Enikku vishannittu vayya! Valla pottiya syntax-um adikku, enikku choolukond thoothuvaaraan!",
+      "Jeevitham engottu ennu chinthikkuvaano atho div engane center cheyyaam ennu veendum google-il thappuvaano?",
+      "Cursor ore sthalathu kidannu minnunnu... Dasa, enthoru nanamkeda ithu!",
+      "Keyboard-il kunju pilleru chaadikkalichaal polum ninnekkaal vegathil code adikkum!",
+      "Ithano ninte senior engineering? 5 line code-ilekku nokki kannuthalli irikkal?",
+      "Dhairyamundenkil oru semicolon-o bracket-o thettichu nokku! Enikku choolukond adichumaattaan vallathum thaa!",
+      "Ethra neramaayi njan choolukond onnum thoothittu! Valla thettum varuthu manushya!",
+      "Saaramilla, saavhadhanam mathi. Veruppeeru code ezhuthaan bhayangara concentration venamallo!"
     ];
 
     const roast = rageBaitRoasts[Math.floor(Math.random() * rageBaitRoasts.length)];
@@ -151,7 +151,7 @@ export class ChaosEngine implements vscode.Disposable {
     this.viewProvider.playSound('tantrum');
     this.viewProvider.shake(2);
 
-    void vscode.window.showWarningMessage(`🧹 DUSTY (Rage Bait / കലിപ്പ്): "${roast}"`);
+    void vscode.window.showWarningMessage(`🧹 DUSTY (Rage Bait / Kalippu): "${roast}"`);
   }
 
   private handleConfigChange(): void {
@@ -331,19 +331,27 @@ export class ChaosEngine implements vscode.Disposable {
           const rage = this.stateStore.increaseRage(rageDelta);
           this.viewProvider.postMessage({ type: 'rage', value: rage });
 
+          let lineSnippet = '';
+          try {
+            lineSnippet = editor.document.lineAt(target.range.start.line).text.trim().slice(0, 100);
+          } catch {}
+
           const roast = await this.roastService.getRoast({
             situation: 'eat_success',
             token: target.safeDisposableToken,
+            codeSnippet: lineSnippet,
+            message: target.message,
             line: target.range.start.line,
             fileName: editor.document.fileName,
-            language: editor.document.languageId
+            language: editor.document.languageId,
+            rageMeter: rage
           });
           this.stateStore.setRoast(roast);
 
           // Big centered modal roast every 2 eats or high rage
           if (this.consecutiveEats % 2 === 0 || intensity === 'feral' || rage >= 70) {
             void vscode.window.showErrorMessage(
-              `🧹 DUSTY വാരിയെടുത്തു ${linesGulped} വരികൾ [കലിപ്പ്: ${rage}% | Strikes: ${this.typingStrikes}]:\n\n"${roast}"`,
+              `🧹 DUSTY vaariyeduthu ${linesGulped} varikal [Kalippu: ${rage}% | Strikes: ${this.typingStrikes}]:\n\n"${roast}"`,
               { modal: true }
             );
           }
@@ -386,10 +394,19 @@ export class ChaosEngine implements vscode.Disposable {
         this.decorationManager.clearDissolve(editor);
         this.viewProvider.playSound('error');
 
+        let unsafeSnippet = '';
+        try {
+          unsafeSnippet = editor.document.lineAt(target.range.start.line).text.trim().slice(0, 100);
+        } catch {}
+
         const roast = await this.roastService.getRoast({
           situation: 'unsafe',
           message: target.message,
-          line: target.range.start.line
+          line: target.range.start.line,
+          fileName: editor.document.fileName,
+          language: editor.document.languageId,
+          codeSnippet: unsafeSnippet,
+          rageMeter: this.stateStore.getSnapshot().rageMeter
         });
         this.stateStore.setRoast(roast);
         this.stateStore.transition('idle');
@@ -436,12 +453,12 @@ export class ChaosEngine implements vscode.Disposable {
   public async feedManually(uri?: vscode.Uri, range?: vscode.Range): Promise<void> {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
-      void vscode.window.showInformationMessage('Dusty: തൂത്തുവാരാൻ ആക്ടീവ് എഡിറ്റർ ഒന്നും കണ്ടില്ല.');
+      void vscode.window.showInformationMessage('Dusty: Thoothuvaaraan active editor onnum kandilla.');
       return;
     }
 
     if (this.stateStore.isClogged()) {
-      void vscode.window.showWarningMessage('Dusty: മുറം നിറഞ്ഞു! ആദ്യം മുറം ഒഴിക്ക് (Cmd/Ctrl+Alt+U C).');
+      void vscode.window.showWarningMessage('Dusty: Muram niranju! Aadhyam muram ozhikku (Cmd/Ctrl+Alt+U C).');
       return;
     }
 
@@ -450,7 +467,7 @@ export class ChaosEngine implements vscode.Disposable {
     const errors = diags.filter(d => d.severity === vscode.DiagnosticSeverity.Error);
 
     if (errors.length === 0) {
-      void vscode.window.showInformationMessage('Dusty: ഇവിടെ തൂത്തുവാരാൻ ഒരു തെറ്റുമില്ല! ശുദ്ധം.');
+      void vscode.window.showInformationMessage('Dusty: Ivide thoothuvaaraan oru thettum illa! Clean.');
       return;
     }
 
@@ -467,7 +484,7 @@ export class ChaosEngine implements vscode.Disposable {
     if (parseResult.confidence !== 'high') {
       const roast = await this.roastService.getRoast({ situation: 'unsafe', message: targetDiag.message });
       this.stateStore.setRoast(roast);
-      void vscode.window.showWarningMessage(`Dusty: ഇത് ചൂലുകൊണ്ട് തൊടാൻ പറ്റില്ല! ${parseResult.reason}`);
+      void vscode.window.showWarningMessage(`Dusty: Ithu choolukond thodaan pattilla! ${parseResult.reason}`);
       return;
     }
 
@@ -482,7 +499,7 @@ export class ChaosEngine implements vscode.Disposable {
       this.stateStore.incrementBag();
       const roast = await this.roastService.getRoast({ situation: 'eat_success', token: parseResult.safeDisposableToken });
       this.stateStore.setRoast(roast);
-      void vscode.window.showInformationMessage(`Dusty: ചൂലുകൊണ്ട് അടിച്ചുവാരി "${parseResult.safeDisposableToken || 'error'}".`);
+      void vscode.window.showInformationMessage(`Dusty: Choolukond adichuvaari "${parseResult.safeDisposableToken || 'error'}".`);
     }
   }
 
@@ -511,7 +528,7 @@ export class ChaosEngine implements vscode.Disposable {
     });
 
     void vscode.window.showWarningMessage(
-      `Dusty: കലിപ്പ് മൂത്ത് നിന്റെ കോഡിന്റെ ${percent}% (${linesToDelete} വരികൾ) ചൂലുകൊണ്ട് അടിച്ചുവാരി ചവറ്റുകുട്ടയിലിട്ടു!`
+      `Dusty: Kalippu moothu ninte code-inte ${percent}% (${linesToDelete} varikal) choolukond adichuvaari dustbin-il ittu!`
     );
   }
 
@@ -599,7 +616,7 @@ export class ChaosEngine implements vscode.Disposable {
 
     // Big centered modal dialog in middle of screen!
     void vscode.window.showErrorMessage(
-      `🚨 DUSTY സമ്പൂർണ്ണ ക്രാഷ് ഔട്ട്! കലിപ്പ് 100%! 🚨\n\n"${crashoutRoast}"\n\n(Dusty നിയന്ത്രണം വിട്ട്, IDE നിറങ്ങൾ മാറ്റി, കലിപ്പ് കാരണം ഫയലിന്റെ ${percentToDelete}% കോഡ് ചൂലുകൊണ്ട് അടിച്ചു നിരത്തി!)`,
+      `🚨 DUSTY SAMPURNA CRASHOUT! Kalippu 100%! 🚨\n\n"${crashoutRoast}"\n\n(Dusty control poyi, IDE colors maatti, kalippu kaaranam file-inte ${percentToDelete}% code choolukond adichu thakarthu!)`,
       { modal: true }
     );
 
@@ -626,7 +643,7 @@ export class ChaosEngine implements vscode.Disposable {
     this.stateStore.unclog();
     this.decorationManager.clear();
     this.viewProvider.playSound('victory');
-    void vscode.window.showInformationMessage('Dusty: മുറം കാലിയാക്കി! ചൂല് വീണ്ടും തൂത്തുവാരാൻ റെഡി.');
+    void vscode.window.showInformationMessage('Dusty: Muram kaaliyaakki! Choolu veendum thoothuvaaraan ready.');
 
     if (this.churnCount >= 3) {
       const editor = vscode.window.activeTextEditor;
@@ -637,7 +654,37 @@ export class ChaosEngine implements vscode.Disposable {
   }
 
   public async insult(): Promise<void> {
-    const roast = await this.roastService.getRoast({ situation: 'brutal_personal' });
+    const editor = vscode.window.activeTextEditor;
+    let fileName: string | undefined;
+    let language: string | undefined;
+    let line: number | undefined;
+    let codeSnippet: string | undefined;
+    let message: string | undefined;
+
+    if (editor) {
+      fileName = editor.document.fileName;
+      language = editor.document.languageId;
+      line = editor.selection.active.line;
+      try {
+        codeSnippet = editor.document.lineAt(line).text.trim().slice(0, 100);
+      } catch {}
+
+      const diags = vscode.languages.getDiagnostics(editor.document.uri);
+      if (diags.length > 0) {
+        const closest = diags.find(d => Math.abs(d.range.start.line - (line ?? 0)) <= 2) || diags[0];
+        message = closest.message;
+      }
+    }
+
+    const roast = await this.roastService.getRoast({
+      situation: 'brutal_personal',
+      fileName,
+      language,
+      line,
+      codeSnippet,
+      message,
+      rageMeter: this.stateStore.getSnapshot().rageMeter
+    });
     this.stateStore.setRoast(roast);
     this.viewProvider.playSound('error');
     this.viewProvider.shake(3);

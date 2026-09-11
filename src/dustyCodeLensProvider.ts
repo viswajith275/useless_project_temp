@@ -51,8 +51,8 @@ export class DustyCodeLensProvider implements vscode.CodeLensProvider, vscode.Di
       // Primary action: Sweep with Dusty
       lenses.push(
         new vscode.CodeLens(lensRange, {
-          title: '🧹 വാരിയെടുക്ക് (Sweep)',
-          tooltip: 'Dusty ചൂലുകൊണ്ട് ഈ സിന്റാക്സ് തെറ്റ് അടിച്ചുവാരി കളയട്ടെ',
+          title: '🧹 Vaariyedukku (Sweep)',
+          tooltip: 'Dusty choolukond ee syntax thettu adichuvaari kalayatte',
           command: 'dusty.feedManually',
           arguments: [document.uri, error.range]
         })
@@ -61,8 +61,8 @@ export class DustyCodeLensProvider implements vscode.CodeLensProvider, vscode.Di
       // Secondary action: Dusty Roast/Explain
       lenses.push(
         new vscode.CodeLens(lensRange, {
-          title: '🔥 കളിയാക്ക് (Roast)',
-          tooltip: 'ഈ തെറ്റിനെ പറ്റി Dusty-യുടെ എട്ടിന്റെ പണി റോസ്റ്റ് കേൾക്കുക',
+          title: '🔥 Keliyaakku (Roast)',
+          tooltip: 'Ee thettine patti Dusty-yude ettinte pani roast kelkkuka',
           command: 'dusty.explainDiagnostic',
           arguments: [error.message, line]
         })

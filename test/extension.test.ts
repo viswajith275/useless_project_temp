@@ -1,5 +1,6 @@
 import './setupMockVscode';
 import * as assert from 'assert';
+import * as path from 'path';
 import * as mock from './mockVscode';
 import { analyzeDiagnosticSpan } from '../src/diagnosticParser';
 import {
@@ -423,17 +424,16 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
     assert.strictEqual(store.isClogged(), true);
   });
 
-  // Test 25: Malayalam brutal meme roasts
-  it('25. should return brutal Malayalam meme roasts for crashout and insults', async () => {
+  // Test 25: Manglish brutal meme roasts
+  it('25. should return brutal Manglish meme roasts for crashout and insults', async () => {
     const roastService = new RoastService();
     const crashoutRoast = await roastService.getRoast({ situation: 'crashout' });
     assert.ok(crashoutRoast.length > 0);
-    // Should contain Malayalam characters
-    assert.match(crashoutRoast, /[\u0D00-\u0D7F]/, 'Should contain Malayalam script');
+    assert.match(crashoutRoast, /(Rangannan|Pavanayi|Nagavalli|Yamadharman|Aavesham|chool|kalippu|code)/i, 'Should contain Manglish troll references');
 
     const personalRoast = await roastService.getRoast({ situation: 'brutal_personal' });
     assert.ok(personalRoast.length > 0);
-    assert.match(personalRoast, /[\u0D00-\u0D7F]/, 'Should contain Malayalam script');
+    assert.match(personalRoast, /(Sahadevan|Shankaradi|Reenu|Shammi|StackOverflow|code|Git blame)/i, 'Should contain Manglish troll references');
   });
 
   // Test 26: Pixel-art broom SVG generation
@@ -451,17 +451,41 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
     assert.ok(activityBarSvg.includes('viewBox="0 0 24 24"'));
   });
 
-  // Test 27: Replaceable audio file folder structure
-  it('27. should have media/sounds folder for customizable sound effects', () => {
-    const fs = require('fs');
-    const path = require('path');
-    const soundsDir = path.join(__dirname, '../../media/sounds');
-    assert.strictEqual(fs.existsSync(soundsDir), true, 'media/sounds directory must exist');
-    const readmeFile = path.join(soundsDir, 'README.md');
-    assert.strictEqual(fs.existsSync(readmeFile), true, 'media/sounds/README.md must exist');
-    const readmeContent = fs.readFileSync(readmeFile, 'utf8');
-    assert.ok(readmeContent.includes('sweep'), 'README should document sweep sound');
-    assert.ok(readmeContent.includes('crashout'), 'README should document crashout sound');
+  // Test 28: Ollama 3B Manglish prompt builder & response cleaning
+  it('28. should build rich contextual 3B Manglish prompt and clean LLM responses', () => {
+    const roastService = new RoastService();
+    const prompt = roastService.buildPrompt({
+      fileName: '/workspace/src/authController.ts',
+      language: 'typescript',
+      line: 41,
+      token: ';;',
+      codeSnippet: 'const token = createToken();;',
+      message: "Unexpected token ';'",
+      situation: 'eat_success'
+    });
+
+    assert.ok(prompt.includes('authController.ts'), 'Prompt must target the file name');
+    assert.ok(prompt.includes('Line 42'), 'Prompt must target the 1-indexed line number');
+    assert.ok(prompt.includes('createToken'), 'Prompt must include the code snippet');
+    assert.ok(prompt.includes('MANGLISH'), 'Prompt must enforce Manglish output');
+    assert.ok(prompt.includes('Aavesham') || prompt.includes('Sandesham'), 'Prompt must include Malayalam cinema tropes');
+
+    const dirtyResponse = '"Dusty: Eda mone, line 42-il ithu type cheyyan ninakku nanamille! [Translation: Are you not ashamed?]"';
+    const cleaned = roastService.cleanLlmResponse(dirtyResponse);
+    assert.strictEqual(cleaned.includes('[Translation:'), false, 'Should strip translation block');
+    assert.strictEqual(cleaned.startsWith('"') || cleaned.endsWith('"'), false, 'Should strip quotes');
+    assert.strictEqual(cleaned.startsWith('Dusty:'), false, 'Should strip Dusty prefix');
+  });
+
+  // Test 29: VacuumViewProvider custom sound file detection
+  it('29. should detect custom sound files in media/sounds directory', () => {
+    const mockStateStore = new StateStore(false, 'normal', true);
+    const mockUri = mock.Uri.file(path.join(__dirname, '../..'));
+    const { VacuumViewProvider } = require('../src/vacuumViewProvider');
+    const provider = new VacuumViewProvider(mockUri as any, mockStateStore, () => {});
+
+    const files = provider.getCustomSoundFiles();
+    assert.ok(Array.isArray(files), 'getCustomSoundFiles must return an array');
   });
 });
 

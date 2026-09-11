@@ -50,7 +50,7 @@ export class DecorationManager implements vscode.Disposable {
     // Harmless visual graffiti decoration (virtual overlay, zero file modification)
     this.graffitiDecoration = vscode.window.createTextEditorDecorationType({
       after: {
-        contentText: ' 🧹 [ചൂല് വന്നുപോയി - ഒന്നും ശരിയായില്ല]',
+        contentText: ' 🧹 [CHOOL VANNOO POYI - ONNUM SHARIYAAYILLA]',
         color: 'rgba(241, 196, 15, 0.7)',
         fontStyle: 'italic',
         fontWeight: 'bold'
@@ -63,7 +63,7 @@ export class DecorationManager implements vscode.Disposable {
         backgroundColor: 'rgba(255, 0, 0, 0.45)',
         isWholeLine: true,
         after: {
-          contentText: ' 🚨🚨 സർവ്വനാശം! സിന്റാക്സ് പ്രളയം! THE END IS NIGH! 🚨🚨',
+          contentText: ' 🚨🚨 SARVANAASHAM! SYNTAX PRALAYAM! THE END IS NIGH! 🚨🚨',
           color: '#ff2222',
           fontWeight: '900'
         }
@@ -72,7 +72,7 @@ export class DecorationManager implements vscode.Disposable {
         backgroundColor: 'rgba(255, 140, 0, 0.5)',
         isWholeLine: true,
         after: {
-          contentText: ' ⚡⚡ കലിപ്പ് മൂത്തു! എന്തിനാ മനുഷ്യാ ഈ കോഡ് അടിച്ചു വെച്ചത്?! ⚡⚡',
+          contentText: ' ⚡⚡ KALIPPU MOOTHU! ENTHINA MANUSHYA EE CODE EZHUTHI VECHE?! ⚡⚡',
           color: '#ffbb00',
           fontWeight: '900'
         }
@@ -81,7 +81,7 @@ export class DecorationManager implements vscode.Disposable {
         backgroundColor: 'rgba(255, 0, 128, 0.45)',
         isWholeLine: true,
         after: {
-          contentText: ' 💥💥 പവനായി ശവമായി! ചൂല് കത്തിപ്പോയി! DUSTY UNSTABLE! 💥💥',
+          contentText: ' 💥💥 PAVANAYI SHAVAMAAYI! CHOOLU KATHIPPOYI! DUSTY UNSTABLE! 💥💥',
           color: '#ff00ee',
           fontWeight: '900'
         }

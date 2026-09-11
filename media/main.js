@@ -38,15 +38,15 @@
   // Unlock Web Audio on user gesture
   function unlockAudio() {
     if (window.vacuumAudio) {
-      const audioCtx = window.vacuumAudio.ensureContext();
-      if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume().catch(() => {});
-      }
+      window.vacuumAudio.ensureContext();
     }
   }
 
-  window.addEventListener('click', unlockAudio, { once: true });
-  window.addEventListener('keydown', unlockAudio, { once: true });
+  window.addEventListener('click', unlockAudio);
+  window.addEventListener('pointerdown', unlockAudio);
+  window.addEventListener('keydown', unlockAudio);
+  window.addEventListener('focus', unlockAudio);
+  window.addEventListener('mouseenter', unlockAudio);
 
   // Event Listeners for Buttons
   btnEngine.addEventListener('click', () => {
@@ -109,6 +109,12 @@
       case 'sound':
         if (window.vacuumAudio) {
           window.vacuumAudio.play(msg.name);
+        }
+        break;
+
+      case 'customSounds':
+        if (window.vacuumAudio && msg.soundsBaseUri) {
+          window.vacuumAudio.initCustomSounds(msg.soundsBaseUri, msg.files || []);
         }
         break;
 
@@ -217,8 +223,10 @@
 
   // Initialize custom audio directory if provided
   const soundsUri = document.body ? document.body.dataset.soundsUri : null;
+  const customSoundsAttr = document.body ? document.body.dataset.customSounds : '';
+  const initialFiles = customSoundsAttr ? customSoundsAttr.split(',').filter(Boolean) : [];
   if (window.vacuumAudio && soundsUri) {
-    window.vacuumAudio.setSoundsBaseUri(soundsUri);
+    window.vacuumAudio.initCustomSounds(soundsUri, initialFiles);
   }
 
   function spawnParticle() {
@@ -369,11 +377,17 @@
     ctx.fillRect(-2, 14, 2, 27);
     ctx.fillRect(6, 15, 2, 25);
 
-    // Jagged pixel tips at bottom edge of broom
+    // Crisp, stable pixel-art bristle tips at bottom edge (no glitchy flickering)
     ctx.fillStyle = bristleColor;
-    for (let bx = -22; bx < 22; bx += 3) {
-      const spikeH = ((bx * 7 + animTick) % 4) + 3;
-      ctx.fillRect(bx, 42, 2, spikeH);
+    for (let bx = -22; bx < 22; bx += 2) {
+      // Stable staggered pattern: 2px / 3px / 4px based purely on X coordinate
+      const pattern = (Math.abs(bx) % 4 === 0) ? 4 : (Math.abs(bx) % 2 === 0 ? 3 : 2);
+      ctx.fillRect(bx, 42, 2, pattern);
+    }
+    // Subtle shadow accent on bristle tips for depth
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+    for (let bx = -22; bx < 22; bx += 4) {
+      ctx.fillRect(bx, 44, 2, 2);
     }
 
     // D. Expressive Pixel Eyes on the Broom Head

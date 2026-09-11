@@ -205,13 +205,32 @@
         },
         "dusty.enableLLM": {
           "type": "boolean",
-          "default": false,
-          "description": "Allow Dusty to query a local Ollama instance for contextual roasts. Disabled by default."
+          "default": true,
+          "description": "Allow Dusty to query a local Ollama instance for personalized Manglish roasts. Falls back gracefully to local templates if offline."
         },
         "dusty.ollamaEndpoint": {
           "type": "string",
           "default": "http://127.0.0.1:11434",
           "description": "Base URL for the local Ollama instance."
+        },
+        "dusty.ollamaModel": {
+          "type": "string",
+          "default": "llama3.2:3b",
+          "description": "Ollama 3B model (e.g. llama3.2:3b, llama3.2, phi3:mini, qwen2.5:3b) for personalized Manglish roasts."
+        },
+        "dusty.ollamaTimeoutMs": {
+          "type": "number",
+          "default": 2500,
+          "minimum": 500,
+          "maximum": 10000,
+          "description": "Timeout in milliseconds for local Ollama LLM roast generation."
+        },
+        "dusty.ollamaTemperature": {
+          "type": "number",
+          "default": 0.85,
+          "minimum": 0.1,
+          "maximum": 1.5,
+          "description": "Sampling temperature for Ollama roasts."
         }
       }
     },

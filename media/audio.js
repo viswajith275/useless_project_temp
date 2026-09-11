@@ -9,26 +9,64 @@ class VacuumAudio {
     this.isMuted = false;
     this.hasUnlocked = false;
     this.soundsBaseUri = null;
+    this.customSoundMap = new Map();
+    this.bufferCache = new Map();
   }
 
   setSoundsBaseUri(baseUri) {
     this.soundsBaseUri = baseUri;
+    this.bufferCache.clear();
+  }
+
+  initCustomSounds(baseUri, files) {
+    if (baseUri) {
+      this.soundsBaseUri = baseUri.replace(/\/+$/, '');
+    }
+    this.customSoundMap.clear();
+    this.bufferCache.clear();
+    if (Array.isArray(files) && this.soundsBaseUri) {
+      for (const f of files) {
+        const dot = f.lastIndexOf('.');
+        if (dot > 0) {
+          const key = f.substring(0, dot).toLowerCase();
+          this.customSoundMap.set(key, `${this.soundsBaseUri}/${f}`);
+        }
+      }
+    }
+  }
+
+  getCustomSoundUrl(name) {
+    if (!name || this.customSoundMap.size === 0) {
+      return null;
+    }
+    const key = name.toLowerCase();
+    if (this.customSoundMap.has(key)) {
+      return this.customSoundMap.get(key);
+    }
+    if (key === 'suction' && this.customSoundMap.has('sweep')) {
+      return this.customSoundMap.get('sweep');
+    }
+    if (key === 'sweep' && this.customSoundMap.has('suction')) {
+      return this.customSoundMap.get('suction');
+    }
+    if ((key === 'siren' || key === 'apocalypse') && this.customSoundMap.has('crashout')) {
+      return this.customSoundMap.get('crashout');
+    }
+    return null;
   }
 
   ensureContext() {
-    if (this.ctx) {
-      if (this.ctx.state === 'suspended') {
+    try {
+      if (!this.ctx) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) {
+          return null;
+        }
+        this.ctx = new AudioCtx();
+      }
+      if (this.ctx && this.ctx.state === 'suspended') {
         this.ctx.resume().catch(() => {});
       }
-      return this.ctx;
-    }
-
-    try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) {
-        return null;
-      }
-      this.ctx = new AudioCtx();
       return this.ctx;
     } catch {
       return null;
@@ -39,42 +77,71 @@ class VacuumAudio {
     this.isMuted = !!muted;
   }
 
-  play(name) {
+  async loadCustomSoundBuffer(ctx, name, url) {
+    if (this.bufferCache.has(name)) {
+      return this.bufferCache.get(name);
+    }
+    try {
+      const res = await fetch(url);
+      if (res.ok) {
+        const arrayBuf = await res.arrayBuffer();
+        const audioBuf = await ctx.decodeAudioData(arrayBuf);
+        if (audioBuf) {
+          this.bufferCache.set(name, audioBuf);
+          return audioBuf;
+        }
+      }
+    } catch {
+      // Fall through to procedural
+    }
+    return null;
+  }
+
+  async play(name) {
     if (this.isMuted) {
       return;
     }
 
-    // 1. Try replaceable external audio file if base URI is provided
-    if (this.soundsBaseUri) {
-      const audioMp3 = new Audio(`${this.soundsBaseUri}/${name}.mp3`);
-      audioMp3.volume = 0.85;
-      const playPromise = audioMp3.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          // Try .wav
-          const audioWav = new Audio(`${this.soundsBaseUri}/${name}.wav`);
-          audioWav.volume = 0.85;
-          const wavPromise = audioWav.play();
-          if (wavPromise !== undefined) {
-            wavPromise.catch(() => {
-              this.playProcedural(name);
-            });
-          } else {
-            this.playProcedural(name);
-          }
-        });
-        return;
+    const ctx = this.ensureContext();
+    if (!ctx) {
+      return;
+    }
+
+    if (ctx.state === 'suspended') {
+      ctx.resume().catch(() => {});
+    }
+
+    // 1. If custom sound file is known to exist, play it via Web Audio
+    const customUrl = this.getCustomSoundUrl(name);
+    if (customUrl) {
+      const buffer = await this.loadCustomSoundBuffer(ctx, name, customUrl);
+      if (buffer) {
+        try {
+          const source = ctx.createBufferSource();
+          source.buffer = buffer;
+          const gain = ctx.createGain();
+          gain.gain.value = 0.85;
+          source.connect(gain);
+          gain.connect(ctx.destination);
+          source.start(0);
+          return;
+        } catch {
+          // Playback failed, fallback to procedural
+        }
       }
     }
 
-    // 2. Procedural Web Audio fallback
+    // 2. Fallback directly to procedural retro Web Audio synthesizer
     this.playProcedural(name);
   }
 
   playProcedural(name) {
     const ctx = this.ensureContext();
-    if (!ctx || ctx.state !== 'running') {
+    if (!ctx) {
       return;
+    }
+    if (ctx.state === 'suspended') {
+      ctx.resume().catch(() => {});
     }
 
     try {

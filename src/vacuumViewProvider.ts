@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
 import {
   HostToWebviewMessage,
   WebviewToHostMessage,
@@ -48,6 +49,14 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
 
     webviewView.webview.onDidReceiveMessage((rawMsg: unknown) => {
       if (this.isValidWebviewMessage(rawMsg)) {
+        if (rawMsg.type === 'ready') {
+          const soundsUri = webviewView.webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'media', 'sounds'));
+          this.postMessage({
+            type: 'customSounds',
+            files: this.getCustomSoundFiles(),
+            soundsBaseUri: soundsUri.toString()
+          });
+        }
         this.onWebviewMessage(rawMsg);
       }
     }, null, this.disposables);
@@ -57,6 +66,12 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
     this.postMessage({ type: 'state', state: snapshot });
     this.postMessage({ type: 'bag', value: snapshot.bagCount, capacity: snapshot.bagCapacity });
     this.postMessage({ type: 'rage', value: snapshot.rageMeter });
+    const soundsUri = webviewView.webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'media', 'sounds'));
+    this.postMessage({
+      type: 'customSounds',
+      files: this.getCustomSoundFiles(),
+      soundsBaseUri: soundsUri.toString()
+    });
   }
 
   public postMessage(message: HostToWebviewMessage): void {
@@ -86,6 +101,18 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
     return typeof type === 'string' && validTypes.includes(type);
   }
 
+  public getCustomSoundFiles(): string[] {
+    try {
+      const soundsDiskDir = vscode.Uri.joinPath(this.extensionUri, 'media', 'sounds').fsPath;
+      if (fs.existsSync(soundsDiskDir)) {
+        return fs.readdirSync(soundsDiskDir).filter(f => /\.(mp3|wav|ogg|m4a|aac)$/i.test(f));
+      }
+    } catch {
+      // Ignore read errors
+    }
+    return [];
+  }
+
   private getNonce(): string {
     let text = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -100,18 +127,19 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
     const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'media', 'main.js'));
     const audioUri = webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'media', 'audio.js'));
     const soundsUri = webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'media', 'sounds'));
+    const customSoundFiles = this.getCustomSoundFiles();
     const nonce = this.getNonce();
 
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} data:; media-src ${webview.cspSource} data:; style-src ${webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} data:; media-src ${webview.cspSource} data:; connect-src ${webview.cspSource} data:; style-src ${webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}';">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="${styleUri}" rel="stylesheet" />
   <title>Dusty the Broom</title>
 </head>
-<body class="dusty-body" data-sounds-uri="${soundsUri}">
+<body class="dusty-body" data-sounds-uri="${soundsUri}" data-custom-sounds="${customSoundFiles.join(',')}">
   <div class="crt-overlay" aria-hidden="true"></div>
 
   <div class="container" id="appContainer">
@@ -126,7 +154,7 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
     <!-- Speech Bubble / Roast Monitor -->
     <div class="bubble-wrap">
       <div class="speech-bubble" id="speechBubble" role="status" aria-live="polite">
-        "ചൂല് റെഡിയാണ്. വല്ല പൊട്ടിയ സിന്റാക്സും ഉണ്ടെങ്കിൽ കാണിക്ക്, തൂത്തുവാരി കളയാം!"
+        "Chool ready aanu! Valla pottiya syntax-um undenkil kaani, ippo thanne thoothu-vaari kalayam!"
       </div>
     </div>
 

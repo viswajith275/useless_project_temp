@@ -7,6 +7,9 @@ export interface RoastContext {
   line?: number;
   fileName?: string;
   language?: string;
+  codeSnippet?: string;
+  surroundingCode?: string;
+  rageMeter?: number;
   confidence?: DustyConfidence;
   bagCount?: number;
   situation?:
@@ -26,125 +29,134 @@ export interface RoastContext {
 
 const ROAST_TEMPLATES: Record<string, string[]> = {
   crashout: [
-    '💥 എടാ മോനേ... രംഗണ്ണൻ പറഞ്ഞ പോലെ "ഇനി ഒരു ഒത്തുതീർപ്പുമില്ല!" നിന്റെ വൃത്തികെട്ട കോഡ് തിന്ന് തിന്ന് എന്റെ ചൂലിന്റെ ഈർക്കിലി വരെ ഒടിഞ്ഞു! DELETING RANDOM CODE OUT OF REVENGE!',
-    '🔥 പവനായി ശവമായി! കലിപ്പ് 100%! ചൂലും കംപൈലറും ഒരുമിച്ച് പണിമുടക്കി! ഫയലിലെ കോഡ് ഞാൻ ചൂലെടുത്ത് അടിച്ചു പരത്തുന്നു... പോയി വേറെ വല്ല പണിയും നോക്കെടാ!',
-    '🌪️ മണിച്ചിത്രത്താഴിലെ നാഗവല്ലി ഇളകിയ പോലെ കലിപ്പ് മൂത്തു! CODEBASE PURGE ACTIVATED! നിന്റെ ഫംഗ്ഷനുകൾ മൊത്തം ഞാൻ ചൂലുകൊണ്ട് തൂത്തെറിഞ്ഞു!',
-    '💀 കിണ്ടി വെച്ച ലോജിക് കണ്ട് എന്റെ സമനില തെറ്റി! ഞാൻ വെറുമൊരു ചൂലല്ല, ഇനി യമധർമ്മനാണ്! ഇതാ നിന്റെ കോഡ് റാൻഡമായി ഡിലീറ്റ് ചെയ്യുന്നു!'
+    '💥 Eda mone... Rangannan paranja pole: "Ini oru compromise-um illa!" Ninte vrithiketta code thinnu thinnu choolinte eerkili vare odinju! DELETING RANDOM CODE OUT OF REVENGE!',
+    '🔥 Pavanayi shavamaayi... ninte function shavamaayi! Kalippu 100%! Choolum compilero-um orumichu panimudakki! File-ile code njan chool eduthu thalachoottil adichu parathuva!',
+    '🌪️ Manichitrathazh-ile Nagavalli alanjadiya pole kalippu moothu! CODEBASE PURGE ACTIVATED! Ninte functions motham choolukond thoothu kalanju!',
+    '💀 Kindi vecha logic kandu ente samashani thetti! Njan choolalla, ini Yamadharman aanu! Ee koothara code njan random aayi delete cheyyunnu!',
+    '💥 Aavesham mode ON! Eda mone, ninakku vattaano ithu type cheyyan? Random deletion activated, ippo thanne file kathikkum!'
   ],
   brutal_personal: [
-    'Are you coding with your feet? കാലുകൊണ്ട് ടൈപ്പ് ചെയ്യുവാണോ? എങ്കിൽ അതൊരു ന്യായീകരണമെങ്കിലും ആക്കാമായിരുന്നു. ഇതെന്ത് ദുരന്തമാണ് മനുഷ്യാ?',
-    'വെറുമൊരു വെർച്വൽ ചൂലായ എനിക്ക് പോലും നിന്റെ കോഡ് കണ്ട് തലയിൽ മുണ്ടിട്ട് നടക്കേണ്ട അവസ്ഥയായി! Git blame നോക്കി വീട്ടുകാർ പോലും നിന്നെ തള്ളിപ്പറയും.',
-    'ലാപ്‌ടോപ്പ് അടച്ചു വെച്ച് പുറത്തുപോയി വല്ല മരത്തോടും മാപ്പ് പറ... നീ ശ്വസിക്കുന്ന ഓക്സിജന് യാതൊരു വിലയുമില്ലാതെ ഈ കോഡ് അടിച്ചതിന്!',
-    '-47 വോട്ട് കിട്ടിയ വല്ല StackOverflow ഉത്തരവും കോപ്പി അടിച്ചതാണോ? സി.ഐ.ഡി മൂസയിലെ അർജുനൻ പോലും ഇതിലും നല്ല കോഡെഴുതും!',
-    'സന്ദേശം സിനിമയിലെ ശങ്കരാടി ചോദിച്ച പോലെ ചോദിക്കുവാ: "തനിക്ക് വേറെ പണിയില്ലേ ഹേ?" ഇതിലും ഭേദം വല്ല തട്ടുകടയും തുടങ്ങുന്നതായിരുന്നു!',
-    'നിന്റെ കോഡിങ് കണ്ട് എനിക്ക് ചൂലെടുത്ത് സ്വന്തം മുഖത്തടിക്കാൻ തോന്നുന്നു. നാളെയെങ്കിലും ജോലി രാജി വെച്ച് വേറെ വല്ല പണിക്കും പോ!',
-    'ഈ കോഡ് production-ൽ പോയാൽ AWS ബിൽ അല്ല, നിന്റെ കരിയറും കമ്പനിയും ഒന്നാകെ കത്തിയമരും! ക്ലോസ് ചെയ്തു പോടാ മോനേ!'
+    'Are you coding with your feet? Kaalukondano ee code type cheyyunne? Engil athoru excuse enkilum aakkaamaayirunnu. Ithenthu durantham manushya!',
+    'Verumoru virtual chool aaya enikku polum ninte code kandu thalayil mundittu nadakkenda gathikedayi! Git blame nokki veettukaar polum ninne thallipparayum!',
+    'Laptop adachu vechu purathu poyi oru marathodu "Sorry" para... Nee ingane jeevichu ee koothara code adichu oxygen waste cheyyunnathinu!',
+    '-47 vote kitti kashamitta StackOverflow answer copy adichathano? CID Moosa-yile Moolamkuzhiyil Sahadevan polum ithilum nalla logic undakkum!',
+    'Sandesham cinemayile Shankaradi chodicha pole chodikuva: "Thanikku vere paniyille hey?" Ithilum bhedam valla thattukadayo lottery kachavadamo thudangunathaayirunnu!',
+    'Ninte coding kandu chool eduthu swantham mughathu adikkaan thonnunnu! Naaleyenkilum resignation koduthu valla kappayo vazhayo vekkeda!',
+    'Ee code production-il poyaal server alla, ninte career-um company-um onnake kathiyamarum! Close cheythu podey!',
+    'Sachin bro... immathiri code kandal Reenu poyittu ninte company-ile security polum ninne mind cheyyilla!',
+    'Shammi hero aada hero... pakshe ninte code verum zero! Tholviyude poorna roopamaanu thaan!'
   ],
   python: [
-    'Python-ൽ രണ്ട് കാര്യമേ ഉള്ളൂ: മര്യാദക്ക് indent ചെയ്യുക, തോന്നിവാസം എഴുതാതിരിക്കുക. നീ രണ്ടും കുളമാക്കി!',
-    'ഉറക്കത്തിൽ 30 സെക്കൻഡ് TikTok ട്യൂട്ടോറിയൽ കണ്ടിട്ടാണോ Python പഠിക്കാൻ ഇറങ്ങിയത്? പോയി വല്ല പപ്പടവും കാച്ചെടാ!',
-    'IndentationError: നിന്റെ തലച്ചോറിലെ ചിന്തകൾക്ക് ഒരു അലൈൻമെന്റുമില്ല, പിന്നെയല്ലേ Python കോഡ്! ചൂലെടുത്ത് തല്ലണം നിന്നെ!'
+    'Python-il randu karyame ullu: maryadakku indent cheyyuka, thenditharam ezhuthathirikkuka. Nee randum kulamakki!',
+    'Urakkathil 30 second TikTok tutorial kandittaano Python padikkan irangiyathu? Poyi valla pappadavum kaacheda!',
+    'IndentationError: Ninte thalachoril oru alignment-um illa, pinneyalle Python code! Chool eduthu thallanam ninne!',
+    'Python syntax kandu Guido van Rossum swantham kayyile coffee cup eduthu thalayil ozhikkum!'
   ],
   rust: [
-    'Rust-ന്റെ borrow checker നിന്റെ കോഡ് മാത്രമല്ല, നിന്റെ ജീവിതം തന്നെ reject ചെയ്തിരിക്കുകയാണ്!',
-    'ഒരു unsafe block-നും നിന്റെ ഈ വൃത്തികെട്ട കോഡിൽ നിന്ന് കംപൈലറെ രക്ഷിക്കാൻ കഴിയില്ല! റസ്റ്റ് കണ്ട് കരയുന്നു!',
-    'Panic at the syntax level: അല്പം പോലും ചിന്തയില്ലാതെ കോഡടിച്ചാൽ Rust പോയിട്ട് ദൈവം തമ്പുരാൻ വിചാരിച്ചാലും രക്ഷിക്കില്ല!'
+    'Rust-inte borrow checker ninte code mathramalla, ninte jeevitham thanne reject cheythu!',
+    'Oru unsafe block-num ninte ee kolapathaka code-il ninnu compilere rakshikkan pattilla! Rust kandu karayunnu!',
+    'Panic at the syntax level: Kurachenkilum chinthikkathe code adichaal Rust alla, daivam thampurante achan vannaalum rekshayilla!'
   ],
   go: [
-    '`if err != nil`? Go-യിൽ ഇവിടെയുള്ള ഒരേയൊരു error നിനക്ക് git-ൽ write access തന്ന ആ മാനേജരാണ്!',
-    'Go ഉണ്ടാക്കിയത് ജൂനിയർമാർ സിസ്റ്റം പൊട്ടിക്കാതിരിക്കാനാണ്. എന്നിട്ടും നീ ഇമ്മാതിരി ദുരന്തം ഉണ്ടാക്കിവെച്ചല്ലോ!',
-    'GOPATH എന്നേ deprecated ആയി, ഇതുപോലെ കോഡടിച്ചാൽ സോഫ്റ്റ്‌വെയർ രംഗത്ത് നിന്റെ ഭാവിയും ഉടൻ deprecated ആകും!'
+    '`if err != nil`? Go-yil ivideyulla ore oru error ninakku repo-yil write access thanna manager aanu!',
+    'Go undakkiyathu junior developers system pottikkathe irikkanaanu. Ennittum nee ithenthu koothara code aaneda ezhuthiye!',
+    'GOPATH enne deprecated aayi, ingane code adichaal software rangathu ninte bhaviyum udan deprecated aakum!'
   ],
   cpp: [
-    'നിന്റെ ഈ പോയിന്റർ കളി കണ്ടാൽ OS കേണൽ പാനിക് ആയി കരയും. സി.ഐ.ഡി മൂസയിലെ വെടി പോലെയാണ് നിന്റെ Memory leak!',
-    'Segmentation fault (core dumped): നിന്റെ ലോജിക് പണ്ടാരമടങ്ങി! പോയി വല്ല കപ്പ കൃഷിയും ചെയ്യ്!',
-    'C++ എഴുതാൻ അറിയില്ലെങ്കിൽ പോയി തുണി അലക്കെടാ! ഈ Pointer വെച്ച് നീ ആരുടെ തലയോട്ടിയാണ് പൊട്ടിക്കാൻ നോക്കുന്നത്?'
+    'Ninte ee pointer kali kandal OS kernel panic aayi karayum. CID Moosa-yile vedi poleyaanu ninte Memory leak!',
+    'Segmentation fault (core dumped): Ninte logic pandaramadangi! Poyi valla kappeem chakkem thinnedaa!',
+    'C++ ezhuthaan ariyillengil poyi thuni alakkeda! Ee Pointer vechu nee aarude thalayottiyaanu pottikkaan nokkunne?'
   ],
   java: [
-    'AbstractSingletonProxyFactoryBean കൊണ്ട് വന്നാലും ഈ ദുരന്തം encapsulate ചെയ്യാൻ പറ്റില്ല! ജാവ കണ്ട് ജെയിംസ് ഗോസ്‌ലിംഗ് കരയുന്നുണ്ടാകും!',
-    'NullPointerException: നിന്റെ തലച്ചോറിനേക്കാൾ ശൂന്യതയാണ് നിന്റെ വേരിയബിളുകളിൽ!',
-    'Enterprise grade അല്ല, ഇത് എൽ.കെ.ജി ലെവൽ തോൽവിയാണ്! പോയി വല്ല ട്യൂഷനും പോടാ!'
+    'AbstractSingletonProxyFactoryBean kondu vannaalum ee durantham encapsulate cheyyan pattilla! Java kandu James Gosling karayunnundaavum!',
+    'NullPointerException: Ninte thalachorinekkal shoonnyathayaanu ninte variables-il!',
+    'Enterprise grade alla, ithu LKG level tholviyaanu! Poyi valla tuition-um poda!'
   ],
   eat_success: [
-    'ചൂലുകൊണ്ട് അടിച്ചുവാരി! ചവറ്റുകുട്ടയിലേക്ക് പോയ തെറ്റ് കണ്ട് നിന്റെ പ്രൊജക്ട് മാനേജർ പോലും ആശ്വസിക്കും!',
-    'സ്വാഹ! ആ പൊട്ടിയ സിന്റാക്സ് ഞാൻ ചൂലെടുത്ത് മുറത്തിൽ ആക്കി!',
-    'തൂത്തുവാരി കളഞ്ഞു! നിന്റെ PR റിജക്റ്റ് ആവാതെ ഞാൻ രക്ഷിച്ചതാ... നന്ദി പറയടാ!',
-    'എടാ മോനേ... നീ തെറ്റുകൾ അടിക്കുന്ന സ്പീഡിൽ തൂത്തുവാരാൻ എനിക്ക് പത്ത് ചൂല് വാങ്ങേണ്ടി വരും!',
-    'ദാസാ... ഒരു തെറ്റ് കൂടി പവനായിയെ പോലെ ശവമായി!'
+    'Choolukond adichuvaari! Dustpan-ilekku poya thettu kandu ninte project manager polum aashwasikkum!',
+    'Swaha! Aa pottiya syntax njan chool eduthu murathil aakki!',
+    'Thoothu-vaari kalanju! Ninte PR reject aavaathe njan rekshichathaa... nandi parayeda!',
+    'Eda mone... nee thettukal adikkunna speed-il thoothuvaaraan enikku pathu choolu vaangendi varum!',
+    'Dasa... oru thettu koodi Pavanayiye pole shavamaayi!',
+    'Jimson-odu Mahesh paranja pole: Chambikko! Chool eduthu njan angottu chambi!'
   ],
   eat_aborted: [
-    'മര്യാദയില്ലാത്ത സ്വഭാവം! ഞാൻ ചൂലുകൊണ്ട് വാരാൻ വരുമ്പോഴേക്കും ഫയൽ മാറ്റുന്നോ?',
-    'ഓടി രക്ഷപ്പെടാൻ നോക്കണ്ട! നിന്റെ പൊട്ടിയ കോഡ് ചൂലിന് എറിഞ്ഞു തന്നിട്ട് പോടാ പേടിത്തൊണ്ടാ!',
-    'മുറത്തിൽ കയറാൻ പോയ സിന്റാക്സിനെ തട്ടിയെടുക്കുന്നോ? എന്ത് ദുരന്തം കാണിപ്പാണിത്!',
-    'ഭയന്നോടി ഒളിക്കാൻ നോക്കണ്ട! നിന്റെ ചവറ് കോഡ് ഞാൻ എവിടെയാണെങ്കിലും ചൂലെടുത്ത് തൂത്തുവാരിയിരിക്കും!'
+    'Maryadhayillatha swabhaavam! Njan choolukond vaaran varumbolzhekkum file maattunno?',
+    'Oodi rekshapedaam ennu karuthenda! Ninte pottiya code choolinu erinju thannittu poda pedithonda!',
+    'Murathil kayaraan poya syntax-ine thattiyedukkunno? Enthu thendi kaanippaanithu!',
+    'Bhayanju oodi olikkaan nokkenda! Ninte chavaru code njan evideyano avide vannu chool eduthu thoothuvaariyirikkum!'
   ],
   typed_while_cleaning: [
-    'എടാ! ഞാൻ ചൂലുകൊണ്ട് CLEAN ചെയ്യുമ്പോൾ KEYBOARD-ൽ തൊടുന്നോ? ആ TYPE ചെയ്തതും ഞാൻ ചൂലെടുത്ത് തൂത്തുവാരി! NOM NOM!',
-    'മര്യാദക്ക് KEYBOARD-ൽ നിന്ന് കൈയ്യെടുക്കടാ! ഞാൻ ചൂലുമായി CLEAN ആക്കുമ്പോൾ TYPE ചെയ്താൽ ബാക്കി കോഡും കൂടി തൂത്തുവാരി കളയും!',
-    'VACUUM പോയി ചൂല് വന്നാലും നീ പഠിക്കില്ലല്ലേ? CLEAN ചെയ്യുമ്പോൾ വീണ്ടും TYPE ചെയ്യുന്നു! NOM NOM കളഞ്ഞു!',
-    'എന്റെ ചൂലിന്റെ മുന്നിൽ വന്ന് KEYBOARD തട്ടുന്നോ? ആ അടിച്ച അക്ഷരം ഞാൻ തിന്നു തീർത്തു! NOM!',
-    'തൊടരുത് KEYBOARD-ൽ! അടിച്ചുവാരുമ്പോൾ വീണ്ടും TYPE ചെയ്താൽ ഫയൽ മൊത്തം ഞാൻ അടിച്ചുമാറ്റും! NOM!'
+    'Eda! Njan choolukond CLEAN cheyyumpol KEYBOARD-il thodunnoda? Aa TYPE cheythathum njan choolukond NOM NOM thinnu theerthu!',
+    'Maryadakku KEYBOARD-il ninnu kayyedukkada! Njan choolu vechu CLEAN aakkumbol TYPE cheythal baaki code-um koodi thoothuvaari kalayum! NOM!',
+    'VACUUM poyi choolu vannalum nee padikkillalle? CLEAN cheyyumpol veendum TYPE cheyyunnu! NOM NOM kalanju!',
+    'Ente choolinte munnil vannu KEYBOARD thattunno? Aa adicha aksharam njan thinnu theerthu! NOM!',
+    'Thodaruthu KEYBOARD-il! Adichuvaarumpol veendum TYPE cheythal file motham njan adichumaattum! NOM!'
   ],
   apocalypse: [
-    '🚨 അത്യാഹിതം: സിന്റാക്സ് പ്രളയം! സർവ്വനാശം വിതച്ച് കോഡ് തകരുന്നു! 🚨',
-    '💥 അയ്യോ... കോഡ് പൊട്ടിത്തെറിച്ചു! ചൂലിനും താങ്ങാൻ പറ്റാത്ത മഹാദുരന്തം! 💥',
-    'സൈറൺ മുഴക്ക്! നാട് വിട്ടോ! കോഡ്ബേസ് ഇനി നേരെ പാതാളത്തിലേക്ക്!',
-    'ദൈവമേ... ഇവന്റെ കൈയ്യിൽ കീബോർഡ് കൊടുത്ത ആ മഹാപാപിയെ ചൂലെടുത്ത് അടിക്കണം!'
+    '🚨 ATHYAHITHAM: SYNTAX PRALAYAM! SARVANAASHAM VITHACHU CODE THAKARUNNU! 🚨',
+    '💥 AYYOO... CODE POTTITHERICHU! CHOOLINUM THAANGAN PATTATHA MAHADURANTHAM! 💥',
+    'Siren muzhakku! Naadu vitto! Codebase ini nere paathaalathilekku!',
+    'Deivame... ivante kayyil keyboard kodutha aa maha paapiye chool eduthu thallanam!'
   ],
   clogged: [
-    'ഛർദ്ദിക്കാൻ വരുന്നു! 5 തെറ്റുകൾ വാരി വാരി മുറം നിറഞ്ഞു തുളുമ്പി!',
-    'മുറം നിറഞ്ഞു! വേഗം മുറം ഒഴിക്ക് (UNCLOG), അല്ലെങ്കിൽ ഈ ചവറ് മൊത്തം നിന്റെ തലയിലേക്ക് തട്ടും!',
-    'പൊട്ടിയ സെമികോളനുകളും നിന്റെ തകർന്ന സ്വപ്നങ്ങളും കൊണ്ട് മുറം നിറഞ്ഞു! Unclog ചെയ്യടാ!',
-    'ചൂല് കുഴഞ്ഞു വീണു... ഇത്രയും വലിയ ചവറ് കോഡ് ഇതിനുമുമ്പ് തൂത്തിട്ടില്ല!'
+    'Chardhikkaan varunnu! 5 thettukal vaari vaari muram niranju thulumbi!',
+    'Muram niranju! Vegam muram ozhikku (UNCLOG), allenkil ee chavaru motham ninte thalayil thattum!',
+    'Pottiya semicolons-um ninte thakarnna swapnangalum kond muram niranju! Unclog cheyyeda!',
+    'Choolu kuzhanju veenu... ithrayum valiya waste code ithinumnpu thoothittilla!'
   ],
   unsafe: [
-    'ഇത്രയും വലിയ കുറ്റിച്ചൂല് പോലും ഈ വൻ ദുരന്തം വാരാൻ തികയില്ല! ഞാൻ പൊടിപടലം മാത്രമേ വാരു, നിന്റെ ആർക്കിടെക്ചറൽ കൊലപാതകം അല്ല!',
-    'ഞാൻ വെറുമൊരു ചൂലാണ്, അല്ലാതെ നിന്റെ പൊട്ടിയ ലോജിക് തിരുത്താൻ വന്ന സീനിയർ ആർക്കിടെക്റ്റ് അല്ല!',
-    'ഇത് സിന്റാക്സ് തെറ്റല്ല, ടൈപ്പ് എററാണ്! നിന്റെ ജീവിതം പോലെ ആകെ കൺഫ്യൂഷനായ എറർ!',
-    'അപകട മേഖല! ഇതിൽ തൊട്ടാൽ ഫയൽ കത്തിയമരും! ധൈര്യമുണ്ടെങ്കിൽ മാനുവലായി വാരിയെടുക്ക്!'
+    'Ithrayum valiya kuttichoolu polum ee van durantham vaaraan thikayilla! Njan crumbs mathrame vaaru, ninte architectural kolapathakam alla!',
+    'Njan verum oru chool aanu, allathe ninte pottiya logic thiruthanaayi vanna senior architect alla!',
+    'Ithu syntax thettalla, type error aanu! Ninte jeevitham pole aake confused aaya error!',
+    'Apadakara mekhala! Ithil thottaal file kathiyamarum! Dhairyamundenkil manually vaariyedukku!'
   ],
   hunger_strike: [
-    'ഞാൻ പണിമുടക്കിലാണ്! ഈ വൃത്തികെട്ട കോഡ് വാരാൻ എന്നെ കിട്ടില്ല! നോക്ക്... ഒന്നങ്ങോട്ട് നോക്ക്!',
-    'സമരം! മര്യാദക്ക് ഇൻഡന്റേഷൻ തന്നാലേ ഞാൻ ഇനി ചൂല് തൊടുള്ളൂ!',
-    'ഒരു ലിന്റർ എന്താണെന്ന് നീ പഠിക്കുന്നത് വരെ ഞാൻ ഇവിടെ നിരാഹാരം കിടക്കും!',
-    'യൂണിയൻ കരാർ പ്രകാരം മണിക്കൂറിൽ 3 തെറ്റേ വാരാൻ പാടുള്ളൂ. നീ നൂറെണ്ണം അടിച്ച് കരാർ ലംഘിച്ചു!'
+    'Njan panimudakkilaanu! Ee vrithiketta code vaaraan enne kittilla! Nokku... onnangottu nokku!',
+    'Samaram! Maryadakku indentation thannale njan ini chool thodullu!',
+    'Oru linter enthaanennu nee padikkunnathu vare njan ivide niraahaaram kidakkum!',
+    'Union contract prakaaram manikkooril 3 thette vaaraan paadullu. Nee noorennam adichu contract langhichu!'
   ],
   tantrum: [
-    'ശ്ശെടാ! ഇതെന്ത് സാധനം?! കണ്ണ് തുറന്ന് പിടിച്ച് ടൈപ്പ് ചെയ്യടാ മനുഷ്യാ!',
-    'എന്റെ ഈർക്കിലി വിറയ്ക്കുന്നു! സിന്റാക്സ് ഓവർലോഡ്! സഹിക്കാൻ പറ്റുന്നില്ല!',
-    'മെക്കാനിക്കൽ കീബോർഡിൽ പൂച്ച മൂത്രമൊഴിച്ചാൽ പോലും ഇതിലും നല്ല ഔട്ട്പുട്ട് വരും!',
-    'കംപൈലർ ബാത്റൂമിൽ പോയി കരയുന്നു, കൂടെ ഞാനും!'
+    'Sshedaa! Ithenthu saadhanaam?! Kannu thurannu vechu type cheyyada manushya!',
+    'Ente eerkili viraykkunnu! SYNTAX OVERLOAD! Sahikkaan pattunnilla!',
+    'Mechanical keyboard-il poocha moothramozhichaal polum ithilum nalla output varum!',
+    'Compiler bathroom-il poyi karayunnu, koode njanum!'
   ],
   useless: [
-    'ഞാൻ ആ ലൈനിന്റെ അടുത്ത് വരെ പോയി, സൂക്ഷിച്ചു നോക്കി, ഒന്നും ചെയ്യാതെ തിരിച്ചുപോന്നു. എങ്ങനെയുണ്ട്?',
-    'ഞാൻ ഒന്നും ശരിയാക്കിയില്ല, എങ്കിലും എനിക്ക് ഭയങ്കര അഭിമാനം തോന്നുന്നു!',
-    'ആ തെറ്റ് വാരാൻ പോയതാ, പക്ഷെ വെറുതെ കിടന്ന ഒരു സ്പേസ് കണ്ട് എന്റെ ശ്രദ്ധ പോയി.',
-    'വെറുതെ തിരക്ക് അഭിനയിച്ച് ചൂലുകൊണ്ട് കാറ്റിൽ അടിക്കുകയാണ്... നിനക്ക് മനസ്സിലാകുമല്ലോ!'
+    'Njan aa line-inte aduthu vare poyi, sookshichu nokki, onnum cheyyaathe thirichu ponnu. Enganeyund?',
+    'Njan onnum shariyaakiyilla, engilum enikku bhayangara abhimanam thonnunnu!',
+    'Aa thettu vaaraan poyatha, pakshe veruthe kidanna oru whitespace kandu ente shradha poyi.',
+    'Veruthe thirakku abhinayichu choolukond kaattil adikkukayaanu... ninakku manassilaakumaayirikkum!'
   ],
   general: [
-    'നിന്റെ കോഡ് മോഡേൺ ആർട്ട് പോലെയാണ്: ആർക്കും ഒന്നും മനസ്സിലാവില്ല, കൊണ്ടുനടക്കാൻ ഭയങ്കര ചിലവും!',
-    'ഒരു സെമികോളൻ ഇവിടെ, ഒരു ബ്രാക്കറ്റ് അവിടെ... റോമാഞ്ചം സിനിമയിലെ പോലെ പ്രേതത്തെ വിളിച്ചുവരുത്തുകയാണോ?',
-    'ഓരോ തവണ സേവ് ചെയ്യുമ്പോഴും കംപൈലർ നെഞ്ചത്തടിച്ച് നിലവിളിക്കുന്നുണ്ട്!',
-    'തലച്ചോർ ഒന്നു ഓഫ് ചെയ്തിട്ട് ഓൺ ചെയ്തു നോക്കിയാലോ? വല്ല മാറ്റവും ഉണ്ടാവുമോ എന്ന് നോക്കാം.',
-    'എന്താണ് തെറ്റിയതെന്ന് പറഞ്ഞുതരാൻ എനിക്ക് ആഗ്രഹമുണ്ട്, പക്ഷെ പാർസർ പോലും ബോധംകെട്ടു വീണു!',
-    'മോണിറ്ററിലേക്ക് നോക്കാതെ കോഡടിക്കുന്ന നിന്റെ ആ ഒരു ധൈര്യം... സമ്മതിക്കണം!',
-    'ഞാൻ വെറുമൊരു ചൂലാണ്, എന്നിട്ടും നിന്നെക്കാൾ എത്രയോ ഭേദമാണ് എന്റെ ബുദ്ധി എന്ന് തോന്നിപ്പോകുന്നു!',
-    'ഷമ്മി ഹീറോയാടാ ഹീറോ... പക്ഷേ നിന്റെ കോഡ് വെറും സീറോ! ക്ലോസ് ചെയ്തു പോടാ മോനേ!',
-    'സച്ചിൻ ബ്രോ... ഇമ്മാതിരി കോഡ് കണ്ടാൽ കമ്പനിയിലെ പ്യൂൺ പോലും മൈൻഡ് ചെയ്യില്ല!',
-    'കുമ്പളങ്ങി നൈറ്റ്സിലെ ഫ്രാങ്കി പറഞ്ഞ പോലെ: "ഈ കുടുംബം നന്നാവാൻ പോകുന്നില്ല", നിന്റെ ഈ പ്രൊജക്റ്റും!'
+    'Ninte code modern art poleyaanu: aarkkum onnum manassilaavilla, kondu nadakkanaano bhayangara chilavum!',
+    'Oru semicolon ivide, oru bracket avide... Romancham cinemayile pole prethathe vilichu varuthukayaano?',
+    'Oro thavana save cheyyumpolum compiler nenjathadichu nilavilikkunnu!',
+    'Thalachoru onnu off cheythittu on cheythu nokkiyaalo? Valla maattavum undaavumo ennu nokkaam.',
+    'Enthaanu thettiyathennu paranju tharaan aagrahathund, pakshe parser polum bodhamkettu veenu!',
+    'Monitor-ilekku nokkaathe code adikkunna ninte aa oru dhairyam... sammathikkanam!',
+    'Njan verum oru chool aanu, ennittum ninnekkaal ethrayo bhedhamaanu ente budhi ennu thonnunnu!',
+    'Shammi hero aada hero... pakshe ninte code verum zero! Close cheythu podey!',
+    'Sachin bro... immathiri code kandal company-ile attender polum mind cheyyilla!',
+    'Franky paranja pole: "Ee kudumbam nannaavan ponilla", ninte ee project-um!',
+    'Vijaya... nammude kanjiyil paatta veenu! Ee code kandaal client flight eduthu naadu vidum!'
   ]
 };
 
 export class RoastService {
   public async getRoast(ctx: RoastContext): Promise<string> {
     const config = vscode.workspace.getConfiguration('dusty');
-    const enableLLM = config.get<boolean>('enableLLM', false);
+    const enableLLM = config.get<boolean>('enableLLM', true);
     const ollamaEndpoint = config.get<string>('ollamaEndpoint', 'http://127.0.0.1:11434');
+    const ollamaModel = config.get<string>('ollamaModel', 'llama3.2:3b');
+    const timeoutMs = config.get<number>('ollamaTimeoutMs', 2500);
+    const temperature = config.get<number>('ollamaTemperature', 0.85);
 
-    // If LLM is enabled, try it with strict timeout and fallback
-    if (enableLLM && ctx.message) {
+    // If LLM is enabled, try local Ollama 3B model first
+    if (enableLLM) {
       try {
-        const llmRoast = await this.fetchOllamaRoast(ollamaEndpoint, ctx.message);
+        const llmRoast = await this.fetchOllamaRoast(ollamaEndpoint, ollamaModel, ctx, timeoutMs, temperature);
         if (llmRoast && llmRoast.trim().length > 0) {
           return llmRoast.trim();
         }
@@ -190,14 +202,29 @@ export class RoastService {
       }
     }
 
+    // Dynamic file-targeted fallback
+    if (ctx.fileName && Math.random() > 0.6) {
+      const baseName = ctx.fileName.split(/[/\\]/).pop();
+      const fileTemplates = [
+        `'${baseName}'-il ithu type cheyyan ninakku naanamille? Sandesham Shankaradi chodicha pole: Thanikku vere paniyille hey?`,
+        `'${baseName}' kandu git blame polum thala thazhthi karayunnu! Close cheythu podey!`,
+        `Eda mone! '${baseName}'-ile logic kandu Rangannan vare njetti tharichu poyi!`,
+        `'${baseName}' ezhuthiya aale kandu pidikkan CID Moosa-yude Sahadevan varanam!`
+      ];
+      return fileTemplates[Math.floor(Math.random() * fileTemplates.length)];
+    }
+
     const pool = ROAST_TEMPLATES[situation] || ROAST_TEMPLATES.general;
 
-    // Mad-libs style contextual insertion if token is known
-    if (ctx.token && (situation === 'eat_success' || situation === 'general')) {
+    // Mad-libs style contextual insertion if token or code is known
+    const codeToken = ctx.token || ctx.codeSnippet;
+    if (codeToken && (situation === 'eat_success' || situation === 'general' || situation === 'unsafe')) {
+      const displayToken = codeToken.slice(0, 30).trim();
       const tokenTemplates = [
-        `വഴിതെറ്റി വന്ന '${ctx.token}' ഞാൻ ചൂലുകൊണ്ട് അടിച്ചുവാരി! എവിടുന്നു വരുന്നു ഇമ്മാതിരി സാധനങ്ങൾ?`,
-        `ദാ കിടക്കുന്നു '${ctx.token}' അലഞ്ഞുതിരിയുന്നു! ഞാൻ ചൂലുകൊണ്ട് മുറത്തിൽ ആക്കി കളഞ്ഞു.`,
-        `'${ctx.token}' ചൂലുകൊണ്ട് തൂത്തുവാരി! കീബോർഡിൽ വിരൽ കുടുങ്ങിപ്പോയതാണോ?`
+        `Vazhithetti vanna '${displayToken}' njan choolukond adichuvaari! Evidunnu varunnu immathiri sadhanangal?`,
+        `Dha kidakkunnu '${displayToken}' alanjuthiriyunnu! Njan choolukond murathil aakki kalanju.`,
+        `'${displayToken}' choolukond thoothuvaari! Keyboard-il viral kudungippoyathaano?`,
+        `'${displayToken}' kandu compiler bodhamkettu veenu! Poyi valla chayakadayum thudanguda!`
       ];
       if (Math.random() > 0.4) {
         return tokenTemplates[Math.floor(Math.random() * tokenTemplates.length)];
@@ -205,46 +232,113 @@ export class RoastService {
     }
 
     if (ctx.line !== undefined && Math.random() > 0.6) {
-      return `വരി ${ctx.line + 1}: വേഗത്തിൽ ടൈപ്പ് ചെയ്യുന്നതും വല്ലതും അറിഞ്ഞ് ടൈപ്പ് ചെയ്യുന്നതും രണ്ടാണെന്ന് മനസ്സിലായോ?`;
+      return `Line ${ctx.line + 1}: Vegathil type cheyyunnathum vallathum arinju type cheyyunnathum randaanennu manassilaayo?`;
     }
 
     const randomIndex = Math.floor(Math.random() * pool.length);
     return pool[randomIndex];
   }
 
-  private async fetchOllamaRoast(endpoint: string, errorMessage: string): Promise<string | null> {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 1200);
+  public buildPrompt(ctx: RoastContext): string {
+    const fn = ctx.fileName ? ctx.fileName.split(/[/\\]/).pop() : 'active_file';
+    const lineInfo = ctx.line !== undefined ? `Line ${ctx.line + 1}` : '';
+    const lang = ctx.language || 'code';
+    const err = ctx.message ? `Diagnostic Error: "${ctx.message.slice(0, 140).replace(/["\\]/g, ' ')}"` : '';
+    const code = ctx.codeSnippet || ctx.token ? `Offending Code/Token: "${(ctx.codeSnippet || ctx.token || '').slice(0, 80).replace(/["\\]/g, ' ')}"` : '';
+    const situation = ctx.situation || 'syntax_error';
 
-    try {
-      const sanitizedMsg = errorMessage.slice(0, 150).replace(/["\\]/g, ' ');
-      const prompt = `You are Dusty, a sassy little retro desktop broom (ചൂൽ) living inside VS Code. Write a short, funny, brutally sarcastic 1-sentence Malayalam roast referencing popular Malayalam cinema memes (under 25 words) for a developer whose code has this syntax error: "${sanitizedMsg}". Poke fun at their coding skills.`;
+    return `You are Dusty, a viciously sarcastic, bad-tempered retro desktop broom living inside the user's VS Code editor.
+Write a brutal, funny 1 to 2 sentence roast in MANGLISH (Malayalam language written entirely using the English alphabet).
+Directly target the developer for their coding error, sloppy logic, and life/career choices so they feel personally attacked and laugh.
 
-      const response = await fetch(`${endpoint.replace(/\/$/, '')}/api/generate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'llama3',
-          prompt,
-          stream: false,
-          options: {
-            temperature: 0.8,
-            num_predict: 40
+Context:
+- File: ${fn} (${lang}) ${lineInfo}
+- ${err}
+- ${code}
+- Situation: ${situation}
+
+Strict Instructions:
+1. Write ONLY in MANGLISH (Malayalam written with English letters like "Eda mone, line 42-il ithu type cheyyan ninakku naanamille?").
+2. DO NOT use Malayalam script (മലയാളം). DO NOT write pure English.
+3. Integrate trending Malayalam pop-culture movie memes (e.g. Aavesham "Eda mone!", Sandesham "Thanikku vere paniyille?", CID Moosa, Shammi in Kumbalangi Nights, Manichitrathazhu, Lucifer, Premalu).
+4. Attack their coding competence and career decisions based directly on the file, line, and code provided above.
+5. Max 35 words. Output ONLY the Manglish dialogue. No English translations, no quotation marks, no preamble.`;
+  }
+
+  public cleanLlmResponse(raw: string): string {
+    let text = raw.replace(/^["']|["']$/g, '').trim();
+    text = text.replace(/^(Dusty|Roast|Manglish|Chool)\s*:\s*/i, '');
+    text = text.replace(/\[Translation:.*?\]/gi, '');
+    text = text.replace(/\*\*.*?\*\*/g, '');
+    text = text.replace(/[\r\n]+/g, ' ').trim();
+    return text;
+  }
+
+  public async fetchOllamaRoast(
+    endpoint: string,
+    model: string,
+    ctx: RoastContext,
+    timeoutMs = 2500,
+    temperature = 0.85
+  ): Promise<string | null> {
+    const prompt = this.buildPrompt(ctx);
+    const baseEndpoint = endpoint.replace(/\/+$/, '');
+
+    const tryGenerate = async (modelName: string): Promise<string | null> => {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+      try {
+        const response = await fetch(`${baseEndpoint}/api/generate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: modelName,
+            prompt,
+            stream: false,
+            options: {
+              temperature,
+              num_predict: 60,
+              stop: ['\n\n', 'Translation:', 'English:', 'Explanation:']
+            }
+          }),
+          signal: controller.signal
+        });
+
+        if (!response.ok) {
+          return null;
+        }
+
+        const json = (await response.json()) as { response?: string };
+        if (json.response) {
+          const cleaned = this.cleanLlmResponse(json.response);
+          if (cleaned.length > 5) {
+            return cleaned;
           }
-        }),
-        signal: controller.signal
-      });
-
-      if (!response.ok) {
+        }
         return null;
+      } catch {
+        return null;
+      } finally {
+        clearTimeout(timeoutId);
       }
+    };
 
-      const json = await response.json() as { response?: string };
-      return json.response?.replace(/["\n]/g, '').trim() || null;
-    } catch {
-      return null;
-    } finally {
-      clearTimeout(timeoutId);
+    // 1. Try primary configured model (e.g. llama3.2:3b)
+    let result = await tryGenerate(model);
+    if (result) {
+      return result;
     }
+
+    // 2. If model had tag like ':3b', try base model tag 'llama3.2'
+    if (model.includes(':')) {
+      const fallbackModel = model.split(':')[0];
+      result = await tryGenerate(fallbackModel);
+      if (result) {
+        return result;
+      }
+    }
+
+    return null;
   }
 }
