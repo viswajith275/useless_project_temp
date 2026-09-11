@@ -63,9 +63,11 @@ export class DiagnosticTargetSelector {
     const activeEntry = allDiagnostics.find(([uri]) => uri.toString() === activeUri.toString());
     const diagnostics = activeEntry ? activeEntry[1] : [];
 
-    // Filter to errors only
-    const errors = diagnostics.filter(d => d.severity === vscode.DiagnosticSeverity.Error);
-    if (errors.length === 0) {
+    // Filter to errors and warnings
+    const candidates = diagnostics.filter(
+      d => d.severity === vscode.DiagnosticSeverity.Error || d.severity === vscode.DiagnosticSeverity.Warning
+    );
+    if (candidates.length === 0) {
       return undefined;
     }
 
@@ -85,7 +87,7 @@ export class DiagnosticTargetSelector {
 
     const scored: ScoredDiagnostic[] = [];
 
-    for (const diag of errors) {
+    for (const diag of candidates) {
       const fp = createDiagnosticFingerprint(activeUri, diag.range, diag.code, diag.source, diag.message);
       const isSuppressed = this.isSuppressed(fp, now);
       const parseResult = analyzeDiagnosticSpan(diag, document);
@@ -93,6 +95,7 @@ export class DiagnosticTargetSelector {
       // Score components:
       // - Higher score is better
       // - High confidence: +1000
+      // - Error severity: +300
       // - Visible range: +500
       // - Proximity to center: -(distance in lines)
       // - Suppressed: -2000
@@ -100,6 +103,10 @@ export class DiagnosticTargetSelector {
       if (parseResult.confidence === 'high') {
         score += 1000;
       } else if (parseResult.confidence === 'medium') {
+        score += 300;
+      }
+
+      if (diag.severity === vscode.DiagnosticSeverity.Error) {
         score += 300;
       }
 
@@ -171,7 +178,7 @@ export class DiagnosticTargetSelector {
 
     // Check 4: Diagnostic must still be present in active diagnostics
     const matchingDiag = activeDiagnostics.find(d => {
-      if (d.severity !== vscode.DiagnosticSeverity.Error) {
+      if (d.severity !== vscode.DiagnosticSeverity.Error && d.severity !== vscode.DiagnosticSeverity.Warning) {
         return false;
       }
       const fp = createDiagnosticFingerprint(target.uri, d.range, d.code, d.source, d.message);

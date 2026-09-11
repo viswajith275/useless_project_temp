@@ -166,17 +166,17 @@
         },
         "dusty.ingestDelayMs": {
           "type": "number",
-          "default": 650,
-          "minimum": 300,
+          "default": 0,
+          "minimum": 0,
           "maximum": 3000,
-          "description": "Delay in milliseconds between visual approach and safe atomic ingestion."
+          "description": "Delay in milliseconds before vacuuming an identified syntax error (0 for instant ingestion)."
         },
         "dusty.cooldownMs": {
           "type": "number",
-          "default": 5000,
-          "minimum": 1000,
+          "default": 0,
+          "minimum": 0,
           "maximum": 60000,
-          "description": "Cooldown period in milliseconds between automatic chaos events."
+          "description": "Cooldown period in milliseconds between automatic chaos events (0 for instant consecutive ingestion)."
         },
         "dusty.enableLLM": {
           "type": "boolean",

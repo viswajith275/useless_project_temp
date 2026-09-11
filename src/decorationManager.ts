@@ -11,8 +11,10 @@ export class DecorationManager implements vscode.Disposable {
   private disabledDecoration: vscode.TextEditorDecorationType;
   private dissolveDecoration: vscode.TextEditorDecorationType;
   private graffitiDecoration: vscode.TextEditorDecorationType;
+  private strobeDecorations: vscode.TextEditorDecorationType[];
 
   private currentAnimationTimer?: NodeJS.Timeout;
+  private apocalypseInterval?: NodeJS.Timeout;
   private activeEditor?: vscode.TextEditor;
 
   constructor() {
@@ -54,6 +56,37 @@ export class DecorationManager implements vscode.Disposable {
         fontWeight: 'bold'
       }
     });
+
+    // Apocalyptic strobe decoration types (screen shake / color-changing chaos)
+    this.strobeDecorations = [
+      vscode.window.createTextEditorDecorationType({
+        backgroundColor: 'rgba(255, 0, 0, 0.45)',
+        isWholeLine: true,
+        after: {
+          contentText: ' 🚨🚨 THE END IS NIGH! SYNTAX APOCALYPSE! 🚨🚨',
+          color: '#ff2222',
+          fontWeight: '900'
+        }
+      }),
+      vscode.window.createTextEditorDecorationType({
+        backgroundColor: 'rgba(255, 140, 0, 0.5)',
+        isWholeLine: true,
+        after: {
+          contentText: ' ⚡⚡ CRITICAL CODE MELTDOWN! WHY DID YOU DO THIS?! ⚡⚡',
+          color: '#ffbb00',
+          fontWeight: '900'
+        }
+      }),
+      vscode.window.createTextEditorDecorationType({
+        backgroundColor: 'rgba(255, 0, 128, 0.45)',
+        isWholeLine: true,
+        after: {
+          contentText: ' 💥💥 ALL HOPE IS LOST! DUSTY IS UNSTABLE! 💥💥',
+          color: '#ff00ee',
+          fontWeight: '900'
+        }
+      })
+    ];
   }
 
   /**
@@ -64,6 +97,10 @@ export class DecorationManager implements vscode.Disposable {
       clearTimeout(this.currentAnimationTimer);
       this.currentAnimationTimer = undefined;
     }
+    if (this.apocalypseInterval) {
+      clearInterval(this.apocalypseInterval);
+      this.apocalypseInterval = undefined;
+    }
 
     const targetEditor = editor || this.activeEditor || vscode.window.activeTextEditor;
     if (!targetEditor) {
@@ -71,6 +108,9 @@ export class DecorationManager implements vscode.Disposable {
     }
 
     for (const dec of this.frameDecorations) {
+      targetEditor.setDecorations(dec, []);
+    }
+    for (const dec of this.strobeDecorations) {
       targetEditor.setDecorations(dec, []);
     }
     targetEditor.setDecorations(this.cloggedDecoration, []);
@@ -169,9 +209,54 @@ export class DecorationManager implements vscode.Disposable {
     }
   }
 
+  /**
+   * Chaotic end-of-the-world apocalyptic screen effect:
+   * Flashes chaotic strobe colors across visible editor lines.
+   */
+  public triggerApocalypseEffect(editor: vscode.TextEditor, line: number, durationMs = 1200): void {
+    this.clear(editor);
+    this.activeEditor = editor;
+
+    if (editor.document.isClosed) {
+      return;
+    }
+
+    const visibleRanges = editor.visibleRanges;
+    const targetRanges = visibleRanges.length > 0 ? visibleRanges : [new vscode.Range(line, 0, line, 0)];
+
+    let strobeStep = 0;
+    this.apocalypseInterval = setInterval(() => {
+      if (editor.document.isClosed) {
+        this.clear(editor);
+        return;
+      }
+      for (let i = 0; i < this.strobeDecorations.length; i++) {
+        if (i === (strobeStep % this.strobeDecorations.length)) {
+          editor.setDecorations(this.strobeDecorations[i], targetRanges);
+        } else {
+          editor.setDecorations(this.strobeDecorations[i], []);
+        }
+      }
+      strobeStep++;
+    }, 110);
+
+    setTimeout(() => {
+      if (this.apocalypseInterval) {
+        clearInterval(this.apocalypseInterval);
+        this.apocalypseInterval = undefined;
+      }
+      for (const dec of this.strobeDecorations) {
+        editor.setDecorations(dec, []);
+      }
+    }, durationMs);
+  }
+
   public dispose(): void {
     this.clear();
     for (const dec of this.frameDecorations) {
+      dec.dispose();
+    }
+    for (const dec of this.strobeDecorations) {
       dec.dispose();
     }
     this.cloggedDecoration.dispose();

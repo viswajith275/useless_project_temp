@@ -45,11 +45,11 @@ export function analyzeDiagnosticSpan(
   diagnostic: vscode.Diagnostic,
   document: vscode.TextDocument
 ): ParseResult {
-  // Gate 1: Must be an Error
-  if (diagnostic.severity !== vscode.DiagnosticSeverity.Error) {
+  // Gate 1: Must be an Error or Warning
+  if (diagnostic.severity !== vscode.DiagnosticSeverity.Error && diagnostic.severity !== vscode.DiagnosticSeverity.Warning) {
     return {
       confidence: 'low',
-      reason: 'Only Error severity diagnostics can be ingested.'
+      reason: 'Only Error and Warning severity diagnostics can be ingested.'
     };
   }
 

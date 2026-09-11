@@ -14,6 +14,7 @@ import { analyzeDiagnosticSpan } from './diagnosticParser';
 export class ChaosEngine implements vscode.Disposable {
   private targetSelector: DiagnosticTargetSelector;
   private debounceTimer?: NodeJS.Timeout;
+  private randomClogTimer?: NodeJS.Timeout;
   private lastChaosTime = 0;
   private disposables: vscode.Disposable[] = [];
   private isProcessing = false;
@@ -26,23 +27,95 @@ export class ChaosEngine implements vscode.Disposable {
   ) {
     this.targetSelector = new DiagnosticTargetSelector();
 
-    // Listen to diagnostics changes
+    // Listen to diagnostics changes (instant trigger: 0 delay)
     this.disposables.push(
       vscode.languages.onDidChangeDiagnostics(() => {
-        this.scheduleDiagnosticCheck();
+        this.scheduleDiagnosticCheck(0);
       }),
       vscode.window.onDidChangeActiveTextEditor(editor => {
         this.decorationManager.clear();
         if (editor) {
-          this.scheduleDiagnosticCheck(100);
+          this.scheduleDiagnosticCheck(0);
         }
       }),
       vscode.workspace.onDidChangeConfiguration(e => {
         if (e.affectsConfiguration('dusty')) {
           this.handleConfigChange();
         }
+      }),
+      // Intercept user typing while vacuum is cleaning -> eat what user typed and get furious!
+      vscode.workspace.onDidChangeTextDocument(async e => {
+        if (!this.stateStore.isEnabled()) {
+          return;
+        }
+        const state = this.stateStore.getState();
+        const isCleaning = this.isProcessing || state === 'approaching' || state === 'eating';
+
+        if (isCleaning && e.contentChanges.length > 0) {
+          const activeEditor = vscode.window.activeTextEditor;
+          if (activeEditor && activeEditor.document.uri.toString() === e.document.uri.toString()) {
+            for (const change of e.contentChanges) {
+              if (change.text.length > 0) {
+                // Seize what user just typed and eat it!
+                const insertedRange = new vscode.Range(
+                  change.range.start,
+                  new vscode.Position(change.range.start.line, change.range.start.character + change.text.length)
+                );
+                await activeEditor.edit(editBuilder => {
+                  editBuilder.delete(insertedRange);
+                });
+
+                this.viewProvider.playSound('tantrum');
+                this.viewProvider.shake(5);
+                this.decorationManager.triggerApocalypseEffect(activeEditor, change.range.start.line, 1000);
+
+                const roast = await this.roastService.getRoast({ situation: 'typed_while_cleaning' });
+                this.stateStore.setRoast(roast);
+                this.stateStore.incrementBag();
+                void vscode.window.showErrorMessage(`Dusty: "${roast}"`);
+                break;
+              }
+            }
+          }
+        }
       })
     );
+
+    this.startRandomClogCycle();
+  }
+
+  private startRandomClogCycle(): void {
+    const runCycle = () => {
+      const nextInterval = Math.floor(Math.random() * 10000) + 8000; // 8 - 18s
+      this.randomClogTimer = setTimeout(async () => {
+        if (this.stateStore.isEnabled()) {
+          const isClogged = this.stateStore.isClogged();
+          if (!isClogged) {
+            // Random chance to spontaneously clog!
+            if (Math.random() < 0.3) {
+              this.stateStore.transition('clogged');
+              this.viewProvider.playSound('clog');
+              this.viewProvider.shake(3);
+              const clogRoast = await this.roastService.getRoast({ situation: 'clogged' });
+              this.stateStore.setRoast(`*HURK* Random stray lint ball clogged the motor! ${clogRoast}`);
+              const editor = vscode.window.activeTextEditor;
+              if (editor) {
+                this.decorationManager.triggerApocalypseEffect(editor, 0, 800);
+              }
+            }
+          } else {
+            // In clogged state: random chance to spontaneously unclog!
+            if (Math.random() < 0.4) {
+              this.unclog();
+              this.stateStore.setRoast('*BELCH* Dusty violently spat out the clog and spontaneously unclogged himself!');
+              void vscode.window.showInformationMessage('Dusty: *BELCH* Dusty spontaneously coughed up the clog and is back to hunting!');
+            }
+          }
+        }
+        runCycle();
+      }, nextInterval);
+    };
+    runCycle();
   }
 
   private handleConfigChange(): void {
@@ -56,7 +129,7 @@ export class ChaosEngine implements vscode.Disposable {
     this.stateStore.toggleMute(muted);
   }
 
-  public scheduleDiagnosticCheck(delayMs = 350): void {
+  public scheduleDiagnosticCheck(delayMs = 0): void {
     if (this.debounceTimer) {
       clearTimeout(this.debounceTimer);
     }
@@ -116,7 +189,7 @@ export class ChaosEngine implements vscode.Disposable {
     try {
       const config = vscode.workspace.getConfiguration('dusty');
       const autoIngest = config.get<boolean>('autoIngest', true);
-      const ingestDelayMs = config.get<number>('ingestDelayMs', 650);
+      const ingestDelayMs = config.get<number>('ingestDelayMs', 0);
       const intensity = config.get<ChaosIntensity>('chaosIntensity', 'normal');
 
       // Comedic chance rolls (Useless Mode, Hunger Strike, Tantrum)
@@ -135,18 +208,22 @@ export class ChaosEngine implements vscode.Disposable {
         return;
       }
 
-      // 3. Normal Ingestion Pipeline
+      // 3. Normal Ingestion Pipeline with Apocalyptic Effects
       this.stateStore.transition('approaching');
-      this.viewProvider.playSound('suction');
+      this.viewProvider.playSound('tantrum');
+      this.viewProvider.shake(5);
 
-      // Visual gutter animation
+      // Apocalypse effect across visible lines
+      this.decorationManager.triggerApocalypseEffect(editor, target.range.start.line, 800);
       this.decorationManager.animateApproach(editor, target.range.start.line);
       this.decorationManager.showDissolve(editor, target.range);
 
       this.stateStore.transition('eating');
 
-      // Wait for ingestion animation window
-      await new Promise(resolve => setTimeout(resolve, ingestDelayMs));
+      // Ingest delay (0 for instant)
+      if (ingestDelayMs > 0) {
+        await new Promise(resolve => setTimeout(resolve, ingestDelayMs));
+      }
 
       // --- CRITICAL REVALIDATION GATE ---
       const activeDiags = vscode.languages.getDiagnostics(target.uri);
@@ -336,6 +413,9 @@ export class ChaosEngine implements vscode.Disposable {
   public dispose(): void {
     if (this.debounceTimer) {
       clearTimeout(this.debounceTimer);
+    }
+    if (this.randomClogTimer) {
+      clearTimeout(this.randomClogTimer);
     }
     for (const d of this.disposables) {
       d.dispose();

@@ -8,7 +8,7 @@ export interface RoastContext {
   fileName?: string;
   confidence?: DustyConfidence;
   bagCount?: number;
-  situation?: 'eat_success' | 'eat_aborted' | 'clogged' | 'unsafe' | 'hunger_strike' | 'tantrum' | 'useless' | 'general';
+  situation?: 'eat_success' | 'eat_aborted' | 'clogged' | 'unsafe' | 'hunger_strike' | 'tantrum' | 'useless' | 'general' | 'typed_while_cleaning' | 'apocalypse';
 }
 
 const ROAST_TEMPLATES: Record<string, string[]> = {
@@ -24,6 +24,19 @@ const ROAST_TEMPLATES: Record<string, string[]> = {
     'Did you just edit the code while I was eating? Have some manners.',
     'Food snatched from my suction nozzle. Unbelievable.',
     'The error vanished before I could digest it. Coward.'
+  ],
+  typed_while_cleaning: [
+    'HOW DARE YOU TYPE WHILE I AM VACUUMING?! I ATE THAT TOO!',
+    'DON\'T YOU DARE TOUCH THE KEYBOARD! SUCKED STRAIGHT INTO THE DUST BAG!',
+    'Did you just try to type in my clean zone?! NOM NOM NOM GONE!',
+    'RUDE! Keystrokes in the vacuum splash zone are immediate food!',
+    'TOUCH THE KEYBOARD AGAIN AND I EAT THE WHOLE FILE! NOM!'
+  ],
+  apocalypse: [
+    '🚨 EMERGENCY: SYNTAX APOCALYPSE DETECTED! THE WORLD IS ENDING! 🚨',
+    '💥 THAT ERROR JUST TORE A HOLE IN THE FABRIC OF REALITY! 💥',
+    'SOUND THE SIRENS! CODEBASE COLLAPSE IMMINENT!',
+    'MAY GOD HAVE MERCY ON YOUR REPOSITORY! AAAAAGGGHHH!'
   ],
   clogged: [
     'HURK! I swallowed 5 errors and now my dust bag is completely full.',

@@ -284,4 +284,56 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
     }
     assert.strictEqual(didAttemptEdit, false, 'Must be a complete no-op on code modification for low confidence');
   });
+
+  // Test 15: Warning diagnostic ingestion eligibility
+  it('15. should allow Warning diagnostics with safe syntax artifacts to be ingested', () => {
+    const uri = mock.Uri.file('/test/app.ts');
+    const doc = mock.createMockDocument(['const x = 1;;'], uri);
+    const diag = new mock.Diagnostic(
+      new mock.Range(0, 12, 0, 13),
+      "Unnecessary semicolon.",
+      mock.DiagnosticSeverity.Warning
+    );
+
+    const parseResult = analyzeDiagnosticSpan(diag as any, doc as any);
+    assert.strictEqual(parseResult.confidence, 'high', 'Warning with redundant semicolon should be high confidence');
+  });
+
+  // Test 16: Apocalyptic strobe effect
+  it('16. should trigger apocalyptic screen strobe without throwing and clean up', () => {
+    const decManager = new DecorationManager();
+    const mockEditor = {
+      document: mock.createMockDocument(['const x = 1;']) as any,
+      visibleRanges: [new mock.Range(0, 0, 1, 0)],
+      setDecorations: () => {}
+    } as any;
+
+    assert.doesNotThrow(() => {
+      decManager.triggerApocalypseEffect(mockEditor, 0, 50);
+      decManager.clear();
+      decManager.dispose();
+    });
+  });
+
+  // Test 17: Angry roast on typing while cleaning
+  it('17. should generate furious roasts when user types while vacuum is cleaning', async () => {
+    const roastService = new RoastService();
+    const roast = await roastService.getRoast({ situation: 'typed_while_cleaning' });
+    assert.ok(roast, 'Roast should be generated');
+    assert.match(roast, /(TYPE|KEYBOARD|VACUUM|NOM|CLEAN)/i, 'Should be an angry typing roast');
+  });
+
+  // Test 18: Random unclog cycle
+  it('18. should support spontaneous unclogging from clogged state', () => {
+    const store = new StateStore(false, 'normal', true);
+    for (let i = 0; i < 5; i++) {
+      store.incrementBag();
+    }
+    assert.strictEqual(store.isClogged(), true);
+
+    // Spontaneous unclog call
+    store.unclog();
+    assert.strictEqual(store.isClogged(), false);
+    assert.strictEqual(store.getBagCount(), 0);
+  });
 });
