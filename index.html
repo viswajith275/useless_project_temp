@@ -1,1 +1,1969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#120e0c" />
+  <meta name="description" content="Dusty the Malicious Chool: A bad-tempered Malayalam desktop broom extension for VS Code that sweeps syntax errors, sabotages clean code, and roasts you in Manglish." />
+  <title>Dusty the Malicious Chool: The Malayalam Pairing Broom for VS Code</title>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
+:root {
+  --bg: #120e0c;
+  --surface: #1a1411;
+  --surface-raised: #231b17;
+  --surface-overlay: #2d231e;
+  --line: rgba(247, 239, 228, 0.12);
+  --line-strong: rgba(247, 239, 228, 0.22);
+  --ink: #f7efe4;
+  --ink-muted: #bdaea2;
+  --ink-faint: #7a6e65;
+  --accent-straw: #f39c12;
+  --accent-straw-dim: rgba(243, 156, 18, 0.15);
+  --accent-twine: #d35400;
+  --accent-twine-dim: rgba(211, 84, 0, 0.18);
+  --accent-rage: #e74c3c;
+  --accent-rage-dim: rgba(231, 76, 60, 0.16);
+  --accent-mischief: #8e44ad;
+  --accent-mischief-dim: rgba(142, 68, 173, 0.18);
+  --accent-murram: #c29b70;
+  --accent-murram-dark: #6e472a;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --elevation: 0 18px 40px rgba(0, 0, 0, 0.45);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  color: var(--ink);
+  background-color: var(--bg);
+  font-family: "Space Grotesk", -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.55;
+  overflow-x: hidden;
+  transition: background-color 0.35s ease;
+}
+
+/* Subtle organic grain overlay, not a grid */
+.grain {
+  position: fixed; inset: 0; pointer-events: none; opacity: 0.04; z-index: 99;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: none; background: none; }
+
+:focus-visible {
+  outline: 2px solid var(--accent-straw);
+  outline-offset: 3px;
+}
+
+/* Header */
+.site-header {
+  position: sticky; top: 0; z-index: 40;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 5vw;
+  background: rgba(18, 14, 12, 0.88);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-icon {
+  width: 34px; height: 34px; border-radius: var(--radius-sm);
+  background: var(--surface-raised); border: 1px solid var(--line-strong);
+  display: grid; place-items: center;
+}
+.brand-icon svg { width: 22px; height: 22px; fill: var(--accent-straw); }
+.brand-text strong {
+  display: block; font-size: 14px; letter-spacing: 0.08em; font-weight: 700;
+}
+.brand-text span {
+  display: block; font-size: 11px; color: var(--ink-muted); font-family: "DM Mono", monospace;
+}
+.nav-links { display: flex; gap: 24px; font-size: 13px; font-weight: 500; }
+.nav-links a { color: var(--ink-muted); transition: color 0.15s; }
+.nav-links a:hover { color: var(--ink); }
+.header-actions { display: flex; align-items: center; gap: 10px; }
+.btn-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 44px; min-height: 44px; padding: 0 14px; gap: 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line-strong);
+  background: var(--surface-raised);
+  font-family: "DM Mono", monospace; font-size: 12px;
+  cursor: pointer; transition: background 0.15s, border-color 0.15s;
+}
+.btn-icon:hover {
+  background: var(--surface-overlay);
+  border-color: var(--accent-straw);
+}
+.sound-indicator {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #2ecc71;
+}
+.sound-indicator.muted { background: var(--ink-faint); }
+
+.container {
+  width: min(1200px, 90vw);
+  margin: 0 auto;
+}
+
+/* Hero Section */
+.hero {
+  padding: 64px 0 80px;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 48px;
+  align-items: center;
+}
+.kicker {
+  display: inline-block;
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-twine);
+  margin-bottom: 12px;
+}
+.hero h1 {
+  font-size: clamp(40px, 5.2vw, 68px);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+.hero h1 span.straw { color: var(--accent-straw); }
+.hero h1 span.rage { color: var(--accent-rage); }
+.hero-lead {
+  font-size: 17px;
+  color: var(--ink-muted);
+  line-height: 1.65;
+  max-width: 560px;
+  margin-bottom: 32px;
+}
+.hero-cta { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 40px; }
+.btn-primary {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 48px; padding: 0 24px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-straw);
+  color: #140e0a;
+  font-weight: 700; font-size: 14px;
+  box-shadow: 0 8px 20px rgba(243, 156, 18, 0.25);
+  cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(243, 156, 18, 0.35);
+}
+.btn-secondary {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 48px; padding: 0 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 600; font-size: 14px;
+  cursor: pointer; transition: background 0.15s, border-color 0.15s;
+}
+.btn-secondary:hover {
+  background: var(--surface-raised);
+  border-color: var(--accent-straw);
+}
+
+/* Genuine Technical Specs Row */
+.spec-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+}
+.spec-item dt {
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.spec-item dd {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* Dusty Character Stage */
+.stage-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--elevation);
+  overflow: hidden;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+.stage-card[data-state="idle"] { border-color: rgba(194, 155, 112, 0.4); }
+.stage-card[data-state="hunting"] { border-color: rgba(243, 156, 18, 0.6); background: rgba(243, 156, 18, 0.04); }
+.stage-card[data-state="eating"] { border-color: rgba(231, 76, 60, 0.7); background: rgba(231, 76, 60, 0.05); }
+.stage-card[data-state="hunger"] { border-color: rgba(211, 84, 0, 0.75); background: rgba(211, 84, 0, 0.06); }
+.stage-card[data-state="mischief"] { border-color: rgba(142, 68, 173, 0.75); background: rgba(142, 68, 173, 0.06); }
+.stage-card[data-state="clogged"] { border-color: rgba(142, 68, 173, 0.85); }
+.stage-card[data-state="crashout"] { border-color: rgba(231, 76, 60, 0.95); background: rgba(231, 76, 60, 0.12); }
+
+.stage-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 24px;
+}
+.status-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px; border-radius: var(--radius-sm);
+  background: var(--surface-raised); border: 1px solid var(--line);
+  font-family: "DM Mono", monospace; font-size: 11px;
+}
+.status-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent-straw);
+}
+.stage-canvas-area {
+  position: relative;
+  height: 280px;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 50% 50%, var(--surface-raised) 0%, var(--surface) 80%);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+/* Pixel-styled SVG Chool & Murram Representation */
+.visual-assembly {
+  position: relative;
+  width: 260px;
+  height: 220px;
+}
+.visual-murram {
+  position: absolute;
+  right: 10px; bottom: 15px;
+  width: 110px; height: 95px;
+  border-radius: 8px 8px 24px 24px;
+  border: 3px solid var(--accent-murram);
+  border-top-width: 6px;
+  background: repeating-linear-gradient(135deg, #6e472a 0 4px, #8d5c36 5px 8px);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 8px;
+  box-shadow: inset 0 -8px 0 rgba(0,0,0,0.3);
+}
+.visual-murram-label {
+  font-size: 11px; font-weight: 700; color: #f7dfbe;
+  text-align: center;
+}
+.visual-murram-count {
+  font-family: "DM Mono", monospace; font-size: 10px;
+  color: #caa07b; text-align: center;
+}
+.crumbs-tray {
+  position: absolute; inset: 12px 10px auto;
+  height: 40px; display: flex; flex-wrap: wrap; gap: 6px;
+}
+.crumb-item {
+  width: 14px; height: 14px; border-radius: 3px;
+  background: var(--accent-straw); color: #22140a;
+  font-family: "DM Mono", monospace; font-size: 11px; font-weight: 700;
+  display: grid; place-items: center;
+  opacity: 0; transform: scale(0.5);
+  transition: opacity 0.2s, transform 0.2s;
+}
+.crumb-item.active { opacity: 1; transform: scale(1); }
+
+.visual-chool {
+  position: absolute;
+  left: 20px; bottom: 20px;
+  width: 100px; height: 180px;
+  transform-origin: 50% 90%;
+  transition: transform 0.25s ease;
+}
+.visual-chool.sweep-anim {
+  animation: choolSweep 0.45s ease-in-out infinite alternate;
+}
+.visual-chool.tantrum-anim {
+  animation: choolTantrum 0.12s linear infinite alternate;
+}
+@keyframes choolSweep {
+  from { transform: rotate(-8deg) translateY(0); }
+  to { transform: rotate(12deg) translateY(-6px); }
+}
+@keyframes choolTantrum {
+  from { transform: rotate(-14deg) translateX(-4px); }
+  to { transform: rotate(14deg) translateX(4px); }
+}
+
+.chool-handle {
+  position: absolute; top: 0; left: 44px;
+  width: 14px; height: 100px;
+  border-radius: 7px;
+  background: linear-gradient(90deg, #5c341e, #8f5330 45%, #5c341e);
+  border: 1px solid #422515;
+}
+.chool-eyes {
+  position: absolute; top: 60px; left: 34px;
+  display: flex; gap: 8px; z-index: 5;
+}
+.chool-eye {
+  width: 14px; height: 16px; border-radius: 50%;
+  background: #fff8eb; border: 2px solid #22150f;
+  position: relative;
+}
+.chool-eye::after {
+  content: ""; position: absolute;
+  top: 4px; left: 3px; width: 5px; height: 7px;
+  border-radius: 50%; background: #22150f;
+}
+.stage-card[data-state="hunger"] .chool-eye::after {
+  top: 2px; left: 2px; background: var(--accent-twine);
+}
+.stage-card[data-state="crashout"] .chool-eye::after {
+  background: var(--accent-rage); transform: scale(1.2);
+}
+.chool-bristles {
+  position: absolute; bottom: 0; left: 16px;
+  width: 70px; height: 75px;
+  display: flex; align-items: flex-end; justify-content: center; gap: 3px;
+}
+.chool-bristle-strand {
+  width: 7px; height: 68px; border-radius: 2px 2px 5px 5px;
+  background: linear-gradient(#b88746, #6b3e1f);
+}
+.chool-bristle-strand:nth-child(even) { height: 60px; background: linear-gradient(#cf9d58, #7a4723); }
+.chool-bristle-strand:nth-child(3n) { height: 72px; }
+
+/* Speech Bubble */
+.speech-container {
+  background: var(--surface-raised);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  min-height: 72px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.speech-role {
+  font-family: "DM Mono", monospace; font-size: 10px;
+  color: var(--accent-straw); text-transform: uppercase;
+  margin-bottom: 4px; letter-spacing: 0.08em;
+}
+.speech-text {
+  font-size: 14px; line-height: 1.45; font-weight: 500;
+  color: var(--ink);
+}
+
+/* Section Common */
+.section {
+  padding: 96px 0;
+  border-top: 1px solid var(--line);
+}
+.section-title-wrap {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 24px;
+  align-items: baseline;
+  margin-bottom: 48px;
+}
+.section-index {
+  font-family: "DM Mono", monospace;
+  font-size: 13px;
+  color: var(--ink-faint);
+}
+.section-title-wrap h2 {
+  font-size: clamp(28px, 3.8vw, 44px);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  font-weight: 700;
+}
+.section-desc {
+  font-size: 16px; color: var(--ink-muted);
+  max-width: 640px; margin-top: 12px; line-height: 1.6;
+}
+
+/* Architecture & Safety Gate Grid */
+.arch-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.arch-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 28px;
+  display: flex; flex-direction: column;
+}
+.arch-card-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 16px;
+}
+.arch-card-kicker {
+  font-family: "DM Mono", monospace; font-size: 11px;
+  color: var(--accent-twine); text-transform: uppercase;
+}
+.arch-card-code {
+  font-family: "DM Mono", monospace; font-size: 11px;
+  color: var(--ink-faint);
+}
+.arch-card h3 {
+  font-size: 20px; font-weight: 700; margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+.arch-card p {
+  font-size: 14px; color: var(--ink-muted); line-height: 1.6;
+  margin-bottom: 20px; flex-grow: 1;
+}
+.arch-metric {
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.arch-metric span {
+  font-family: "DM Mono", monospace; font-size: 11px; color: var(--ink-faint);
+}
+.arch-metric strong {
+  font-family: "DM Mono", monospace; font-size: 13px; color: var(--accent-straw);
+}
+
+/* Interactive Simulator Section */
+.simulator-layout {
+  display: grid;
+  grid-template-columns: 1.35fr 0.65fr;
+  gap: 24px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--elevation);
+}
+
+/* Authentic VS Code Editor Simulation */
+.vscode-editor-frame {
+  display: flex; flex-direction: column;
+  background: #141211;
+  border-right: 1px solid var(--line);
+  min-height: 460px;
+}
+.vscode-tab-bar {
+  display: flex; align-items: center;
+  background: #181513;
+  border-bottom: 1px solid var(--line);
+  height: 38px;
+}
+.vscode-tab {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 100%; padding: 0 16px;
+  background: #141211;
+  border-right: 1px solid var(--line);
+  border-top: 2px solid var(--accent-straw);
+  font-family: "DM Mono", monospace; font-size: 12px; color: var(--ink);
+}
+.vscode-tab-fileicon {
+  width: 12px; height: 12px; border-radius: 2px;
+  background: #3178c6; display: inline-block;
+}
+.vscode-breadcrumbs {
+  padding: 8px 16px;
+  background: #161311;
+  border-bottom: 1px solid var(--line);
+  font-family: "DM Mono", monospace; font-size: 11px; color: var(--ink-faint);
+}
+.vscode-code-canvas {
+  flex-grow: 1; padding: 18px 0;
+  font-family: "DM Mono", monospace; font-size: 13px; line-height: 1.85;
+}
+.code-row {
+  display: flex; align-items: center;
+  padding: 0 16px; min-height: 26px;
+}
+.code-row.target-line {
+  background: rgba(243, 156, 18, 0.08);
+}
+.code-row.deleted-line {
+  background: rgba(231, 76, 60, 0.12);
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+.code-gutter {
+  width: 50px; flex-shrink: 0; display: flex; align-items: center; gap: 6px;
+  color: var(--ink-faint); user-select: none;
+}
+.gutter-icon {
+  width: 14px; height: 14px; display: inline-block;
+}
+.code-lens-row {
+  padding: 0 16px 0 66px;
+  font-size: 11px; color: #8e7a6d;
+}
+.codelens-action {
+  color: var(--accent-straw); cursor: pointer; text-decoration: underline;
+  margin-right: 8px;
+}
+.code-content { flex-grow: 1; white-space: pre; }
+.syn-kw { color: #f07178; }
+.syn-fn { color: #82aaff; }
+.syn-str { color: #c3e88d; }
+.syn-punct { color: #d6deeb; }
+.error-token-inline {
+  color: var(--accent-rage);
+  text-decoration: underline wavy var(--accent-rage) 2px;
+}
+.vscode-status-bar {
+  height: 28px; background: #0e0b0a;
+  border-top: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 14px;
+  font-family: "DM Mono", monospace; font-size: 11px; color: var(--ink-muted);
+}
+.status-bar-left { display: flex; align-items: center; gap: 14px; }
+.status-bar-right { display: flex; align-items: center; gap: 12px; color: var(--ink-faint); }
+
+/* Simulator Control Panel */
+.simulator-sidebar {
+  padding: 24px;
+  display: flex; flex-direction: column; gap: 20px;
+  background: var(--surface);
+}
+.sim-metric-box {
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+}
+.sim-metric-label {
+  display: flex; justify-content: space-between;
+  font-family: "DM Mono", monospace; font-size: 11px;
+  margin-bottom: 8px;
+}
+.sim-metric-bar {
+  height: 8px; border-radius: 4px;
+  background: #100c0a; overflow: hidden;
+}
+.sim-metric-bar-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--accent-straw), var(--accent-rage));
+  transition: width 0.25s ease;
+}
+.sim-controls-grid {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.sim-btn {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; border-radius: var(--radius-sm);
+  border: 1px solid var(--line-strong);
+  background: var(--surface-raised);
+  font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: background 0.15s, border-color 0.15s;
+}
+.sim-btn:hover {
+  background: var(--surface-overlay);
+  border-color: var(--accent-straw);
+}
+.sim-btn.danger {
+  border-color: rgba(231, 76, 60, 0.4);
+  color: #ff8b82;
+}
+.sim-btn.danger:hover {
+  background: var(--accent-rage-dim);
+  border-color: var(--accent-rage);
+}
+.sim-btn-shortcut {
+  font-family: "DM Mono", monospace; font-size: 10px;
+  color: var(--ink-faint);
+}
+.sim-log-box {
+  flex-grow: 1; min-height: 120px;
+  background: #110d0b;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  font-family: "DM Mono", monospace; font-size: 11px;
+  color: var(--ink-muted);
+  display: flex; flex-direction: column; gap: 6px;
+  overflow-y: auto;
+}
+.sim-log-entry { display: flex; gap: 8px; }
+.sim-log-time { color: var(--ink-faint); }
+
+/* Cinema Roasts Section */
+.roast-showcase {
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.roast-info h3 {
+  font-size: 32px; letter-spacing: -0.03em; margin-bottom: 16px;
+}
+.roast-info p {
+  color: var(--ink-muted); line-height: 1.6; margin-bottom: 24px;
+}
+.roast-pipeline-steps {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.pipeline-step {
+  display: flex; align-items: center; gap: 12px;
+  font-family: "DM Mono", monospace; font-size: 12px;
+  color: var(--ink-muted);
+}
+.step-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent-twine);
+}
+
+.roast-box-display {
+  background: #110d0b;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.roast-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: "DM Mono", monospace; font-size: 11px;
+  color: var(--ink-faint);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 10px;
+}
+.roast-quote {
+  font-size: 17px; line-height: 1.5; font-style: italic;
+  color: var(--ink); min-height: 80px;
+}
+.roast-source {
+  font-family: "DM Mono", monospace; font-size: 11px;
+  color: var(--accent-straw);
+}
+.roast-button-bar {
+  display: flex; gap: 12px;
+}
+
+/* Emotional States Selector */
+.states-dashboard {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 28px;
+}
+.states-nav {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.state-selector-btn {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-family: "DM Mono", monospace; font-size: 12px;
+  cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s;
+  color: var(--ink-muted);
+}
+.state-selector-btn:hover, .state-selector-btn.active {
+  background: var(--surface-raised);
+  border-color: var(--accent-straw);
+  color: var(--ink);
+}
+.state-selector-btn[data-state="crashout"].active {
+  border-color: var(--accent-rage);
+  color: #ff8b82;
+}
+.state-indicator-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--ink-faint);
+}
+.state-selector-btn.active .state-indicator-dot {
+  background: var(--accent-straw);
+}
+.state-selector-btn[data-state="crashout"].active .state-indicator-dot {
+  background: var(--accent-rage);
+}
+
+.state-detail-panel {
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  padding: 32px;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.state-detail-title {
+  font-size: 26px; font-weight: 700; margin-bottom: 12px;
+}
+.state-detail-desc {
+  font-size: 15px; color: var(--ink-muted); line-height: 1.65;
+  margin-bottom: 24px;
+}
+.state-traits {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+  border-top: 1px solid var(--line); padding-top: 20px;
+}
+.trait-card dt {
+  font-family: "DM Mono", monospace; font-size: 11px; color: var(--ink-faint);
+  margin-bottom: 4px;
+}
+.trait-card dd {
+  font-size: 14px; font-weight: 600; color: var(--ink);
+}
+
+/* Commands & Settings Table */
+.data-table-container {
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  overflow-x: auto;
+}
+.data-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 13px; text-align: left;
+}
+.data-table th {
+  background: var(--surface-raised);
+  padding: 14px 20px;
+  font-family: "DM Mono", monospace; font-size: 11px;
+  color: var(--ink-muted); text-transform: uppercase;
+  border-bottom: 1px solid var(--line);
+}
+.data-table td {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-muted);
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: rgba(255, 255, 255, 0.02); }
+.data-table code {
+  font-family: "DM Mono", monospace; font-size: 12px;
+  color: var(--accent-straw);
+}
+.data-table kbd {
+  font-family: "DM Mono", monospace; font-size: 11px;
+  padding: 3px 6px; border-radius: 4px;
+  background: var(--surface-raised); border: 1px solid var(--line-strong);
+  color: var(--ink);
+}
+
+/* Install & Packaging Section */
+.install-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: 24px;
+}
+.install-code-card {
+  background: #110d0b;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.install-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 18px; background: #16120f;
+  border-bottom: 1px solid var(--line);
+  font-family: "DM Mono", monospace; font-size: 11px; color: var(--ink-faint);
+}
+.install-code-card pre {
+  padding: 20px;
+  font-family: "DM Mono", monospace; font-size: 13px; line-height: 1.8;
+  color: #dfdbd5; overflow-x: auto;
+}
+.install-code-card pre .comment { color: var(--ink-faint); }
+.install-code-card pre .cmd { color: var(--accent-straw); font-weight: 500; }
+.install-checklist {
+  display: flex; flex-direction: column; gap: 12px;
+}
+.install-checklist-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 18px;
+}
+.install-checklist-card dt {
+  font-weight: 700; font-size: 14px; margin-bottom: 4px;
+  color: var(--ink);
+}
+.install-checklist-card dd {
+  font-size: 12px; color: var(--ink-muted); line-height: 1.5;
+}
+
+/* Footer */
+.site-footer {
+  padding: 48px 0;
+  border-top: 1px solid var(--line);
+  background: #0d0a08;
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+.footer-row {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 20px;
+}
+.footer-brand { display: flex; align-items: center; gap: 10px; color: var(--ink); }
+.footer-links { display: flex; gap: 20px; font-family: "DM Mono", monospace; font-size: 12px; }
+.footer-links a:hover { color: var(--ink); }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(40px);
+  opacity: 0; pointer-events: none;
+  background: var(--ink); color: #140e0a;
+  padding: 10px 18px; border-radius: var(--radius-sm);
+  font-family: "DM Mono", monospace; font-size: 12px; font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  z-index: 100;
+}
+.toast.active {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .hero { grid-template-columns: 1fr; padding: 40px 0 60px; }
+  .arch-grid { grid-template-columns: 1fr; }
+  .simulator-layout { grid-template-columns: 1fr; }
+  .vscode-editor-frame { border-right: none; border-bottom: 1px solid var(--line); }
+  .roast-showcase { grid-template-columns: 1fr; }
+  .states-dashboard { grid-template-columns: 1fr; }
+  .install-grid { grid-template-columns: 1fr; }
+  .spec-strip { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+}
+
+@media (max-width: 640px) {
+  .site-header { padding: 14px 4vw; }
+  .nav-links { display: none; }
+  .section-title-wrap { grid-template-columns: 1fr; gap: 8px; }
+  .spec-strip { grid-template-columns: 1fr; }
+  .data-table th, .data-table td { padding: 10px 12px; }
+  .footer-row { flex-direction: column; align-items: flex-start; }
+}
+  </style>
+</head>
+<body>
+  <div class="grain"></div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Dusty homepage">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24"><path d="M19.36 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.64-4.96zM13 13v4h-2v-4H8l4-4 4 4h-3z"/></svg>
+      </div>
+      <div class="brand-text">
+        <strong>DUSTY</strong>
+        <span>the malicious chool</span>
+      </div>
+    </a>
+    <nav class="nav-links">
+      <a href="#architecture">Architecture</a>
+      <a href="#simulator">Simulator</a>
+      <a href="#roasts">Roast Engine</a>
+      <a href="#states">States</a>
+      <a href="#commands">Commands</a>
+      <a href="#install">Install</a>
+    </nav>
+    <div class="header-actions">
+      <button class="btn-icon" id="audioToggleBtn" title="Toggle procedural Web Audio">
+        <span class="sound-indicator" id="audioLed"></span>
+        <span id="audioLabel">AUDIO: ON</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero Section -->
+    <section class="container hero">
+      <div class="hero-left">
+        <span class="kicker">VS Code Extension / Single-Responsibility Engine</span>
+        <h1>The bad-tempered <span class="straw">chool</span> pairing partner for <span class="rage">VS Code</span>.</h1>
+        <p class="hero-lead">
+          Dusty lives in your secondary sidebar, classifies syntax diagnostics, sweeps up to five disposable crumbs into his bamboo dustpan (MURRAM), and sabotages your clean code if you write bug-free functions for too long.
+        </p>
+
+        <div class="hero-cta">
+          <a class="btn-primary" href="#install">Package & Install VSIX</a>
+          <a class="btn-secondary" href="#simulator">Try Interactive Simulator</a>
+        </div>
+
+        <dl class="spec-strip">
+          <div class="spec-item">
+            <dt>Dustpan Capacity</dt>
+            <dd>5 Crumbs</dd>
+          </div>
+          <div class="spec-item">
+            <dt>Hunger Interval</dt>
+            <dd>35s - 45s</dd>
+          </div>
+          <div class="spec-item">
+            <dt>Roast Catalog</dt>
+            <dd>60+ Quotes</dd>
+          </div>
+          <div class="spec-item">
+            <dt>Dependencies</dt>
+            <dd>0 Runtime npm</dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- Character Stage -->
+      <div class="stage-card" id="heroStage" data-state="idle">
+        <div class="stage-header">
+          <div class="status-pill">
+            <span class="status-dot" id="stageStatusDot"></span>
+            <span id="stageStateText">STATE: IDLE</span>
+          </div>
+          <div class="status-pill">
+            <span id="stageMurramStatus">MURRAM: 0 / 5</span>
+          </div>
+        </div>
+
+        <div class="stage-canvas-area">
+          <div class="visual-assembly">
+            <!-- Murram (Dustpan) -->
+            <div class="visual-murram" id="visualMurram">
+              <div class="crumbs-tray">
+                <span class="crumb-item" id="crumb0">;</span>
+                <span class="crumb-item" id="crumb1">}</span>
+                <span class="crumb-item" id="crumb2">)</span>
+                <span class="crumb-item" id="crumb3">]</span>
+                <span class="crumb-item" id="crumb4">;</span>
+              </div>
+              <div class="visual-murram-label">മുറം</div>
+              <div class="visual-murram-count" id="murramCountText">0 / 5 CRUMBS</div>
+            </div>
+
+            <!-- Chool (Broom) -->
+            <div class="visual-chool" id="visualChool">
+              <div class="chool-handle"></div>
+              <div class="chool-eyes">
+                <div class="chool-eye"></div>
+                <div class="chool-eye"></div>
+              </div>
+              <div class="chool-bristles">
+                <div class="chool-bristle-strand"></div>
+                <div class="chool-bristle-strand"></div>
+                <div class="chool-bristle-strand"></div>
+                <div class="chool-bristle-strand"></div>
+                <div class="chool-bristle-strand"></div>
+                <div class="chool-bristle-strand"></div>
+                <div class="chool-bristle-strand"></div>
+                <div class="chool-bristle-strand"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="speech-container">
+          <div class="speech-role">DUSTY DIAGNOSTIC MONITOR</div>
+          <div class="speech-text" id="heroSpeechText">Njan nokki kondirikkunnu. Code ezhuthikko. Thett undakki nokk.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture & Safety Gate -->
+    <section class="section" id="architecture">
+      <div class="container">
+        <div class="section-title-wrap">
+          <span class="section-index">01</span>
+          <div>
+            <h2>Core Architecture & Non-Negotiable Safety Gates</h2>
+            <p class="section-desc">
+              Dusty is designed to be deeply annoying, but he is never allowed to corrupt your working code. All mutations pass through an atomic verification gate.
+            </p>
+          </div>
+        </div>
+
+        <div class="arch-grid">
+          <article class="arch-card">
+            <div class="arch-card-header">
+              <span class="arch-card-kicker">INGESTION GATE</span>
+              <span class="arch-card-code">src/diagnosticParser.ts</span>
+            </div>
+            <h3>Safe Disposable Token Filter</h3>
+            <p>
+              Auto-ingestion is strictly restricted to single-line syntax artifacts of 5 characters or fewer (stray duplicate semicolons, unclosed brackets). Dusty never auto-deletes statements, imports, declarations, or comments.
+            </p>
+            <div class="arch-metric">
+              <span>Max Ingest Token Span</span>
+              <strong>&le; 5 Characters</strong>
+            </div>
+          </article>
+
+          <article class="arch-card">
+            <div class="arch-card-header">
+              <span class="arch-card-kicker">BUFFER DISCIPLINE</span>
+              <span class="arch-card-code">src/stateStore.ts</span>
+            </div>
+            <h3>Kerala Murram Clog Capacity</h3>
+            <p>
+              Every ingested syntax crumb lands in Dusty's woven bamboo dustpan. At exactly five crumbs, the chool chokes, the gutter broom freezes, and auto-sweeping locks until cleared via command or metabolic auto-digestion.
+            </p>
+            <div class="arch-metric">
+              <span>Dustpan Capacity Ceiling</span>
+              <strong>5 Crumbs Max</strong>
+            </div>
+          </article>
+
+          <article class="arch-card">
+            <div class="arch-card-header">
+              <span class="arch-card-kicker">SABOTAGE TIMING</span>
+              <span class="arch-card-code">src/chaosEngine.ts</span>
+            </div>
+            <h3>Hunger & Mischief Engine</h3>
+            <p>
+              Writing flawless code carries penalties. If no syntax errors occur within 35 to 45 seconds, Dusty warns of hunger. If another 11 to 21 seconds pass with no errors, Dusty mischievously purges a working line to feed.
+            </p>
+            <div class="arch-metric">
+              <span>Warning Interval</span>
+              <strong>35s &plusmn; 5s</strong>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Simulator -->
+    <section class="section" id="simulator">
+      <div class="container">
+        <div class="section-title-wrap">
+          <span class="section-index">02</span>
+          <div>
+            <h2>Interactive VS Code Simulator</h2>
+            <p class="section-desc">
+              Experience the full workflow directly in the browser: real gutter animations, CodeLens actions, procedural Web Audio effects, and state transitions.
+            </p>
+          </div>
+        </div>
+
+        <div class="simulator-layout">
+          <!-- Editor Frame -->
+          <div class="vscode-editor-frame">
+            <div class="vscode-tab-bar">
+              <div class="vscode-tab">
+                <span class="vscode-tab-fileicon"></span>
+                <span>service.ts</span>
+                <span id="tabDirtyDot" style="display:none; color:var(--accent-straw);">●</span>
+              </div>
+            </div>
+            <div class="vscode-breadcrumbs">
+              src &gt; services &gt; service.ts &gt; processOrder
+            </div>
+
+            <div class="vscode-code-canvas">
+              <div class="code-row">
+                <div class="code-gutter"><span>01</span></div>
+                <div class="code-content"><span class="syn-kw">export</span> <span class="syn-kw">function</span> <span class="syn-fn">processOrder</span><span class="syn-punct">(</span>id<span class="syn-punct">:</span> <span class="syn-fn">string</span><span class="syn-punct">)</span> <span class="syn-punct">{</span></div>
+              </div>
+              <div class="code-row" id="codeRow2">
+                <div class="code-gutter"><span>02</span></div>
+                <div class="code-content">&nbsp;&nbsp;<span class="syn-kw">const</span> status <span class="syn-punct">=</span> <span class="syn-str">"verified"</span><span class="syn-punct">;</span></div>
+              </div>
+              <div class="code-row" id="codeRow3">
+                <div class="code-gutter"><span>03</span></div>
+                <div class="code-content">&nbsp;&nbsp;<span class="syn-kw">return</span> <span class="syn-punct">{</span> id<span class="syn-punct">,</span> status <span class="syn-punct">};</span></div>
+              </div>
+
+              <!-- CodeLens Row -->
+              <div class="code-lens-row" id="codeLensRow" style="display:none;">
+                <span class="codelens-action" id="codeLensFeedBtn">[Feed Dusty]</span>
+                <span class="codelens-action" id="codeLensExplainBtn">[Dusty: Explain]</span>
+              </div>
+
+              <!-- Diagnostic Target Line -->
+              <div class="code-row" id="codeRow4">
+                <div class="code-gutter">
+                  <span id="gutterGlow" class="gutter-icon"></span>
+                  <span>04</span>
+                </div>
+                <div class="code-content" id="targetLineContent">&nbsp;&nbsp;<span class="syn-fn">console</span><span class="syn-punct">.</span><span class="syn-fn">log</span><span class="syn-punct">(</span>status<span class="syn-punct">);</span></div>
+              </div>
+
+              <div class="code-row">
+                <div class="code-gutter"><span>05</span></div>
+                <div class="code-content"><span class="syn-punct">}</span></div>
+              </div>
+            </div>
+
+            <div class="vscode-status-bar">
+              <div class="status-bar-left">
+                <span id="statusBarIndicator">Dusty: IDLE (0/5)</span>
+                <span id="statusBarDiagCount">0 problems</span>
+              </div>
+              <div class="status-bar-right">
+                <span>TypeScript</span>
+                <span>UTF-8</span>
+                <span>Ln 4, Col 22</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Simulator Controls -->
+          <div class="simulator-sidebar">
+            <div class="sim-metric-box">
+              <div class="sim-metric-label">
+                <span>RAGE METER</span>
+                <strong id="simRageText">0%</strong>
+              </div>
+              <div class="sim-metric-bar">
+                <div class="sim-metric-bar-fill" id="simRageFill"></div>
+              </div>
+            </div>
+
+            <div class="sim-controls-grid">
+              <button class="sim-btn" id="simAddErrorBtn">
+                <span>Drop Syntax Typo</span>
+                <span class="sim-btn-shortcut">diagnostic</span>
+              </button>
+              <button class="sim-btn" id="simSweepBtn">
+                <span>Trigger Ingestion</span>
+                <span class="sim-btn-shortcut">feed</span>
+              </button>
+              <button class="sim-btn" id="simHungerBtn">
+                <span>Simulate Clean Code Hunger</span>
+                <span class="sim-btn-shortcut">35s tick</span>
+              </button>
+              <button class="sim-btn" id="simMischiefBtn">
+                <span>Simulate Line Deletion</span>
+                <span class="sim-btn-shortcut">16s tick</span>
+              </button>
+              <button class="sim-btn" id="simUnclogBtn">
+                <span>Unclog Dustpan</span>
+                <span class="sim-btn-shortcut">Cmd+Alt+U C</span>
+              </button>
+              <button class="sim-btn danger" id="simCrashoutBtn">
+                <span>Trigger Rangannan Crashout</span>
+                <span class="sim-btn-shortcut">purge</span>
+              </button>
+            </div>
+
+            <div class="sim-log-box" id="simLogBox" aria-live="polite">
+              <div class="sim-log-entry">
+                <span class="sim-log-time">00:00</span>
+                <span>Dusty vacuum engine initialized.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3-Tier Roast Engine & Ollama 3B -->
+    <section class="section" id="roasts">
+      <div class="container">
+        <div class="section-title-wrap">
+          <span class="section-index">03</span>
+          <div>
+            <h2>3-Tier Roast Engine & Local LLM Integration</h2>
+            <p class="section-desc">
+              Dusty delivers brutal commentary referencing legendary Malayalam cinema memes. An LRU buffer ensures recent roasts never loop consecutively.
+            </p>
+          </div>
+        </div>
+
+        <div class="roast-showcase">
+          <div class="roast-info">
+            <span class="kicker">OLLAMA 3B PIPELINE</span>
+            <h3>No Cloud. Zero External Calls. Pure Manglish Trauma.</h3>
+            <p>
+              When local Ollama is active, Dusty queries lightweight models (llama3.2:3b, phi3:mini, qwen2.5:3b) at 0.7 temperature with context from your active file name, language, and error token. If offline, he falls back instantly to his built-in cinema vault.
+            </p>
+
+            <div class="roast-pipeline-steps">
+              <div class="pipeline-step"><span class="step-dot"></span> Tier 1: Local Ollama (llama3.2:3b contextual generation)</div>
+              <div class="pipeline-step"><span class="step-dot"></span> Tier 2: 60+ Malayalam cinema meme bank (Aavesham, Sandesham, Premalu)</div>
+              <div class="pipeline-step"><span class="step-dot"></span> Tier 3: LRU de-duplication buffer (no consecutive repeats)</div>
+            </div>
+          </div>
+
+          <div class="roast-box-display">
+            <div class="roast-meta">
+              <span id="roastCategoryTag">SITUATION: BRUTAL PERSONAL</span>
+              <span>LRU ACTIVE</span>
+            </div>
+            <div class="roast-quote" id="roastQuoteDisplay">
+              "Sandesham cinemayile Shankaradi chodicha pole chodikuva: Thanikku vere paniyille hey? Antharaashtra thalathil ulla ghadanaparamaya tholviyaanu thaan!"
+            </div>
+            <div class="roast-source" id="roastSourceDisplay">
+              Source: Sandesham (1991)
+            </div>
+            <div class="roast-button-bar">
+              <button class="btn-primary" id="triggerNextRoastBtn">Get Another Roast</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Emotional States -->
+    <section class="section" id="states">
+      <div class="container">
+        <div class="section-title-wrap">
+          <span class="section-index">04</span>
+          <div>
+            <h2>The Seven Emotional States</h2>
+            <p class="section-desc">
+              Dusty's mood shifts based on diagnostic arrival rates, dustpan weight, and developer typing speed.
+            </p>
+          </div>
+        </div>
+
+        <div class="states-dashboard">
+          <div class="states-nav" id="statesNav">
+            <button class="state-selector-btn active" data-state="idle">
+              <span>IDLE</span>
+              <span class="state-indicator-dot"></span>
+            </button>
+            <button class="state-selector-btn" data-state="hunting">
+              <span>HUNTING</span>
+              <span class="state-indicator-dot"></span>
+            </button>
+            <button class="state-selector-btn" data-state="eating">
+              <span>EATING</span>
+              <span class="state-indicator-dot"></span>
+            </button>
+            <button class="state-selector-btn" data-state="hunger">
+              <span>HUNGER</span>
+              <span class="state-indicator-dot"></span>
+            </button>
+            <button class="state-selector-btn" data-state="mischief">
+              <span>MISCHIEF</span>
+              <span class="state-indicator-dot"></span>
+            </button>
+            <button class="state-selector-btn" data-state="clogged">
+              <span>CLOGGED</span>
+              <span class="state-indicator-dot"></span>
+            </button>
+            <button class="state-selector-btn" data-state="crashout">
+              <span>CRASHOUT</span>
+              <span class="state-indicator-dot"></span>
+            </button>
+          </div>
+
+          <div class="state-detail-panel" id="stateDetailPanel">
+            <div>
+              <div class="kicker" id="stateDetailKicker">STATE 1 OF 7</div>
+              <h3 class="state-detail-title" id="stateDetailTitle">IDLE: Suspiciously Calm</h3>
+              <p class="state-detail-desc" id="stateDetailDesc">
+                Dusty rests in your secondary sidebar watching the active text editor. Bristles are still, rage meter cools down over time, and procedural humming is minimal.
+              </p>
+            </div>
+            <dl class="state-traits">
+              <div class="trait-card">
+                <dt>Audio Synthesis</dt>
+                <dd id="stateAudioTrait">Subtle 60Hz idle hum</dd>
+              </div>
+              <div class="trait-card">
+                <dt>Gutter Behavior</dt>
+                <dd id="stateGutterTrait">Hidden</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Commands & Settings Matrix -->
+    <section class="section" id="commands">
+      <div class="container">
+        <div class="section-title-wrap">
+          <span class="section-index">05</span>
+          <div>
+            <h2>Commands & Configuration Reference</h2>
+            <p class="section-desc">
+              All interactions route through native VS Code commands. Customize debounce delays, Ollama endpoints, and hunger mechanics via user settings.
+            </p>
+          </div>
+        </div>
+
+        <div class="data-table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>VS Code Command</th>
+                <th>Title</th>
+                <th>Shortcut</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>dusty.toggleEngine</code></td>
+                <td>Toggle Engine</td>
+                <td><kbd>Palette</kbd></td>
+                <td>Pause or resume the background diagnostic scanner and hunger timers.</td>
+              </tr>
+              <tr>
+                <td><code>dusty.unclog</code></td>
+                <td>Unclog Dust Bag</td>
+                <td><kbd>Cmd+Alt+U C</kbd></td>
+                <td>Empty the 5-crumb dustpan buffer when clogged. Available in command palette.</td>
+              </tr>
+              <tr>
+                <td><code>dusty.feedManually</code></td>
+                <td>Feed Dusty</td>
+                <td><kbd>CodeLens</kbd></td>
+                <td>Force Dusty to immediately sweep the active diagnostic under cursor.</td>
+              </tr>
+              <tr>
+                <td><code>dusty.insultMe</code></td>
+                <td>Roast Me</td>
+                <td><kbd>Palette</kbd></td>
+                <td>Generate an on-demand personal Manglish roast targeting current file code.</td>
+              </tr>
+              <tr>
+                <td><code>dusty.muteAudio</code></td>
+                <td>Toggle Audio</td>
+                <td><kbd>Sidebar</kbd></td>
+                <td>Mute procedural Web Audio synthesis and custom sound file playback.</td>
+              </tr>
+              <tr>
+                <td><code>dusty.crashout</code></td>
+                <td>Trigger Crashout</td>
+                <td><kbd>Palette</kbd></td>
+                <td>Engage Rangannan mode, cycle theme to Chaos Apocalypse, and purge lines.</td>
+              </tr>
+              <tr>
+                <td><code>dusty.explainDiagnostic</code></td>
+                <td>Dusty: Explain</td>
+                <td><kbd>CodeLens</kbd></td>
+                <td>Deliver a sarcastic Malayalam explanation of the active compiler error.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Installation & Packaging -->
+    <section class="section" id="install">
+      <div class="container">
+        <div class="section-title-wrap">
+          <span class="section-index">06</span>
+          <div>
+            <h2>Installation & Build Workflow</h2>
+            <p class="section-desc">
+              Built with zero unnecessary dependencies. Compiles with raw TypeScript compiler (tsc) and packages to standard VSIX.
+            </p>
+          </div>
+        </div>
+
+        <div class="install-grid">
+          <div class="install-code-card">
+            <div class="install-header">
+              <span>BASH / TERMINAL</span>
+              <button class="btn-icon" id="copyInstallCommandsBtn">COPY COMMANDS</button>
+            </div>
+            <pre><code id="installScriptText"><span class="comment"># 1. Clone repository</span>
+<span class="cmd">git clone</span> https://github.com/viswajith275/useless_project_temp.git
+<span class="cmd">cd</span> useless_project_temp
+
+<span class="comment"># 2. Compile TypeScript & package VSIX</span>
+<span class="cmd">npm install</span>
+<span class="cmd">npm run compile</span>
+<span class="cmd">npm run package</span>
+
+<span class="comment"># 3. Install VSIX into VS Code</span>
+<span class="cmd">code --install-extension</span> dusty-vacuum-0.1.0.vsix
+
+<span class="comment"># 4. (Optional) Run local Ollama 3B model for custom roasts</span>
+<span class="cmd">ollama run</span> llama3.2:3b</code></pre>
+          </div>
+
+          <div class="install-checklist">
+            <div class="install-checklist-card">
+              <dt>VS Code Engine 1.85+</dt>
+              <dd>Uses WebviewViewProvider and native Diagnostic collection APIs.</dd>
+            </div>
+            <div class="install-checklist-card">
+              <dt>Node.js & npm</dt>
+              <dd>Required solely to compile TypeScript into CommonJS output.</dd>
+            </div>
+            <div class="install-checklist-card">
+              <dt>Local Ollama (Optional)</dt>
+              <dd>Zero cloud footprint. Runs offline with graceful built-in fallback.</dd>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <div class="footer-brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24"><path d="M19.36 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.64-4.96zM13 13v4h-2v-4H8l4-4 4 4h-3z"/></svg>
+        </div>
+        <span>Dusty the Malicious Chool: TinkerHub Useless Projects Entry</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/viswajith275/useless_project_temp" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+        <a href="#top">Back to Top</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toastMessage" role="status" aria-live="polite">Copied to clipboard.</div>
+
+  <!-- Procedural Web Audio Engine & Interactive Simulation Script -->
+  <script>
+    /* Zero-asset Procedural Web Audio Synthesizer */
+    class ProceduralAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.muted = false;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) this.ctx = new AudioContextClass();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume().catch(() => {});
+        }
+      }
+      setMuted(m) { this.muted = !!m; }
+      playSweep() {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+        const ctx = this.ctx;
+        const size = Math.floor(ctx.sampleRate * 0.2);
+        const buf = ctx.createBuffer(1, size, ctx.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < size; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / size);
+        const src = ctx.createBufferSource();
+        src.buffer = buf;
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(800, ctx.currentTime);
+        filter.frequency.exponentialRampToValueAtTime(320, ctx.currentTime + 0.18);
+        filter.Q.value = 2.5;
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+        src.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        src.start();
+      }
+      playSuction() {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+        const ctx = this.ctx;
+        const size = ctx.sampleRate * 0.35;
+        const buf = ctx.createBuffer(1, size, ctx.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < size; i++) d[i] = Math.random() * 2 - 1;
+        const src = ctx.createBufferSource();
+        src.buffer = buf;
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(300, ctx.currentTime);
+        filter.frequency.exponentialRampToValueAtTime(1300, ctx.currentTime + 0.3);
+        filter.Q.value = 3;
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0.01, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+        src.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        src.start();
+      }
+      playError() {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+        const ctx = this.ctx;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(240, ctx.currentTime);
+        osc.frequency.setValueAtTime(190, ctx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.22);
+      }
+      playClog() {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+        const ctx = this.ctx;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(90, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(30, ctx.currentTime + 0.25);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.25);
+      }
+      playVictory() {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+        const ctx = this.ctx;
+        [523.25, 659.25, 783.99].forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          const t = ctx.currentTime + idx * 0.07;
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, t);
+          gain.gain.setValueAtTime(0.12, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.15);
+        });
+      }
+      playHunger() {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+        const ctx = this.ctx;
+        const t0 = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const filter = ctx.createBiquadFilter();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(90, t0);
+        osc.frequency.exponentialRampToValueAtTime(45, t0 + 0.35);
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(320, t0);
+        gain.gain.setValueAtTime(0.001, t0);
+        gain.gain.linearRampToValueAtTime(0.35, t0 + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.35);
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(t0);
+        osc.stop(t0 + 0.36);
+      }
+      playMischief() {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+        const ctx = this.ctx;
+        const t0 = ctx.currentTime;
+        [520, 440, 370, 640].forEach((freq, idx) => {
+          const t = t0 + idx * 0.07;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(freq, t);
+          osc.frequency.exponentialRampToValueAtTime(freq * 0.75, t + 0.06);
+          gain.gain.setValueAtTime(0.001, t);
+          gain.gain.linearRampToValueAtTime(0.18, t + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.065);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.07);
+        });
+      }
+      playCrashout() {
+        if (this.muted) return;
+        this.init();
+        if (!this.ctx) return;
+        const ctx = this.ctx;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        osc.frequency.setValueAtTime(587, ctx.currentTime + 0.15);
+        osc.frequency.setValueAtTime(880, ctx.currentTime + 0.3);
+        osc.frequency.setValueAtTime(587, ctx.currentTime + 0.45);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.6);
+      }
+    }
+
+    const audio = new ProceduralAudioEngine();
+
+    /* Real Cinema Roasts Catalog from src/roastService.ts */
+    const ROAST_CATALOG = [
+      {
+        quote: "Sandesham cinemayile Shankaradi chodicha pole chodikuva: Thanikku vere paniyille hey? Antharaashtra thalathil ulla ghadanaparamaya tholviyaanu thaan!",
+        source: "Sandesham (1991)",
+        situation: "BRUTAL PERSONAL"
+      },
+      {
+        quote: "Aavesham Rangannan: Mone... enikku vishakkumbol njan nallavan alla! Udan oru semicolon thettiche tharanam, allenkil ninte main component swaha!",
+        source: "Aavesham (2024)",
+        situation: "HUNGER"
+      },
+      {
+        quote: "Eda mone... Rangannan paranja pole: Ini oru compromise-um illa! Ninte vrithiketta code thinnu thinnu choolinte eerkili vare odinju! DELETING RANDOM CODE OUT OF REVENGE!",
+        source: "Aavesham (2024)",
+        situation: "CRASHOUT"
+      },
+      {
+        quote: "Sachin bro... immathiri code kandal Reenu poyittu ninte company-ile security polum ninne mind cheyyilla! Just kidding da!",
+        source: "Premalu (2024)",
+        situation: "BRUTAL PERSONAL"
+      },
+      {
+        quote: "Bramayugam Potti: Ee manayil syntax thettukal illengil, njan ninte working lines bali kodukkum! Ninte PR reject aavunnathilum valiya durantham njan ippo undakkum!",
+        source: "Bramayugam (2024)",
+        situation: "HUNGER"
+      },
+      {
+        quote: "CID Moosa-yile Moolamkuzhiyil Sahadevan polum ithilum nalla logic undakkum! Git blame nokki veettukaar polum ninne thallipparayum!",
+        source: "CID Moosa (2003)",
+        situation: "BRUTAL PERSONAL"
+      },
+      {
+        quote: "KALLATHARAM COMPLETE! Paranjathu nee kettilla, athukond ninte super working line njan chavachu thinnu kalanju! NOM NOM NOM!",
+        source: "Mischief Engine",
+        situation: "MISCHIEF"
+      },
+      {
+        quote: "Kumbalangi Shammi smiling with a knife: Nee oru pottiya syntax polum tharathe enne pattikkuvaano? Ninte working logic njan choolukond thoothu kalayaan povuvaa!",
+        source: "Kumbalangi Nights (2019)",
+        situation: "HUNGER"
+      },
+      {
+        quote: "Lucifer Stephen Nedumpally: Njan ninte thalavarakku meethulla choolaanu! File motham adichu parathi!",
+        source: "Lucifer (2019)",
+        situation: "CRASHOUT"
+      },
+      {
+        quote: "Pavanayi shavamaayi... ninte function shavamaayi! Kalippu 100%! Choolum compilero-um orumichu panimudakki!",
+        source: "Nadodikkattu (1987)",
+        situation: "CRASHOUT"
+      }
+    ];
+
+    let roastIndex = 0;
+    const roastQuoteDisplay = document.getElementById('roastQuoteDisplay');
+    const roastSourceDisplay = document.getElementById('roastSourceDisplay');
+    const roastCategoryTag = document.getElementById('roastCategoryTag');
+
+    function displayNextRoast() {
+      roastIndex = (roastIndex + 1) % ROAST_CATALOG.length;
+      const r = ROAST_CATALOG[roastIndex];
+      roastQuoteDisplay.textContent = `"${r.quote}"`;
+      roastSourceDisplay.textContent = `Source: ${r.source}`;
+      roastCategoryTag.textContent = `SITUATION: ${r.situation}`;
+      audio.playSuction();
+    }
+    document.getElementById('triggerNextRoastBtn').addEventListener('click', displayNextRoast);
+
+    /* State Details Data Matrix */
+    const STATE_CONFIGS = {
+      idle: {
+        index: "STATE 1 OF 7",
+        title: "IDLE: Suspiciously Calm",
+        desc: "Dusty rests in your secondary sidebar watching the active text editor. Bristles are still, rage meter cools down over time, and procedural humming is minimal.",
+        audio: "Subtle 60Hz idle hum",
+        gutter: "Hidden"
+      },
+      hunting: {
+        index: "STATE 2 OF 7",
+        title: "HUNTING: Target Acquired",
+        desc: "Diagnostic parser identifies a single-line disposable syntax error. The animated chool targets the line number in the gutter while evaluating confidence score.",
+        audio: "Pitch-gliding suction sweep",
+        gutter: "Gutter broom marker animated"
+      },
+      eating: {
+        index: "STATE 3 OF 7",
+        title: "EATING: Digesting Syntax Crumb",
+        desc: "Atomic edit replaces the syntax artifact. The crumb is placed inside Dusty's dustpan (മുറം) while dissolution overlays flash on the affected span.",
+        audio: "Triple-burst gulp / gobble",
+        gutter: "Sweep dissolution pulse"
+      },
+      hunger: {
+        index: "STATE 4 OF 7",
+        title: "HUNGER: Clean Code Penalty Active",
+        desc: "Developer has written error-free code for 35 to 45 seconds. Dusty raises a threatening Malayalam cinema warning requesting a syntax mistake immediately.",
+        audio: "Low rumbling 90Hz growl",
+        gutter: "Impatience tremor shake"
+      },
+      mischief: {
+        index: "STATE 5 OF 7",
+        title: "MISCHIEF: Code Line Sabotaged",
+        desc: "Following the hunger warning, 11 to 21 seconds elapsed without bugs. Dusty mischievously purges a working code line to sate his appetite.",
+        audio: "4-note cartoon cackle blip",
+        gutter: "Line-snatch gutter bite"
+      },
+      clogged: {
+        index: "STATE 6 OF 7",
+        title: "CLOGGED: Dustpan Capacity Reached",
+        desc: "Exactly five syntax crumbs have filled the dustpan. Auto-sweeping is completely disabled until manual unclog via Cmd+Alt+U C or automatic 12s metabolic digestion.",
+        audio: "Damped 90Hz clog thunk",
+        gutter: "Locked with choking indicator"
+      },
+      crashout: {
+        index: "STATE 7 OF 7",
+        title: "CRASHOUT: Rangannan Rage Apocalypse",
+        desc: "Rage reached 100%. Dusty switches the editor theme to Chaos Apocalypse, plays a warning siren, and randomly deletes lines of code out of vengeance.",
+        audio: "Dissonant oscillating siren alarm",
+        gutter: "Emergency red alert strobe"
+      }
+    };
+
+    /* Simulation Variables */
+    let simState = 'idle';
+    let simCrumbs = 0;
+    let simRage = 0;
+    let simHasError = false;
+
+    const heroStage = document.getElementById('heroStage');
+    const stageStateText = document.getElementById('stageStateText');
+    const stageMurramStatus = document.getElementById('stageMurramStatus');
+    const murramCountText = document.getElementById('murramCountText');
+    const heroSpeechText = document.getElementById('heroSpeechText');
+    const visualChool = document.getElementById('visualChool');
+    const visualMurram = document.getElementById('visualMurram');
+
+    const simRageText = document.getElementById('simRageText');
+    const simRageFill = document.getElementById('simRageFill');
+    const codeLensRow = document.getElementById('codeLensRow');
+    const targetLineContent = document.getElementById('targetLineContent');
+    const gutterGlow = document.getElementById('gutterGlow');
+    const statusBarIndicator = document.getElementById('statusBarIndicator');
+    const statusBarDiagCount = document.getElementById('statusBarDiagCount');
+    const tabDirtyDot = document.getElementById('tabDirtyDot');
+    const simLogBox = document.getElementById('simLogBox');
+
+    function logSim(msg) {
+      const d = new Date();
+      const time = d.toTimeString().split(' ')[0].substring(3);
+      const row = document.createElement('div');
+      row.className = 'sim-log-entry';
+      row.innerHTML = `<span class="sim-log-time">${time}</span><span>${msg}</span>`;
+      simLogBox.prepend(row);
+      while (simLogBox.children.length > 8) simLogBox.lastElementChild.remove();
+    }
+
+    function setSimulationState(st) {
+      simState = st;
+      heroStage.setAttribute('data-state', st);
+      stageStateText.textContent = `STATE: ${st.toUpperCase()}`;
+      statusBarIndicator.textContent = `Dusty: ${st.toUpperCase()} (${simCrumbs}/5)`;
+
+      visualChool.classList.remove('sweep-anim', 'tantrum-anim');
+      if (st === 'hunting' || st === 'eating') visualChool.classList.add('sweep-anim');
+      if (st === 'crashout' || st === 'mischief') visualChool.classList.add('tantrum-anim');
+
+      // Update States Dashboard selection
+      document.querySelectorAll('.state-selector-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.state === st);
+      });
+      const cfg = STATE_CONFIGS[st];
+      if (cfg) {
+        document.getElementById('stateDetailKicker').textContent = cfg.index;
+        document.getElementById('stateDetailTitle').textContent = cfg.title;
+        document.getElementById('stateDetailDesc').textContent = cfg.desc;
+        document.getElementById('stateAudioTrait').textContent = cfg.audio;
+        document.getElementById('stateGutterTrait').textContent = cfg.gutter;
+      }
+    }
+
+    function updateCrumbsVisual() {
+      stageMurramStatus.textContent = `MURRAM: ${simCrumbs} / 5`;
+      murramCountText.textContent = `${simCrumbs} / 5 CRUMBS`;
+      for (let i = 0; i < 5; i++) {
+        const item = document.getElementById(`crumb${i}`);
+        if (item) {
+          if (i < simCrumbs) item.classList.add('active');
+          else item.classList.remove('active');
+        }
+      }
+    }
+
+    function updateRageVisual() {
+      simRageFill.style.width = `${simRage}%`;
+      simRageText.textContent = `${simRage}%`;
+    }
+
+    // Add Error
+    document.getElementById('simAddErrorBtn').addEventListener('click', () => {
+      if (simState === 'clogged') {
+        heroSpeechText.textContent = "മുറം full aanu! Adhyam Cmd+Alt+U C adichu vrithiyaakku!";
+        audio.playClog();
+        logSim("Dusty rejected error: Murram buffer is clogged.");
+        return;
+      }
+      simHasError = true;
+      targetLineContent.innerHTML = '&nbsp;&nbsp;<span class="syn-fn">console</span><span class="syn-punct">.</span><span class="syn-fn">log</span><span class="syn-punct">(</span>status<span class="error-token-inline">;;</span>';
+      codeLensRow.style.display = 'block';
+      gutterGlow.textContent = '🧹';
+      statusBarDiagCount.textContent = '1 problem';
+      tabDirtyDot.style.display = 'inline';
+      simRage = Math.min(100, simRage + 15);
+      updateRageVisual();
+
+      setSimulationState('hunting');
+      audio.playError();
+      heroSpeechText.textContent = "Aha! Double semicolon duplicate token kandupidichu. Feed Dusty click cheyy!";
+      logSim("Diagnostic targeted: Stray duplicate semicolon (line 4).");
+    });
+
+    // Feed / Sweep
+    function executeSweep() {
+      if (!simHasError) {
+        heroSpeechText.textContent = "Error onnum illallo. Enikku pani thaa mone!";
+        logSim("Sweep aborted: No active diagnostic target.");
+        return;
+      }
+      if (simCrumbs >= 5) {
+        setSimulationState('clogged');
+        audio.playClog();
+        heroSpeechText.textContent = "Chool choking! 5 crumbs aayi. Cmd+Alt+U C adichu vrithiyaakku!";
+        logSim("Clog threshold reached: Ingestion suspended.");
+        return;
+      }
+
+      simHasError = false;
+      targetLineContent.innerHTML = '&nbsp;&nbsp;<span class="syn-fn">console</span><span class="syn-punct">.</span><span class="syn-fn">log</span><span class="syn-punct">(</span>status<span class="syn-punct">);</span>';
+      codeLensRow.style.display = 'none';
+      gutterGlow.textContent = '';
+      statusBarDiagCount.textContent = '0 problems';
+      tabDirtyDot.style.display = 'none';
+
+      simCrumbs++;
+      updateCrumbsVisual();
+
+      setSimulationState('eating');
+      audio.playSweep();
+
+      if (simCrumbs >= 5) {
+        setSimulationState('clogged');
+        audio.playClog();
+        heroSpeechText.textContent = "മുറം full! Chool chokes dramatically. Run dusty.unclog.";
+        logSim("Atomic edit done. Dustpan full (5/5). State: CLOGGED.");
+      } else {
+        heroSpeechText.textContent = "Token ingested cleanly. Ini adutha thettu evide?";
+        logSim(`Atomic edit: line 4 swept. Dustpan now ${simCrumbs}/5.`);
+        setTimeout(() => {
+          if (simState === 'eating') setSimulationState('idle');
+        }, 1500);
+      }
+    }
+
+    document.getElementById('simSweepBtn').addEventListener('click', executeSweep);
+    document.getElementById('codeLensFeedBtn').addEventListener('click', executeSweep);
+    document.getElementById('codeLensExplainBtn').addEventListener('click', () => {
+      audio.playSuction();
+      heroSpeechText.textContent = "Sarcastic Explain: Randu semicolon ezhuthiyaal code double fast aakumo? Poyi valla puttum thinnu!";
+      logSim("CodeLens action: Dusty: Explain executed.");
+    });
+
+    // Hunger
+    document.getElementById('simHungerBtn').addEventListener('click', () => {
+      setSimulationState('hunger');
+      audio.playHunger();
+      simRage = Math.min(100, simRage + 20);
+      updateRageVisual();
+      heroSpeechText.textContent = "Vishakkunnu! 35 seconds aayi thettu cheythittilla. Valla syntax error-um thaada!";
+      logSim("Hunger warning triggered: 35s clean code penalty.");
+    });
+
+    // Mischief
+    document.getElementById('simMischiefBtn').addEventListener('click', () => {
+      setSimulationState('mischief');
+      audio.playMischief();
+      const row2 = document.getElementById('codeRow2');
+      row2.classList.add('deleted-line');
+      heroSpeechText.textContent = "KALLATHARAM COMPLETE! Ninte working line 2 njan thinnu kalanju! NOM NOM NOM!";
+      logSim("Mischief sabotage: Working line 2 deleted out of hunger!");
+      setTimeout(() => {
+        row2.classList.remove('deleted-line');
+      }, 3500);
+    });
+
+    // Unclog
+    document.getElementById('simUnclogBtn').addEventListener('click', () => {
+      simCrumbs = 0;
+      updateCrumbsVisual();
+      setSimulationState('idle');
+      audio.playVictory();
+      heroSpeechText.textContent = "*BELCH* Muram vrithiyaayi! Choolu veendum thettu vetaan thudangi.";
+      logSim("Dustpan emptied via dusty.unclog. State: IDLE.");
+    });
+
+    // Crashout
+    document.getElementById('simCrashoutBtn').addEventListener('click', () => {
+      simRage = 100;
+      updateRageVisual();
+      setSimulationState('crashout');
+      audio.playCrashout();
+      heroSpeechText.textContent = "RANGANNAN CRASHOUT! Ini oru compromise-um illa! Codebase purge in progress!";
+      logSim("EMERGENCY: Rangannan crashout engaged. Theme changed to Chaos Apocalypse.");
+    });
+
+    // States Switcher
+    document.querySelectorAll('.state-selector-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.state;
+        setSimulationState(target);
+        if (target === 'crashout') audio.playCrashout();
+        else if (target === 'hunger') audio.playHunger();
+        else if (target === 'mischief') audio.playMischief();
+        else if (target === 'clogged') audio.playClog();
+        else audio.playSweep();
+      });
+    });
+
+    // Audio Toggle
+    const audioToggleBtn = document.getElementById('audioToggleBtn');
+    const audioLed = document.getElementById('audioLed');
+    const audioLabel = document.getElementById('audioLabel');
+    audioToggleBtn.addEventListener('click', () => {
+      audio.setMuted(!audio.muted);
+      if (audio.muted) {
+        audioLed.classList.add('muted');
+        audioLabel.textContent = 'AUDIO: MUTED';
+        showToast('Audio muted');
+      } else {
+        audioLed.classList.remove('muted');
+        audioLabel.textContent = 'AUDIO: ON';
+        audio.playSweep();
+        showToast('Web Audio synthesis enabled');
+      }
+    });
+
+    // Toast & Copy Clipboard
+    const toast = document.getElementById('toastMessage');
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('active');
+      setTimeout(() => toast.classList.remove('active'), 2200);
+    }
+
+    document.getElementById('copyInstallCommandsBtn').addEventListener('click', async () => {
+      const txt = document.getElementById('installScriptText').innerText;
+      try {
+        await navigator.clipboard.writeText(txt);
+        showToast('Installation commands copied to clipboard');
+      } catch {
+        showToast('Clipboard access denied. Please select text manually.');
+      }
+    });
+
+    // Initialize
+    updateCrumbsVisual();
+    updateRageVisual();
+    setSimulationState('idle');
+  </script>
+</body>
+</html>
