@@ -386,6 +386,96 @@ button { font: inherit; color: inherit; border: none; background: none; }
   max-width: 640px; margin-top: 12px; line-height: 1.6;
 }
 
+/* Concept: Problem & Solution Section */
+.concept-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 28px;
+  align-items: stretch;
+}
+.concept-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+}
+.concept-card.problem {
+  border-color: rgba(247, 239, 228, 0.15);
+  background: linear-gradient(175deg, #181311 0%, #120e0c 100%);
+}
+.concept-card.solution {
+  border-color: rgba(243, 156, 18, 0.35);
+  background: linear-gradient(175deg, #221812 0%, #17110e 100%);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+.concept-tag {
+  display: inline-block;
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.concept-card.problem .concept-tag {
+  color: var(--ink-faint);
+}
+.concept-card.solution .concept-tag {
+  color: var(--accent-straw);
+}
+.concept-card h3 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+.concept-card p {
+  color: var(--ink-muted);
+  font-size: 15px;
+  line-height: 1.65;
+  margin-bottom: 18px;
+}
+.concept-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: auto;
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+}
+.concept-list-item {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 10px;
+  align-items: baseline;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+.concept-list-item strong {
+  color: var(--ink);
+}
+.concept-marker {
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+}
+.concept-card.problem .concept-marker { color: var(--ink-faint); }
+.concept-card.solution .concept-marker { color: var(--accent-straw); }
+.concept-quote-callout {
+  margin-top: 22px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, 0.28);
+  border-left: 3px solid var(--accent-straw);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
 /* Architecture & Safety Gate Grid */
 .arch-grid {
   display: grid;
@@ -825,6 +915,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
 /* Responsive */
 @media (max-width: 960px) {
   .hero { grid-template-columns: 1fr; padding: 40px 0 60px; }
+  .concept-grid { grid-template-columns: 1fr; }
   .arch-grid { grid-template-columns: 1fr; }
   .simulator-layout { grid-template-columns: 1fr; }
   .vscode-editor-frame { border-right: none; border-bottom: 1px solid var(--line); }
@@ -859,6 +950,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
       </div>
     </a>
     <nav class="nav-links">
+      <a href="#concept">Concept</a>
       <a href="#architecture">Architecture</a>
       <a href="#simulator">Simulator</a>
       <a href="#roasts">Roast Engine</a>
@@ -932,7 +1024,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
                 <span class="crumb-item" id="crumb3">]</span>
                 <span class="crumb-item" id="crumb4">;</span>
               </div>
-              <div class="visual-murram-label">മുറം</div>
+              <div class="visual-murram-label">MURRAM</div>
               <div class="visual-murram-count" id="murramCountText">0 / 5 CRUMBS</div>
             </div>
 
@@ -964,11 +1056,90 @@ button { font: inherit; color: inherit; border: none; background: none; }
       </div>
     </section>
 
+    <!-- Concept: Problem & Solution Section -->
+    <section class="section" id="concept">
+      <div class="container">
+        <div class="section-title-wrap">
+          <span class="section-index">01</span>
+          <div>
+            <h2>The Premise: The Problem and Solution</h2>
+            <p class="section-desc">
+              Why build a helpful extension when you can build an irritable coconut broom that enforces keyboard discipline through pure emotional distress?
+            </p>
+          </div>
+        </div>
+
+        <div class="concept-grid">
+          <!-- The Problem (that doesn't exist) -->
+          <article class="concept-card problem">
+            <span class="concept-tag">THE PROBLEM (THAT DOESN'T EXIST)</span>
+            <h3>The Dangerous Epidemic of "Peace of Mind" and "Excessive Productivity"</h3>
+            <p>
+              Modern developers are suffering from an alarming plague of calm. Tools like Copilot and ChatGPT apologize for minor hallucinations, silently auto-complete missing syntax, and gently nudge code forward without any emotional consequence.
+            </p>
+            <p>
+              This has stripped programming of the traditional, character-building trauma of being scolded by an irritable elder brandishing a household coconut broom. Stray duplicate semicolons, unclosed brackets, and abandoned functions linger in codebases without a virtual broom actively sweeping them into a dustpan and screaming at your incompetence.
+            </p>
+
+            <div class="concept-list">
+              <div class="concept-list-item">
+                <span class="concept-marker">[!]</span>
+                <span><strong>Overly Polite AI:</strong> Apologizing assistants rob developers of resilience.</span>
+              </div>
+              <div class="concept-list-item">
+                <span class="concept-marker">[!]</span>
+                <span><strong>Silent Correction:</strong> Syntax errors disappear with zero consequence or memory.</span>
+              </div>
+              <div class="concept-list-item">
+                <span class="concept-marker">[!]</span>
+                <span><strong>No Elder Energy:</strong> Zero household coconut brooms judging your typing habits.</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- The Solution (that nobody asked for) -->
+          <article class="concept-card solution">
+            <span class="concept-tag">THE SOLUTION (THAT NOBODY ASKED FOR)</span>
+            <h3>Dusty: A Native Pairing Broom with Severe Anger Management Issues</h3>
+            <p>
+              We built Dusty directly into the VS Code extension host. Instead of polite autocomplete, Dusty marches multi-frame pixelated bristles down your editor gutter, vacuums syntax artifacts into his bamboo dustpan (മുറം), and questions your career choices in unfiltered Manglish.
+            </p>
+            <p>
+              If you dare to type while he cleans, he aggressively deletes what you just typed to teach you keyboard discipline. If his dustpan reaches 5 crumbs, he chokes until you manually unclog him. And if his Rage Meter hits 100%, he enters Rangannan Crashout Mode, strobes your editor with an emergency apocalypse theme, and purges code lines out of sheer revenge.
+            </p>
+
+            <div class="concept-list">
+              <div class="concept-list-item">
+                <span class="concept-marker">[+]</span>
+                <span><strong>Keyboard Discipline:</strong> Typing while Dusty cleans deletes your fresh input.</span>
+              </div>
+              <div class="concept-list-item">
+                <span class="concept-marker">[+]</span>
+                <span><strong>Dustpan Choking:</strong> Exactly 5 crumbs lock the editor until unclogged.</span>
+              </div>
+              <div class="concept-list-item">
+                <span class="concept-marker">[+]</span>
+                <span><strong>Hunger Sabotage:</strong> 35s to 45s of bug-free code provokes a mischievous line deletion.</span>
+              </div>
+              <div class="concept-list-item">
+                <span class="concept-marker">[+]</span>
+                <span><strong>Rangannan Crashout:</strong> 100% rage unleashes siren alarms and revenge code purges.</span>
+              </div>
+            </div>
+
+            <div class="concept-quote-callout">
+              "Sandesham Shankaradi chodicha pole chodikuva: Thanikku vere paniyille hey? Poyi valla thattukadayum thudanguda!"
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <!-- Architecture & Safety Gate -->
     <section class="section" id="architecture">
       <div class="container">
         <div class="section-title-wrap">
-          <span class="section-index">01</span>
+          <span class="section-index">02</span>
           <div>
             <h2>Core Architecture & Non-Negotiable Safety Gates</h2>
             <p class="section-desc">
@@ -1030,7 +1201,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
     <section class="section" id="simulator">
       <div class="container">
         <div class="section-title-wrap">
-          <span class="section-index">02</span>
+          <span class="section-index">03</span>
           <div>
             <h2>Interactive VS Code Simulator</h2>
             <p class="section-desc">
@@ -1155,7 +1326,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
     <section class="section" id="roasts">
       <div class="container">
         <div class="section-title-wrap">
-          <span class="section-index">03</span>
+          <span class="section-index">04</span>
           <div>
             <h2>3-Tier Roast Engine & Local LLM Integration</h2>
             <p class="section-desc">
@@ -1202,7 +1373,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
     <section class="section" id="states">
       <div class="container">
         <div class="section-title-wrap">
-          <span class="section-index">04</span>
+          <span class="section-index">05</span>
           <div>
             <h2>The Seven Emotional States</h2>
             <p class="section-desc">
@@ -1270,7 +1441,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
     <section class="section" id="commands">
       <div class="container">
         <div class="section-title-wrap">
-          <span class="section-index">05</span>
+          <span class="section-index">06</span>
           <div>
             <h2>Commands & Configuration Reference</h2>
             <p class="section-desc">
@@ -1342,7 +1513,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
     <section class="section" id="install">
       <div class="container">
         <div class="section-title-wrap">
-          <span class="section-index">06</span>
+          <span class="section-index">07</span>
           <div>
             <h2>Installation & Build Workflow</h2>
             <p class="section-desc">
