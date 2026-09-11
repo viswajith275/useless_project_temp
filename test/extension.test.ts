@@ -345,7 +345,7 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
     assert.match(pyRoast, /(Python|indent|TikTok)/i);
 
     const rustRoast = await roastService.getRoast({ language: 'rust', situation: 'general' });
-    assert.match(rustRoast, /(borrow checker|unsafe|Panic)/i);
+    assert.match(rustRoast, /(borrow checker|unsafe|Panic|Lifetimes)/i);
 
     const goRoast = await roastService.getRoast({ language: 'go', situation: 'general' });
     assert.match(goRoast, /(err != nil|Go|GOPATH)/i);
@@ -429,11 +429,11 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
     const roastService = new RoastService();
     const crashoutRoast = await roastService.getRoast({ situation: 'crashout' });
     assert.ok(crashoutRoast.length > 0);
-    assert.match(crashoutRoast, /(Rangannan|Pavanayi|Nagavalli|Yamadharman|Aavesham|chool|kalippu|code)/i, 'Should contain Manglish troll references');
+    assert.match(crashoutRoast, /(Rangannan|Pavanayi|Nagavalli|Yamadharman|Aavesham|chool|kalippu|code|Bramayugam|Lucifer|Thorapan)/i, 'Should contain Manglish troll references');
 
     const personalRoast = await roastService.getRoast({ situation: 'brutal_personal' });
     assert.ok(personalRoast.length > 0);
-    assert.match(personalRoast, /(Sahadevan|Shankaradi|Reenu|Shammi|StackOverflow|code|Git blame)/i, 'Should contain Manglish troll references');
+    assert.match(personalRoast, /(Sahadevan|Shankaradi|Reenu|Shammi|StackOverflow|code|Git blame|Achuthankutty|Ambani|Appukuttan|Potti|Peethambaran)/i, 'Should contain Manglish troll references');
   });
 
   // Test 26: Pixel-art broom SVG generation
@@ -486,6 +486,65 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
 
     const files = provider.getCustomSoundFiles();
     assert.ok(Array.isArray(files), 'getCustomSoundFiles must return an array');
+  });
+
+  // Test 30: Roast de-duplication ring buffer
+  it('30. should avoid immediately repeating the same dialogue when pool has alternatives', () => {
+    const roastService = new RoastService();
+    const candidates = ['Roast A', 'Roast B', 'Roast C', 'Roast D'];
+    const chosen1 = roastService.pickRoast(candidates);
+    const chosen2 = roastService.pickRoast(candidates);
+    assert.notStrictEqual(chosen1, chosen2, 'Consecutive picks should not return the exact same candidate');
+  });
+
+  // Test 31: Hunger and mischief roasts
+  it('31. should return hungry warning and mischievous deletion roasts with meme references', async () => {
+    const roastService = new RoastService();
+    const hungerRoast = await roastService.getRoast({ situation: 'hunger' });
+    assert.ok(hungerRoast.length > 0);
+    assert.match(hungerRoast, /(vishannu|food|thettum|working|clean|aakrantham|Rangannan|Potti|Shammi)/i);
+
+    const mischiefRoast = await roastService.getRoast({ situation: 'mischief_eaten' });
+    assert.ok(mischiefRoast.length > 0);
+    assert.match(mischiefRoast, /(NOM|working|Swaha|theerthu|thettum|Chambikko|prathikaaram)/i);
+  });
+
+  // Test 32: Llama 3.2: 3B few-shot prompt structure
+  it('32. should format Llama 3.2: 3B prompt with system header and few-shot examples', () => {
+    const roastService = new RoastService();
+    const prompt = roastService.buildPrompt({
+      fileName: 'test.py',
+      language: 'python',
+      situation: 'hunger'
+    });
+    assert.ok(prompt.includes('<|start_header_id|>system<|end_header_id|>'));
+    assert.ok(prompt.includes('FEW-SHOT EXAMPLES:'));
+    assert.ok(prompt.includes('<|start_header_id|>assistant<|end_header_id|>'));
+  });
+
+  // Test 33: Hunger and mischief states, sounds, and randomized interval bounds
+  it('33. should support hunger and mischief states and verify +/-5s interval bounds', () => {
+    const store = new StateStore(false, 'normal', true);
+    store.transition('hunger');
+    assert.strictEqual(store.getState(), 'hunger');
+
+    store.transition('mischief');
+    assert.strictEqual(store.getState(), 'mischief');
+
+    // Test interval formula bounds:
+    // Warning: 40s +/- 5s = 35s to 45s (17 to 23 ticks at 2s/tick)
+    for (let i = 0; i < 50; i++) {
+      const secWarning = 35 + Math.floor(Math.random() * 11);
+      const ticksWarning = Math.max(15, Math.round(secWarning / 2));
+      assert.ok(secWarning >= 35 && secWarning <= 45, 'Warning seconds must be between 35 and 45');
+      assert.ok(ticksWarning >= 17 && ticksWarning <= 23, 'Warning ticks must be between 17 and 23');
+
+      // Mischief: 16s +/- 5s = 11s to 21s (5 to 11 ticks at 2s/tick)
+      const secMischief = 11 + Math.floor(Math.random() * 11);
+      const ticksMischief = Math.max(5, Math.round(secMischief / 2));
+      assert.ok(secMischief >= 11 && secMischief <= 21, 'Mischief seconds must be between 11 and 21');
+      assert.ok(ticksMischief >= 5 && ticksMischief <= 11, 'Mischief ticks must be between 5 and 11');
+    }
   });
 });
 

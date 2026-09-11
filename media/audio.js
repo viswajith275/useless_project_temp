@@ -164,6 +164,12 @@ class VacuumAudio {
         case 'tantrum':
           this.playTantrum(ctx);
           break;
+        case 'hunger':
+          this.playHunger(ctx);
+          break;
+        case 'mischief':
+          this.playMischief(ctx);
+          break;
         case 'idle':
           this.playIdleHum(ctx);
           break;
@@ -412,6 +418,75 @@ class VacuumAudio {
 
     osc.start();
     osc.stop(ctx.currentTime + 0.6);
+  }
+
+  /**
+   * Menacing hunger grumble followed by ominous two-tone warning chime
+   */
+  playHunger(ctx) {
+    const t0 = ctx.currentTime;
+    // 1. Low rumbling growl
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(90, t0);
+    osc.frequency.exponentialRampToValueAtTime(45, t0 + 0.35);
+
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(320, t0);
+
+    gain.gain.setValueAtTime(0.001, t0);
+    gain.gain.linearRampToValueAtTime(0.35, t0 + 0.05);
+    gain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.35);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(t0);
+    osc.stop(t0 + 0.36);
+
+    // 2. Ominous warning chime
+    const chime = ctx.createOscillator();
+    const chimeGain = ctx.createGain();
+    chime.type = 'triangle';
+    chime.frequency.setValueAtTime(330, t0 + 0.15);
+    chime.frequency.setValueAtTime(260, t0 + 0.28);
+
+    chimeGain.gain.setValueAtTime(0.001, t0 + 0.15);
+    chimeGain.gain.linearRampToValueAtTime(0.25, t0 + 0.18);
+    chimeGain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.45);
+
+    chime.connect(chimeGain);
+    chimeGain.connect(ctx.destination);
+    chime.start(t0 + 0.15);
+    chime.stop(t0 + 0.46);
+  }
+
+  /**
+   * Sneaky mischievous cartoon cackle: 4 staccato hopping blips with pitch bend
+   */
+  playMischief(ctx) {
+    const t0 = ctx.currentTime;
+    const notes = [520, 440, 370, 640];
+    notes.forEach((freq, idx) => {
+      const noteTime = t0 + idx * 0.07;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(freq, noteTime);
+      osc.frequency.exponentialRampToValueAtTime(freq * 0.75, noteTime + 0.06);
+
+      gain.gain.setValueAtTime(0.001, noteTime);
+      gain.gain.linearRampToValueAtTime(0.2, noteTime + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, noteTime + 0.065);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(noteTime);
+      osc.stop(noteTime + 0.07);
+    });
   }
 }
 

@@ -10,6 +10,8 @@ export type DustyState =
   | 'regurgitating'
   | 'graffiti'
   | 'hungerStrike'
+  | 'hunger'
+  | 'mischief'
   | 'tantrum'
   | 'crashout'
   | 'disabled';
@@ -24,6 +26,8 @@ export type SoundName =
   | 'clog'
   | 'victory'
   | 'tantrum'
+  | 'hunger'
+  | 'mischief'
   | 'idle'
   | 'gobble'
   | 'crashout'

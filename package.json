@@ -230,10 +230,15 @@
         },
         "dusty.ollamaTemperature": {
           "type": "number",
-          "default": 0.85,
+          "default": 0.7,
           "minimum": 0.1,
           "maximum": 1.5,
           "description": "Sampling temperature for Ollama roasts."
+        },
+        "dusty.hungerMischief": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allow Dusty to get hungry and mischievously delete clean code if no syntax errors are made for a prolonged period."
         }
       }
     },

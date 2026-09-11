@@ -23,6 +23,29 @@ export class ChaosEngine implements vscode.Disposable {
   private digestTicksRemaining = 0;
   private idleTicks = 0;
   private churnCount = 0;
+  private cleanCodeTicks = 0;
+  private hungerWarned = false;
+  private nextHungerWarningTicks = this.getRandomHungerWarningTicks();
+  private nextMischiefTicks = this.getRandomMischiefTicks();
+
+  private getRandomHungerWarningTicks(): number {
+    // 40s +/- 5s (35s to 45s) -> 17 to 23 ticks at 2s per tick
+    const sec = 35 + Math.floor(Math.random() * 11);
+    return Math.max(15, Math.round(sec / 2));
+  }
+
+  private getRandomMischiefTicks(): number {
+    // 16s +/- 5s (11s to 21s) -> 5 to 11 ticks at 2s per tick
+    const sec = 11 + Math.floor(Math.random() * 11);
+    return Math.max(5, Math.round(sec / 2));
+  }
+
+  private resetHungerTimers(): void {
+    this.cleanCodeTicks = 0;
+    this.hungerWarned = false;
+    this.nextHungerWarningTicks = this.getRandomHungerWarningTicks();
+    this.nextMischiefTicks = this.getRandomMischiefTicks();
+  }
 
   constructor(
     private readonly stateStore: StateStore,
@@ -86,7 +109,7 @@ export class ChaosEngine implements vscode.Disposable {
   /**
    * Deterministic metabolic engine:
    * Predictably digests clogs over calculated ticks, decrements rage when idle,
-   * and fires rage-baiting popups when Dusty has nothing to do.
+   * fires rage-baiting popups, and triggers hunger mischief when user writes clean code too long.
    */
   private startMetabolicEngine(): void {
     const runCycle = () => {
@@ -117,9 +140,39 @@ export class ChaosEngine implements vscode.Disposable {
 
               // 2. Give random popups of roasting while Dusty has no work to do (rage baiting)
               this.idleTicks++;
-              if (!this.stateStore.getActiveTarget() && this.idleTicks >= 5) { // ~10 seconds of idle
+              if (!this.stateStore.getActiveTarget() && this.idleTicks >= 6) { // ~12 seconds of idle
                 this.idleTicks = 0;
                 await this.triggerIdleRageBait();
+              }
+
+              // 3. Hunger / Mischief Engine:
+              // When user writes clean code without syntax errors for prolonged duration,
+              // Dusty gets hungry, warns the user, and if still no errors, deletes a line mischievously!
+              const editor = vscode.window.activeTextEditor;
+              const hasDiags = editor && !editor.document.isClosed && vscode.languages.getDiagnostics(editor.document.uri).some(
+                d => d.severity === vscode.DiagnosticSeverity.Error || d.severity === vscode.DiagnosticSeverity.Warning
+              );
+
+              if (hasDiags || this.stateStore.getActiveTarget()) {
+                this.resetHungerTimers();
+              } else if (editor && !editor.document.isClosed && (editor.document.uri.scheme === 'file' || editor.document.uri.scheme === 'untitled')) {
+                const config = vscode.workspace.getConfiguration('dusty');
+                const hungerEnabled = config.get<boolean>('hungerMischief', true);
+                if (hungerEnabled) {
+                  this.cleanCodeTicks++;
+
+                  // Phase 1: Threatening Warning at randomized 40s +/- 5s (35s to 45s)
+                  if (this.cleanCodeTicks >= this.nextHungerWarningTicks && !this.hungerWarned) {
+                    this.hungerWarned = true;
+                    this.cleanCodeTicks = 0; // reset ticks to measure subsequent mischief interval
+                    await this.triggerHungerWarning(editor);
+                  }
+                  // Phase 2: Mischievous Line Deletion at randomized 16s +/- 5s (11s to 21s after warning)
+                  else if (this.cleanCodeTicks >= this.nextMischiefTicks && this.hungerWarned) {
+                    this.resetHungerTimers();
+                    await this.executeHungerMischief(editor);
+                  }
+                }
               }
             } else {
               this.idleTicks = 0;
@@ -130,6 +183,110 @@ export class ChaosEngine implements vscode.Disposable {
       }, 2000);
     };
     runCycle();
+  }
+
+  private async triggerHungerWarning(editor: vscode.TextEditor): Promise<void> {
+    this.stateStore.transition('hunger');
+    this.viewProvider.playSound('hunger');
+    this.viewProvider.shake(3);
+
+    const roast = await this.roastService.getRoast({
+      situation: 'hunger',
+      fileName: editor.document.fileName,
+      language: editor.document.languageId
+    });
+    this.stateStore.setRoast(roast);
+
+    void vscode.window.showWarningMessage(
+      `😈 DUSTY (Bheeshani / Vishakkunnu!): "${roast}"\n\n(Chool vishannu valayunnu! Udan thettukal tharillel working code thinnu kalayum!)`
+    );
+  }
+
+  public async executeHungerMischief(editor: vscode.TextEditor): Promise<void> {
+    if (editor.document.isClosed || (editor.document.uri.scheme !== 'file' && editor.document.uri.scheme !== 'untitled')) {
+      return;
+    }
+
+    const lineCount = editor.document.lineCount;
+    if (lineCount <= 1) {
+      return;
+    }
+
+    // Pick a candidate non-empty code line (avoiding purely whitespace or solitary bracket)
+    let targetLine = editor.selection.active.line;
+    let lineText = editor.document.lineAt(targetLine).text.trim();
+
+    if (lineText.length < 3) {
+      // Find nearest non-empty code line
+      const candidates: number[] = [];
+      for (let i = 0; i < lineCount; i++) {
+        const text = editor.document.lineAt(i).text.trim();
+        if (text.length >= 3 && !/^[{}()[\];]+$/.test(text)) {
+          candidates.push(i);
+        }
+      }
+      if (candidates.length > 0) {
+        // Pick line
+        targetLine = candidates[Math.floor(Math.random() * candidates.length)];
+        lineText = editor.document.lineAt(targetLine).text.trim();
+      } else {
+        targetLine = 0;
+        lineText = editor.document.lineAt(0).text.trim();
+      }
+    }
+
+    const lineRange = editor.document.lineAt(targetLine).rangeIncludingLineBreak;
+
+    this.stateStore.transition('mischief');
+    this.viewProvider.playSound('mischief');
+    this.decorationManager.animateApproach(editor, targetLine);
+    this.decorationManager.showDissolve(editor, lineRange);
+
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    if (editor.document.isClosed) {
+      this.decorationManager.clear(editor);
+      this.stateStore.transition('idle');
+      return;
+    }
+
+    const editSuccess = await editor.edit(builder => {
+      builder.delete(lineRange);
+    });
+
+    this.decorationManager.clear(editor);
+
+    if (editSuccess) {
+      this.viewProvider.playSound('mischief');
+      this.viewProvider.shake(6);
+      this.stateStore.incrementBag(1);
+      const rage = this.stateStore.increaseRage(15);
+      this.viewProvider.postMessage({ type: 'rage', value: rage });
+
+      const roast = await this.roastService.getRoast({
+        situation: 'mischief_eaten',
+        codeSnippet: lineText.slice(0, 80),
+        fileName: editor.document.fileName,
+        language: editor.document.languageId,
+        line: targetLine,
+        rageMeter: rage
+      });
+      this.stateStore.setRoast(roast);
+
+      void vscode.window.showErrorMessage(
+        `🦹 DUSTY (Mischief Executed / Kallappani):\n\n"${roast}"\n\n(Bheeshani satyamaayi! Thettukal tharathathukond ninte working line choolukond adichuvaari thinnu kalanju!)`,
+        { modal: true }
+      );
+
+      this.stateStore.transition('recovering');
+      setTimeout(() => {
+        if (this.stateStore.getState() === 'recovering' || this.stateStore.getState() === 'mischief') {
+          this.stateStore.transition('idle');
+        }
+      }, 1200);
+    } else {
+      this.stateStore.transition('idle');
+    }
   }
 
   private async triggerIdleRageBait(): Promise<void> {
@@ -146,7 +303,7 @@ export class ChaosEngine implements vscode.Disposable {
       "Saaramilla, saavhadhanam mathi. Veruppeeru code ezhuthaan bhayangara concentration venamallo!"
     ];
 
-    const roast = rageBaitRoasts[Math.floor(Math.random() * rageBaitRoasts.length)];
+    const roast = this.roastService.pickRoast(rageBaitRoasts);
     this.stateStore.setRoast(roast);
     this.viewProvider.playSound('tantrum');
     this.viewProvider.shake(2);
@@ -222,6 +379,7 @@ export class ChaosEngine implements vscode.Disposable {
     target: DustyDiagnosticTarget
   ): Promise<void> {
     this.isProcessing = true;
+    this.resetHungerTimers();
 
     try {
       const config = vscode.workspace.getConfiguration('dusty');

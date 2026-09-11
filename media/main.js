@@ -242,6 +242,141 @@
     }
   }
 
+  function drawMurram(ctx, animTick, bagCount, currentState, rageMeter, isEnabled) {
+    ctx.save();
+
+    let murramX = 116;
+    let murramY = 78;
+    let murramAngle = 0;
+
+    if (!isEnabled) {
+      // Idle leaning
+      murramX = 120;
+      murramY = 82;
+      murramAngle = 0.08;
+    } else if (currentState === 'crashout' || rageMeter >= 90) {
+      // Violent rattle
+      murramX += (Math.random() * 6 - 3);
+      murramY += (Math.random() * 4 - 2);
+      murramAngle = (Math.random() * 0.3 - 0.15);
+    } else if (currentState === 'tantrum' || rageMeter >= 65) {
+      // Angry tremor
+      murramX += Math.sin(animTick * 0.8) * 3;
+      murramY += Math.cos(animTick * 0.8) * 1.5;
+      murramAngle = Math.sin(animTick * 0.8) * 0.08;
+    } else if (currentState === 'mischief') {
+      // Hopping forward in mischievous conspiracy
+      murramX = 104 + Math.sin(animTick * 0.5) * 3;
+      murramY = 75 + Math.cos(animTick * 0.5) * 2;
+      murramAngle = -0.22 + Math.sin(animTick * 0.5) * 0.06;
+    } else if (currentState === 'hunger') {
+      // Trembling slightly in hungry anticipation
+      murramX = 110 + Math.sin(animTick * 0.25) * 2;
+      murramY = 77 + Math.sin(animTick * 0.25) * 1.5;
+      murramAngle = -0.1 + Math.sin(animTick * 0.25) * 0.04;
+    } else if (currentState === 'eating' || currentState === 'approaching') {
+      // Eagerly tilted forward toward broom mouth
+      murramX = 108 + Math.sin(animTick * 0.3) * 2;
+      murramY = 76 + Math.cos(animTick * 0.3) * 1.5;
+      murramAngle = -0.16 + Math.sin(animTick * 0.3) * 0.05;
+    } else if (currentState === 'clogged') {
+      // Overloaded tremor
+      murramY = 80 + Math.sin(animTick * 0.3) * 2;
+      murramAngle = 0.12;
+    } else {
+      // Idle rhythmic breathing
+      murramY += Math.sin(animTick * 0.08 + 1.2) * 1.5;
+      murramAngle = Math.sin(animTick * 0.05) * 0.04;
+    }
+
+    ctx.translate(murramX, murramY);
+    ctx.rotate(murramAngle);
+
+    // Murram Outer Shadow
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+    ctx.beginPath();
+    ctx.ellipse(14, 18, 16, 4, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Bamboo Woven Base (Trapezoid mouth pointing left towards broom)
+    // Left edge (mouth) is wider and open, right edge is narrower and backed
+    ctx.fillStyle = '#d2a679'; // Warm woven bamboo
+    ctx.beginPath();
+    ctx.moveTo(0, 14);     // Bottom-left lip
+    ctx.lineTo(28, 10);    // Bottom-right corner
+    ctx.lineTo(28, -6);    // Top-right corner
+    ctx.lineTo(0, -10);    // Top-left lip
+    ctx.closePath();
+    ctx.fill();
+
+    // Woven Reed Grid Texture Lines
+    ctx.strokeStyle = '#b37d4e';
+    ctx.lineWidth = 1;
+    // Horizontal bamboo strips
+    ctx.beginPath();
+    ctx.moveTo(0, -6); ctx.lineTo(28, -3);
+    ctx.moveTo(0, -2); ctx.lineTo(28, 0);
+    ctx.moveTo(0, 2);  ctx.lineTo(28, 3);
+    ctx.moveTo(0, 6);  ctx.lineTo(28, 7);
+    ctx.moveTo(0, 10); ctx.lineTo(28, 9);
+    ctx.stroke();
+
+    // Vertical warp weaving lines
+    ctx.strokeStyle = '#c49364';
+    ctx.beginPath();
+    ctx.moveTo(7, -9); ctx.lineTo(7, 13);
+    ctx.moveTo(14, -8); ctx.lineTo(14, 12);
+    ctx.moveTo(21, -7); ctx.lineTo(21, 11);
+    ctx.stroke();
+
+    // Raised Woven Bamboo Rim (Border on top, right, and bottom; left mouth is open)
+    ctx.strokeStyle = '#6b4226'; // Dark reinforced cane rim
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(0, -10);
+    ctx.lineTo(28, -6);
+    ctx.lineTo(28, 10);
+    ctx.lineTo(0, 14);
+    ctx.stroke();
+
+    // Inner rim highlight
+    ctx.strokeStyle = '#8d5524';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(1, -9);
+    ctx.lineTo(27, -5);
+    ctx.lineTo(27, 9);
+    ctx.lineTo(1, 13);
+    ctx.stroke();
+
+    // Open mouth lip plate (front edge facing the broom)
+    ctx.fillStyle = '#5c3818';
+    ctx.fillRect(-2, -10, 2, 24);
+
+    // Dust Crumbs Accumulated in Murram
+    if (bagCount > 0) {
+      const crumbColors = ['#e74c3c', '#f1c40f', '#3498db', '#9b59b6', '#2ecc71', '#e67e22'];
+      const count = Math.min(25, bagCount * 5);
+      for (let i = 0; i < count; i++) {
+        // Deterministic pseudo-random placement inside murram bed
+        const cx = 5 + ((i * 7 + 3) % 20);
+        const cy = -5 + ((i * 11 + 5) % 16);
+        ctx.fillStyle = crumbColors[i % crumbColors.length];
+        ctx.fillRect(cx, cy, 2, 2);
+      }
+
+      // Overflow indicator if clogged
+      if (currentState === 'clogged') {
+        ctx.fillStyle = '#e74c3c';
+        ctx.fillRect(26, -4 + Math.sin(animTick * 0.4) * 2, 3, 3);
+        ctx.fillRect(24, 6 + Math.cos(animTick * 0.4) * 2, 3, 3);
+      }
+    }
+
+    ctx.restore();
+  }
+
   function draw() {
     animTick++;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -271,42 +406,30 @@
     } else if (currentState === 'tantrum') {
       sweepAngle = Math.sin(animTick * 0.5) * 0.35;
       sweepX = Math.sin(animTick * 0.5) * 12;
+    } else if (currentState === 'mischief') {
+      sweepAngle = Math.sin(animTick * 0.45) * 0.38;
+      sweepX = Math.sin(animTick * 0.45) * 14;
+      spawnParticle();
+    } else if (currentState === 'hunger') {
+      sweepAngle = Math.sin(animTick * 0.15) * 0.22;
+      sweepX = Math.sin(animTick * 0.15) * 8;
     } else {
       // Idle: gentle breathing sway
       sweepAngle = Math.sin(animTick * 0.06) * 0.07;
       sweepX = Math.sin(animTick * 0.06) * 3;
     }
 
-    // --- 1. Draw Dustpan (മുറം) on the floor at bottom right ---
-    ctx.fillStyle = '#2c3e50';
-    ctx.fillRect(115, 84 + bob * 0.5, 30, 4); // Dustpan bottom lip
-    ctx.fillStyle = '#2980b9'; // Blue metal dustpan body
-    ctx.beginPath();
-    ctx.moveTo(115, 84 + bob * 0.5);
-    ctx.lineTo(145, 84 + bob * 0.5);
-    ctx.lineTo(142, 68 + bob * 0.5);
-    ctx.lineTo(120, 68 + bob * 0.5);
-    ctx.closePath();
-    ctx.fill();
-    // Dustpan handle
-    ctx.fillStyle = '#34495e';
-    ctx.fillRect(142, 72 + bob * 0.5, 12, 3);
+    // --- 1. Draw Animated Kerala Murram (മുറം / Dustpan) ---
+    drawMurram(ctx, animTick, bagCount, currentState, rageMeter, isEnabled);
 
-    // Dust accumulation in dustpan
-    if (bagCount > 0) {
-      ctx.fillStyle = '#7f8c8d';
-      const dustHeight = Math.min(12, bagCount * 2.5);
-      ctx.fillRect(122, 82 - dustHeight + bob * 0.5, 20, dustHeight);
-    }
-
-    // --- 2. Draw Dust Particles flying into Dustpan ---
+    // --- 2. Draw Dust Particles flying into Murram ---
     for (let i = particles.length - 1; i >= 0; i--) {
       const p = particles[i];
       p.x += p.vx;
       p.y += p.vy;
       ctx.fillStyle = p.color;
       ctx.fillRect(p.x, p.y, p.size, p.size);
-      if (p.x > 140 || p.x < 30) {
+      if (p.x > 130 || p.x < 30) {
         particles.splice(i, 1);
       }
     }
@@ -355,6 +478,10 @@
       bristleColor = '#8e44ad'; // Purple cobweb dust overload
     } else if (currentState === 'tantrum') {
       bristleColor = animTick % 6 < 3 ? '#c0392b' : '#f39c12';
+    } else if (currentState === 'mischief') {
+      bristleColor = animTick % 6 < 3 ? '#9b59b6' : '#8e44ad'; // Mischievous trickster purple
+    } else if (currentState === 'hunger') {
+      bristleColor = '#e67e22'; // Hungry fiery amber
     }
 
     ctx.fillStyle = bristleColor;
@@ -428,6 +555,46 @@
       ctx.arc(-14, eyeY + 6, 3, 0, Math.PI * 2);
       ctx.arc(14, eyeY + 6, 3, 0, Math.PI * 2);
       ctx.fill();
+    } else if (currentState === 'hunger' || currentState === 'mischief') {
+      // Sinister angled mischievous/threatening eyes
+      ctx.fillStyle = currentState === 'mischief' ? '#ff0055' : '#f39c12';
+      ctx.beginPath();
+      ctx.moveTo(eye1X - 5, eyeY - 2);
+      ctx.lineTo(eye1X + 4, eyeY + 1);
+      ctx.lineTo(eye1X - 3, eyeY + 4);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(eye2X + 5, eyeY - 2);
+      ctx.lineTo(eye2X - 4, eyeY + 1);
+      ctx.lineTo(eye2X + 3, eyeY + 4);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = '#1a1a1a';
+      ctx.fillRect(eye1X - 1, eyeY, 2, 3);
+      ctx.fillRect(eye2X - 1, eyeY, 2, 3);
+
+      // Threatening / Mischievous Mouth
+      if (currentState === 'hunger') {
+        // Menacing hungry grin with sharp fangs
+        ctx.fillStyle = '#2c3e50';
+        ctx.beginPath();
+        ctx.arc(0, eyeY + 8, 4.5, 0, Math.PI);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(-2, eyeY + 8, 2, 2);
+        ctx.fillRect(1, eyeY + 8, 2, 2);
+      } else {
+        // Sly lopsided smirk
+        ctx.strokeStyle = '#2c3e50';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(-5, eyeY + 11);
+        ctx.quadraticCurveTo(0, eyeY + 13, 5, eyeY + 7);
+        ctx.stroke();
+      }
     } else {
       const blink = animTick % 90 < 4;
       if (blink) {
