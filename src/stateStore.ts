@@ -14,6 +14,7 @@ export class StateStore implements vscode.Disposable {
   private enabled = true;
   private muted = false;
   private chaosIntensity: ChaosIntensity = 'normal';
+  private rageMeter = 0;
   private lastRoast?: string;
   private activeTarget?: DustyDiagnosticTarget;
 
@@ -46,12 +47,44 @@ export class StateStore implements vscode.Disposable {
       state: this.state,
       bagCount: this.bagCount,
       bagCapacity: this.bagCapacity,
+      rageMeter: this.rageMeter,
       enabled: this.enabled,
       muted: this.muted,
       chaosIntensity: this.chaosIntensity,
       lastRoast: this.lastRoast,
       currentTarget: serializableTarget
     };
+  }
+
+  public getRage(): number {
+    return this.rageMeter;
+  }
+
+  public increaseRage(amount: number): number {
+    this.rageMeter = Math.min(100, Math.max(0, this.rageMeter + amount));
+    if (this.rageMeter >= 100) {
+      this.transition('crashout');
+    }
+    this._onDidChangeState.fire(this.getSnapshot());
+    return this.rageMeter;
+  }
+
+  public coolDownRage(amount = 5): void {
+    if (this.rageMeter <= 0) {
+      return;
+    }
+    this.rageMeter = Math.max(0, this.rageMeter - amount);
+    this._onDidChangeState.fire(this.getSnapshot());
+  }
+
+  public getFatigue(): number {
+    const bagRatio = this.bagCapacity > 0 ? this.bagCount / this.bagCapacity : 0;
+    return Math.min(100, Math.round((this.rageMeter * 0.5) + (bagRatio * 50)));
+  }
+
+  public resetRage(): void {
+    this.rageMeter = 0;
+    this._onDidChangeState.fire(this.getSnapshot());
   }
 
   public getState(): DustyState {
@@ -107,8 +140,8 @@ export class StateStore implements vscode.Disposable {
     this._onDidChangeState.fire(this.getSnapshot());
   }
 
-  public incrementBag(): boolean {
-    this.bagCount++;
+  public incrementBag(amount = 1): boolean {
+    this.bagCount = Math.min(this.bagCapacity, this.bagCount + amount);
     if (this.bagCount >= this.bagCapacity) {
       this.transition('clogged');
       return true; // Now clogged

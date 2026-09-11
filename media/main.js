@@ -8,6 +8,8 @@
   const speechBubble = document.getElementById('speechBubble');
   const bagValue = document.getElementById('bagValue');
   const bagBar = document.getElementById('bagBar');
+  const rageValue = document.getElementById('rageValue');
+  const rageBar = document.getElementById('rageBar');
   const targetCard = document.getElementById('targetCard');
   const targetDesc = document.getElementById('targetDesc');
   const appContainer = document.getElementById('appContainer');
@@ -29,6 +31,7 @@
   let isMuted = false;
   let bagCount = 0;
   let bagCapacity = 5;
+  let rageMeter = 0;
   let animTick = 0;
   let particles = [];
 
@@ -95,6 +98,10 @@
         updateBag(msg.value, msg.capacity);
         break;
 
+      case 'rage':
+        updateRage(msg.value);
+        break;
+
       case 'target':
         updateTarget(msg.target);
         break;
@@ -121,6 +128,7 @@
     isMuted = stateSnapshot.muted;
     bagCount = stateSnapshot.bagCount;
     bagCapacity = stateSnapshot.bagCapacity;
+    rageMeter = stateSnapshot.rageMeter || 0;
 
     // Update State Badge
     stateBadge.textContent = currentState.toUpperCase();
@@ -150,10 +158,26 @@
     }
 
     updateBag(bagCount, bagCapacity);
+    updateRage(rageMeter);
     updateTarget(stateSnapshot.currentTarget);
 
     if (stateSnapshot.lastRoast) {
       speechBubble.textContent = `"${stateSnapshot.lastRoast}"`;
+    }
+  }
+
+  function updateRage(rage) {
+    rageMeter = rage || 0;
+    if (rageValue) {
+      rageValue.textContent = `${rageMeter}%`;
+    }
+    if (rageBar) {
+      rageBar.style.width = `${rageMeter}%`;
+      if (rageMeter >= 75) {
+        rageBar.classList.add('nuclear');
+      } else {
+        rageBar.classList.remove('nuclear');
+      }
     }
   }
 
@@ -251,6 +275,14 @@
     let bodyColor = '#e74c3c'; // Default Crimson
     if (!isEnabled) {
       bodyColor = '#7f8c8d';
+    } else if (currentState === 'crashout' || rageMeter >= 90) {
+      // Nuclear crashout: violent neon color strobe
+      const strobe = ['#ff0033', '#9b59b6', '#00ffff', '#ffaa00'];
+      bodyColor = strobe[Math.floor(animTick / 3) % strobe.length];
+    } else if (rageMeter >= 65) {
+      bodyColor = animTick % 6 < 3 ? '#c0392b' : '#8e44ad';
+    } else if (rageMeter >= 35) {
+      bodyColor = '#e67e22'; // Molten fiery orange
     } else if (currentState === 'clogged') {
       bodyColor = '#8e44ad';
     } else if (currentState === 'tantrum') {
@@ -344,14 +376,14 @@
         ctx.lineTo(eye2X + 5, eyeY);
         ctx.stroke();
       } else {
-        // Eye whites
-        ctx.fillStyle = '#ffffff';
+        // Eye whites (glow red at high rage)
+        ctx.fillStyle = rageMeter >= 65 ? '#ff1111' : '#ffffff';
         ctx.beginPath();
         ctx.arc(eye1X, eyeY, 6, 0, Math.PI * 2);
         ctx.arc(eye2X, eyeY, 6, 0, Math.PI * 2);
         ctx.fill();
 
-        // Pupils looking toward nozzle / target
+        // Pupils looking toward nozzle / target (glowing yellow if angry)
         let pupilOffsetX = 2;
         let pupilOffsetY = 0;
         if (currentState === 'hunting') {
@@ -360,7 +392,7 @@
           pupilOffsetX = 3.5;
         }
 
-        ctx.fillStyle = '#2c3e50';
+        ctx.fillStyle = rageMeter >= 65 ? '#ffff00' : '#2c3e50';
         ctx.beginPath();
         ctx.arc(eye1X + pupilOffsetX, eyeY + pupilOffsetY, 2.5, 0, Math.PI * 2);
         ctx.arc(eye2X + pupilOffsetX, eyeY + pupilOffsetY, 2.5, 0, Math.PI * 2);

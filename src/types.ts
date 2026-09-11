@@ -11,17 +11,29 @@ export type DustyState =
   | 'graffiti'
   | 'hungerStrike'
   | 'tantrum'
+  | 'crashout'
   | 'disabled';
 
 export type DustyConfidence = 'high' | 'medium' | 'low';
 
 export type ChaosIntensity = 'calm' | 'normal' | 'feral';
 
-export type SoundName = 'suction' | 'error' | 'clog' | 'victory' | 'tantrum' | 'idle';
+export type SoundName =
+  | 'suction'
+  | 'error'
+  | 'clog'
+  | 'victory'
+  | 'tantrum'
+  | 'idle'
+  | 'gobble'
+  | 'crashout'
+  | 'apocalypse'
+  | 'siren';
 
 export interface DustyDiagnosticTarget {
   uri: vscode.Uri;
   range: vscode.Range;
+  blockRange?: vscode.Range;
   severity: vscode.DiagnosticSeverity;
   source?: string;
   code?: string | number | { value: string | number; target: vscode.Uri };
@@ -46,6 +58,7 @@ export interface DustyStateSnapshot {
   state: DustyState;
   bagCount: number;
   bagCapacity: number;
+  rageMeter: number;
   enabled: boolean;
   muted: boolean;
   chaosIntensity: ChaosIntensity;
@@ -58,6 +71,7 @@ export type HostToWebviewMessage =
   | { type: 'roast'; text: string }
   | { type: 'target'; target?: SerializableTarget }
   | { type: 'bag'; value: number; capacity: number }
+  | { type: 'rage'; value: number }
   | { type: 'sound'; name: SoundName }
   | { type: 'shake'; intensity: number }
   | { type: 'graffiti'; text: string }

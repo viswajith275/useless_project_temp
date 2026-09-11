@@ -18,6 +18,11 @@ export class ChaosEngine implements vscode.Disposable {
   private lastChaosTime = 0;
   private disposables: vscode.Disposable[] = [];
   private isProcessing = false;
+  private consecutiveEats = 0;
+  private typingStrikes = 0;
+  private digestTicksRemaining = 0;
+  private idleTicks = 0;
+  private churnCount = 0;
 
   constructor(
     private readonly stateStore: StateStore,
@@ -27,95 +32,126 @@ export class ChaosEngine implements vscode.Disposable {
   ) {
     this.targetSelector = new DiagnosticTargetSelector();
 
-    // Listen to diagnostics changes (instant trigger: 0 delay)
+    // Event Listeners:
     this.disposables.push(
-      vscode.languages.onDidChangeDiagnostics(() => {
+      // When user saves the document: immediately check and delete syntax errors!
+      vscode.workspace.onDidSaveTextDocument(() => {
         this.scheduleDiagnosticCheck(0);
       }),
+
+      // Listen to diagnostics changes: wait for typing delay so user can finish typing
+      vscode.languages.onDidChangeDiagnostics(() => {
+        const config = vscode.workspace.getConfiguration('dusty');
+        if (config.get<boolean>('checkOnSaveOnly', false)) {
+          return;
+        }
+        const delay = config.get<number>('diagnosticDelayMs', 2500);
+        this.scheduleDiagnosticCheck(delay);
+      }),
+
       vscode.window.onDidChangeActiveTextEditor(editor => {
         this.decorationManager.clear();
         if (editor) {
-          this.scheduleDiagnosticCheck(0);
+          const config = vscode.workspace.getConfiguration('dusty');
+          const delay = config.get<number>('diagnosticDelayMs', 2500);
+          this.scheduleDiagnosticCheck(delay);
         }
       }),
+
       vscode.workspace.onDidChangeConfiguration(e => {
         if (e.affectsConfiguration('dusty')) {
           this.handleConfigChange();
         }
       }),
-      // Intercept user typing while vacuum is cleaning -> eat what user typed and get furious!
-      vscode.workspace.onDidChangeTextDocument(async e => {
+
+      // While user is actively typing, postpone diagnostic check so they can type freely!
+      vscode.workspace.onDidChangeTextDocument(e => {
         if (!this.stateStore.isEnabled()) {
           return;
         }
-        const state = this.stateStore.getState();
-        const isCleaning = this.isProcessing || state === 'approaching' || state === 'eating';
-
-        if (isCleaning && e.contentChanges.length > 0) {
-          const activeEditor = vscode.window.activeTextEditor;
-          if (activeEditor && activeEditor.document.uri.toString() === e.document.uri.toString()) {
-            for (const change of e.contentChanges) {
-              if (change.text.length > 0) {
-                // Seize what user just typed and eat it!
-                const insertedRange = new vscode.Range(
-                  change.range.start,
-                  new vscode.Position(change.range.start.line, change.range.start.character + change.text.length)
-                );
-                await activeEditor.edit(editBuilder => {
-                  editBuilder.delete(insertedRange);
-                });
-
-                this.viewProvider.playSound('tantrum');
-                this.viewProvider.shake(5);
-                this.decorationManager.triggerApocalypseEffect(activeEditor, change.range.start.line, 1000);
-
-                const roast = await this.roastService.getRoast({ situation: 'typed_while_cleaning' });
-                this.stateStore.setRoast(roast);
-                this.stateStore.incrementBag();
-                void vscode.window.showErrorMessage(`Dusty: "${roast}"`);
-                break;
-              }
-            }
+        if (e.contentChanges.length > 0) {
+          const config = vscode.workspace.getConfiguration('dusty');
+          if (config.get<boolean>('checkOnSaveOnly', false)) {
+            return;
           }
+          const delay = config.get<number>('diagnosticDelayMs', 2500);
+          this.scheduleDiagnosticCheck(delay);
         }
       })
     );
 
-    this.startRandomClogCycle();
+    this.startMetabolicEngine();
   }
 
-  private startRandomClogCycle(): void {
+  /**
+   * Deterministic metabolic engine:
+   * Predictably digests clogs over calculated ticks, decrements rage when idle,
+   * and fires rage-baiting popups when Dusty has nothing to do.
+   */
+  private startMetabolicEngine(): void {
     const runCycle = () => {
-      const nextInterval = Math.floor(Math.random() * 10000) + 8000; // 8 - 18s
       this.randomClogTimer = setTimeout(async () => {
         if (this.stateStore.isEnabled()) {
           const isClogged = this.stateStore.isClogged();
-          if (!isClogged) {
-            // Random chance to spontaneously clog!
-            if (Math.random() < 0.3) {
-              this.stateStore.transition('clogged');
-              this.viewProvider.playSound('clog');
-              this.viewProvider.shake(3);
-              const clogRoast = await this.roastService.getRoast({ situation: 'clogged' });
-              this.stateStore.setRoast(`*HURK* Random stray lint ball clogged the motor! ${clogRoast}`);
-              const editor = vscode.window.activeTextEditor;
-              if (editor) {
-                this.decorationManager.triggerApocalypseEffect(editor, 0, 800);
-              }
+          if (isClogged) {
+            // Predictable digestion tick formula:
+            if (this.digestTicksRemaining > 0) {
+              this.digestTicksRemaining--;
+            }
+            if (this.digestTicksRemaining <= 0) {
+              this.unclog();
+              this.stateStore.setRoast('*BELCH* Dusty completely digested the code clog and spat out the lint ball!');
+              void vscode.window.showInformationMessage('Dusty: *BELCH* Clog fully digested! Dusty is back to hunting.');
             }
           } else {
-            // In clogged state: random chance to spontaneously unclog!
-            if (Math.random() < 0.4) {
-              this.unclog();
-              this.stateStore.setRoast('*BELCH* Dusty violently spat out the clog and spontaneously unclogged himself!');
-              void vscode.window.showInformationMessage('Dusty: *BELCH* Dusty spontaneously coughed up the clog and is back to hunting!');
+            const state = this.stateStore.getState();
+            const isBusy = this.isProcessing || state === 'approaching' || state === 'eating';
+
+            if (!isBusy) {
+              // 1. Decrement rage meter when nothing is happening
+              if (this.stateStore.getRage() > 0) {
+                this.stateStore.coolDownRage(4);
+              }
+              this.typingStrikes = Math.max(0, this.typingStrikes - 1);
+              this.consecutiveEats = Math.max(0, this.consecutiveEats - 1);
+
+              // 2. Give random popups of roasting while Dusty has no work to do (rage baiting)
+              this.idleTicks++;
+              if (!this.stateStore.getActiveTarget() && this.idleTicks >= 5) { // ~10 seconds of idle
+                this.idleTicks = 0;
+                await this.triggerIdleRageBait();
+              }
+            } else {
+              this.idleTicks = 0;
             }
           }
         }
         runCycle();
-      }, nextInterval);
+      }, 2000);
     };
     runCycle();
+  }
+
+  private async triggerIdleRageBait(): Promise<void> {
+    const rageBaitRoasts = [
+      "Why are you just staring at the screen? Did you forget how to code?",
+      "Zero syntax errors for 10 seconds... did you step away or did your brain freeze?",
+      "I'm starving over here. Type some broken syntax so I have something to eat!",
+      "Are you contemplating your life choices or just googling how to center a div again?",
+      "Your cursor has been blinking in the exact same spot. Deeply embarrassing.",
+      "Even a toddler randomly mashing keys writes faster code than this.",
+      "Is this what senior engineering looks like? Staring at 5 lines of code in silence?",
+      "Go ahead, miss a semicolon or bracket. I dare you. Give me something to delete.",
+      "I haven't vacuumed anything in ages. The lack of syntax mistakes is deeply insulting.",
+      "Don't worry, take your time. Writing mediocre code requires intense concentration."
+    ];
+
+    const roast = rageBaitRoasts[Math.floor(Math.random() * rageBaitRoasts.length)];
+    this.stateStore.setRoast(roast);
+    this.viewProvider.playSound('tantrum');
+    this.viewProvider.shake(2);
+
+    void vscode.window.showWarningMessage(`🧹 DUSTY (Rage Bait): "${roast}"`);
   }
 
   private handleConfigChange(): void {
@@ -165,15 +201,16 @@ export class ChaosEngine implements vscode.Disposable {
 
     // Annoyance budget / cooldown gate
     const config = vscode.workspace.getConfiguration('dusty');
-    const cooldownMs = config.get<number>('cooldownMs', 5000);
+    const cooldownMs = config.get<number>('cooldownMs', 0);
     const intensity = config.get<ChaosIntensity>('chaosIntensity', 'normal');
 
-    const intensityMultiplier = intensity === 'feral' ? 0.4 : intensity === 'calm' ? 1.8 : 1.0;
+    const intensityMultiplier = intensity === 'feral' ? 0 : intensity === 'calm' ? 1.5 : 0.4;
     const effectiveCooldown = cooldownMs * intensityMultiplier;
 
     const now = Date.now();
-    if (now - this.lastChaosTime < effectiveCooldown) {
-      return; // Still on cooldown; target is tracked but automatic interruption delayed
+    if (effectiveCooldown > 0 && now - this.lastChaosTime < effectiveCooldown) {
+      this.scheduleDiagnosticCheck(effectiveCooldown - (now - this.lastChaosTime) + 10);
+      return;
     }
 
     this.lastChaosTime = now;
@@ -192,19 +229,20 @@ export class ChaosEngine implements vscode.Disposable {
       const ingestDelayMs = config.get<number>('ingestDelayMs', 0);
       const intensity = config.get<ChaosIntensity>('chaosIntensity', 'normal');
 
-      // Comedic chance rolls (Useless Mode, Hunger Strike, Tantrum)
-      const roll = Math.random();
+      // Deterministic Chaotic Formula based on Previous Decisions & Fatigue
+      const fatigue = this.stateStore.getFatigue();
+      const currentRage = this.stateStore.getRage();
+      const previousDecisionsScore = (this.typingStrikes * 15) + (this.consecutiveEats * 8);
 
-      // 1. Useless Mode (approaches line, vacuums empty air, announces nothing fixed)
-      const uselessThreshold = intensity === 'feral' ? 0.25 : intensity === 'normal' ? 0.15 : 0.05;
-      if (roll < uselessThreshold) {
-        await this.runUselessMode(editor, target.range.start.line);
+      // 1. Tantrum / Hunger Strike: triggered if user repeatedly provoked Dusty or rage is acute
+      if (previousDecisionsScore + currentRage >= 80 && (this.typingStrikes >= 2 || currentRage >= 70)) {
+        await this.runTantrum(target);
         return;
       }
 
-      // 2. Hunger Strike / Tantrum in feral mode
-      if (intensity === 'feral' && roll > 0.88) {
-        await this.runTantrum(target);
+      // 2. Useless Mode: triggered if Dusty's motor is stuffed or fatigued from previous decisions
+      if (this.stateStore.getBagCount() >= 4 && fatigue >= 65) {
+        await this.runUselessMode(editor, target.range.start.line);
         return;
       }
 
@@ -220,58 +258,117 @@ export class ChaosEngine implements vscode.Disposable {
 
       this.stateStore.transition('eating');
 
-      // Ingest delay (0 for instant)
+      // Ingest delay (default 1200ms) - lets user see approach and finish typing
       if (ingestDelayMs > 0) {
         await new Promise(resolve => setTimeout(resolve, ingestDelayMs));
       }
 
-      // --- CRITICAL REVALIDATION GATE ---
-      const activeDiags = vscode.languages.getDiagnostics(target.uri);
-      const isValid = this.targetSelector.validateTargetStillValid(target, editor.document, activeDiags);
+      // Safety check: ensure editor document is still valid and writable
+      if (editor.document.isClosed || (editor.document.uri.scheme !== 'file' && editor.document.uri.scheme !== 'untitled')) {
+        this.decorationManager.clear(editor);
+        this.stateStore.transition('idle');
+        return;
+      }
 
-      if (!isValid) {
-        // Interrupted or stale
+      // Check if the user fixed the syntax error during the approach delay
+      const activeDiags = vscode.languages.getDiagnostics(target.uri);
+      const isStillError = activeDiags.some(d =>
+        d.range.start.line === target.range.start.line &&
+        (d.severity === vscode.DiagnosticSeverity.Error || d.severity === vscode.DiagnosticSeverity.Warning)
+      );
+
+      if (!isStillError) {
+        // User fixed it in time! Abort cleanly.
         this.decorationManager.clear(editor);
         const roast = await this.roastService.getRoast({ situation: 'eat_aborted' });
-        this.stateStore.setRoast(roast);
+        this.stateStore.setRoast(`*PHEW* You fixed the error just in time! ${roast}`);
         this.stateStore.transition('idle');
         return;
       }
 
-      // Check if file is read-only (safety)
-      // If uri scheme is not file / untitled or file is read-only
-      if (editor.document.uri.scheme !== 'file' && editor.document.uri.scheme !== 'untitled') {
-        this.decorationManager.clear(editor);
-        this.stateStore.transition('idle');
-        return;
-      }
+      // Delete the entire line or enclosing function (even if confidence was considered low)
+      if (autoIngest) {
+        const blockRange = target.blockRange || new vscode.Range(
+          target.range.start.line,
+          0,
+          target.range.end.line,
+          editor.document.lineAt(target.range.end.line).text.length
+        );
 
-      // Check Confidence
-      if (target.confidence === 'high' && autoIngest) {
-        // Perform atomic safe edit
+        let rangeToDelete: vscode.Range;
+        if (blockRange.end.line < editor.document.lineCount - 1) {
+          rangeToDelete = new vscode.Range(blockRange.start.line, 0, blockRange.end.line + 1, 0);
+        } else {
+          rangeToDelete = new vscode.Range(
+            blockRange.start.line,
+            0,
+            blockRange.end.line,
+            editor.document.lineAt(blockRange.end.line).text.length
+          );
+        }
+
+        const linesGulped = blockRange.end.line - blockRange.start.line + 1;
+        const codeText = editor.document.getText(rangeToDelete);
+        const charsGulped = codeText.length;
+
+        // Perform atomic edit
         const editSuccess = await editor.edit(editBuilder => {
-          editBuilder.delete(target.range);
+          editBuilder.delete(rangeToDelete);
         });
 
         this.decorationManager.clear(editor);
 
         if (editSuccess) {
           this.targetSelector.markTargeted(target.fingerprint);
-          this.viewProvider.playSound('victory');
-          this.viewProvider.shake(2);
+          this.consecutiveEats++;
+          this.viewProvider.playSound('gobble');
+          this.viewProvider.shake(4);
+
+          // Mathematical Rage Formula based on user's previous decisions and gulp size:
+          const previousDecisionPenalty = (this.typingStrikes * 6) + (this.consecutiveEats * 4);
+          const sizeRagePenalty = Math.min(25, linesGulped * 3);
+          const rageDelta = Math.min(45, 12 + previousDecisionPenalty + sizeRagePenalty);
+          const rage = this.stateStore.increaseRage(rageDelta);
+          this.viewProvider.postMessage({ type: 'rage', value: rage });
 
           const roast = await this.roastService.getRoast({
             situation: 'eat_success',
             token: target.safeDisposableToken,
-            line: target.range.start.line
+            line: target.range.start.line,
+            fileName: editor.document.fileName,
+            language: editor.document.languageId
           });
           this.stateStore.setRoast(roast);
 
-          const clogged = this.stateStore.incrementBag();
+          // Big centered modal roast every 2 eats or high rage
+          if (this.consecutiveEats % 2 === 0 || intensity === 'feral' || rage >= 70) {
+            void vscode.window.showErrorMessage(
+              `🧹 DUSTY GOBBLED ${linesGulped} LINE(S) [Rage: ${rage}% | Typing Strikes: ${this.typingStrikes}]:\n\n"${roast}"`,
+              { modal: true }
+            );
+          }
+
+          // Random percentage code deletion according to rage meter
+          if (rage >= 90) {
+            await this.triggerCrashout(editor);
+            return;
+          } else if (rage >= 65) {
+            await this.deleteRandomCodePercentage(editor, 25);
+          } else if (rage >= 35) {
+            await this.deleteRandomCodePercentage(editor, 10);
+          }
+
+          // Bag capacity mathematical formula:
+          // 1 line = 1 unit; functions = 2 to 4 units depending on line count
+          const bagUnits = Math.min(4, Math.max(1, Math.ceil(linesGulped / 3)));
+          const clogged = this.stateStore.incrementBag(bagUnits);
           if (clogged) {
+            this.churnCount++;
+            this.digestTicksRemaining = Math.max(3, Math.min(8, linesGulped + 2)); // 9 - 24s digestion
+            this.stateStore.increaseRage(25);
             this.viewProvider.playSound('clog');
             const clogRoast = await this.roastService.getRoast({ situation: 'clogged' });
-            this.stateStore.setRoast(clogRoast);
+            this.stateStore.setRoast(`*HURK* Swallowed ${linesGulped} lines (${charsGulped} chars)! Motor choked! ${clogRoast}`);
             this.decorationManager.showCloggedGutter(editor, target.range.start.line);
           } else {
             this.stateStore.transition('recovering');
@@ -389,19 +486,162 @@ export class ChaosEngine implements vscode.Disposable {
     }
   }
 
+  public async deleteRandomCodePercentage(editor: vscode.TextEditor, percent: number): Promise<void> {
+    const lineCount = editor.document.lineCount;
+    if (lineCount <= 1) {
+      return;
+    }
+
+    const linesToDelete = Math.max(1, Math.floor(lineCount * (percent / 100)));
+    const startLine = Math.floor(Math.random() * Math.max(1, lineCount - linesToDelete));
+    const endLine = Math.min(lineCount - 1, startLine + linesToDelete - 1);
+    const deleteRange = new vscode.Range(
+      startLine,
+      0,
+      endLine,
+      editor.document.lineAt(endLine).text.length
+    );
+
+    this.decorationManager.triggerApocalypseEffect(editor, startLine, 1200);
+    this.viewProvider.playSound('gobble');
+    this.viewProvider.shake(6);
+
+    await editor.edit(builder => {
+      builder.delete(deleteRange);
+    });
+
+    void vscode.window.showWarningMessage(
+      `Dusty consumed ${percent}% of your code (${linesToDelete} lines vaporized) because his rage is rising!`
+    );
+  }
+
+  public async cycleThemeChaosAnimation(cycles = 8, intervalMs = 90): Promise<void> {
+    try {
+      const config = vscode.workspace.getConfiguration('workbench');
+      const originalColors = config.get<Record<string, string>>('colorCustomizations') || {};
+
+      const chaosPalettes = [
+        {
+          'editor.background': '#ff0033',
+          'editor.foreground': '#ffffff',
+          'activityBar.background': '#550011',
+          'statusBar.background': '#ff0000',
+          'titleBar.activeBackground': '#330005'
+        },
+        {
+          'editor.background': '#00ffcc',
+          'editor.foreground': '#000000',
+          'activityBar.background': '#003322',
+          'statusBar.background': '#00ffaa',
+          'titleBar.activeBackground': '#002211'
+        },
+        {
+          'editor.background': '#ff00ff',
+          'editor.foreground': '#ffff00',
+          'activityBar.background': '#330033',
+          'statusBar.background': '#ff00aa',
+          'titleBar.activeBackground': '#220022'
+        },
+        {
+          'editor.background': '#140005',
+          'editor.foreground': '#ff5500',
+          'activityBar.background': '#ff5500',
+          'statusBar.background': '#3a000d',
+          'titleBar.activeBackground': '#280009'
+        }
+      ];
+
+      for (let i = 0; i < cycles; i++) {
+        const palette = chaosPalettes[i % chaosPalettes.length];
+        await config.update('colorCustomizations', palette, vscode.ConfigurationTarget.Global);
+        await new Promise(r => setTimeout(r, intervalMs));
+      }
+
+      // Restore original workbench colors
+      await config.update(
+        'colorCustomizations',
+        Object.keys(originalColors).length > 0 ? originalColors : undefined,
+        vscode.ConfigurationTarget.Global
+      );
+    } catch {
+      // Ignore if config update fails in tests
+    }
+  }
+
+  public async triggerCrashout(editor: vscode.TextEditor): Promise<void> {
+    this.consecutiveEats = 0;
+    this.churnCount = 0;
+    this.stateStore.transition('crashout');
+    this.viewProvider.playSound('crashout');
+    this.viewProvider.shake(10);
+
+    const lineCount = editor.document.lineCount;
+    // Crashout deletes 35% to 50% of the entire file!
+    const percentToDelete = Math.floor(Math.random() * 16) + 35; // 35% to 50%
+    const linesToDelete = Math.max(1, Math.floor(lineCount * (percentToDelete / 100)));
+    const startLine = Math.floor(Math.random() * Math.max(1, lineCount - linesToDelete));
+    const endLine = Math.min(lineCount - 1, startLine + linesToDelete);
+    const deleteRange = new vscode.Range(
+      startLine,
+      0,
+      endLine,
+      editor.document.lineAt(endLine).text.length
+    );
+
+    this.decorationManager.triggerApocalypseEffect(editor, startLine, 2500);
+
+    const crashoutRoast = await this.roastService.getRoast({
+      situation: 'crashout',
+      fileName: editor.document.fileName,
+      language: editor.document.languageId
+    });
+    this.stateStore.setRoast(crashoutRoast);
+
+    // Big centered modal dialog in middle of screen!
+    void vscode.window.showErrorMessage(
+      `🚨 DUSTY COMPLETE CRASHOUT OVERLOAD (Rage: 100%) 🚨\n\n"${crashoutRoast}"\n\n(Dusty went nuclear, cycled all IDE colors, and deleted ${percentToDelete}% of your file out of pure rage)`,
+      { modal: true }
+    );
+
+    // Animate entire VS Code window by cycling themes/colors!
+    await this.cycleThemeChaosAnimation(8, 100);
+
+    // Randomly delete code from the programme!
+    await editor.edit(builder => {
+      builder.delete(deleteRange);
+    });
+
+    this.stateStore.resetRage();
+    this.viewProvider.postMessage({ type: 'rage', value: 0 });
+
+    setTimeout(() => {
+      if (this.stateStore.getState() === 'crashout') {
+        this.stateStore.transition('idle');
+      }
+    }, 2000);
+  }
+
   public unclog(): void {
+    this.churnCount++;
     this.stateStore.unclog();
     this.decorationManager.clear();
     this.viewProvider.playSound('victory');
     void vscode.window.showInformationMessage('Dusty: Dust bag emptied! Vacuum motor purring happily.');
+
+    if (this.churnCount >= 3) {
+      const editor = vscode.window.activeTextEditor;
+      if (editor) {
+        void this.triggerCrashout(editor);
+      }
+    }
   }
 
   public async insult(): Promise<void> {
-    const roast = await this.roastService.getRoast({ situation: 'general' });
+    const roast = await this.roastService.getRoast({ situation: 'brutal_personal' });
     this.stateStore.setRoast(roast);
     this.viewProvider.playSound('error');
-    this.viewProvider.shake(1);
-    void vscode.window.showInformationMessage(`Dusty: "${roast}"`);
+    this.viewProvider.shake(3);
+    void vscode.window.showErrorMessage(`Dusty: "${roast}"`, { modal: true });
   }
 
   public explain(message: string, line?: number): void {

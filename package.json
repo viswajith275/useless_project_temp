@@ -30,6 +30,13 @@
   ],
   "icon": "media/icons/dusty-icon.png",
   "contributes": {
+    "themes": [
+      {
+        "label": "Dusty Chaos Apocalypse",
+        "uiTheme": "vs-dark",
+        "path": "./themes/dusty-chaos-theme.json"
+      }
+    ],
     "viewsContainers": {
       "activitybar": [
         {
@@ -99,6 +106,12 @@
         "icon": "$(layout-sidebar-right)"
       },
       {
+        "command": "dusty.crashout",
+        "title": "Trigger Crashout (Delete Code)",
+        "category": "Dusty",
+        "icon": "$(flame)"
+      },
+      {
         "command": "dusty.explainDiagnostic",
         "title": "Explain Error",
         "category": "Dusty"
@@ -166,17 +179,29 @@
         },
         "dusty.ingestDelayMs": {
           "type": "number",
-          "default": 0,
+          "default": 1200,
           "minimum": 0,
-          "maximum": 3000,
-          "description": "Delay in milliseconds before vacuuming an identified syntax error (0 for instant ingestion)."
+          "maximum": 5000,
+          "description": "Delay in milliseconds before vacuuming an identified syntax error while showing approach animation."
+        },
+        "dusty.diagnosticDelayMs": {
+          "type": "number",
+          "default": 2500,
+          "minimum": 500,
+          "maximum": 10000,
+          "description": "Delay in milliseconds after the user stops typing before Dusty checks and targets syntax errors (allows user time to type)."
+        },
+        "dusty.checkOnSaveOnly": {
+          "type": "boolean",
+          "default": false,
+          "description": "Only check and delete syntax errors when the user explicitly saves the document."
         },
         "dusty.cooldownMs": {
           "type": "number",
           "default": 0,
           "minimum": 0,
           "maximum": 60000,
-          "description": "Cooldown period in milliseconds between automatic chaos events (0 for instant consecutive ingestion)."
+          "description": "Cooldown period in milliseconds between automatic chaos events."
         },
         "dusty.enableLLM": {
           "type": "boolean",

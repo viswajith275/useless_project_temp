@@ -79,10 +79,18 @@ export class DustyStatusBar implements vscode.Disposable {
         this.item.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground');
         break;
 
+      case 'crashout':
+        this.item.text = '$(flame) Dusty: CRASHOUT! (100%)';
+        this.item.tooltip = 'Dusty has completely crashed out from rage!';
+        this.item.command = 'dusty.openSidebar';
+        this.item.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground');
+        break;
+
       default:
         // Idle
-        this.item.text = `🧹 Dusty: Idle (${snapshot.bagCount}/${snapshot.bagCapacity})`;
-        this.item.tooltip = `Dusty is purring quietly. Bag: ${snapshot.bagCount}/${snapshot.bagCapacity}. Click to open sidebar.`;
+        const rageLabel = snapshot.rageMeter > 0 ? ` [Rage: ${snapshot.rageMeter}%]` : '';
+        this.item.text = `🧹 Dusty: Idle (${snapshot.bagCount}/${snapshot.bagCapacity})${rageLabel}`;
+        this.item.tooltip = `Dusty is purring quietly. Bag: ${snapshot.bagCount}/${snapshot.bagCapacity}. Rage: ${snapshot.rageMeter}%. Click to open sidebar.`;
         this.item.command = 'dusty.openSidebar';
         this.item.backgroundColor = undefined;
         break;

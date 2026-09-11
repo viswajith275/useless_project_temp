@@ -84,4 +84,16 @@ export function registerCommands(
       chaosEngine.explain(message, line);
     })
   );
+
+  // 10. Force Crashout
+  context.subscriptions.push(
+    vscode.commands.registerCommand('dusty.crashout', async () => {
+      const ed = vscode.window.activeTextEditor;
+      if (ed) {
+        await chaosEngine.triggerCrashout(ed);
+      } else {
+        void vscode.window.showWarningMessage('Dusty: Open an editor first so I can crash out and delete code!');
+      }
+    })
+  );
 }

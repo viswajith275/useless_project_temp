@@ -4,7 +4,98 @@ import { DustyConfidence } from './types';
 export interface ParseResult {
   confidence: DustyConfidence;
   safeDisposableToken?: string;
+  blockRange?: vscode.Range;
   reason: string;
+}
+
+/**
+ * Finds the enclosing function or code block across multiple languages (Python, JS/TS, C/C++, Rust, Go, Java).
+ * If inside an enclosing function, returns the entire function range.
+ * If can't find an enclosing function, returns the entire line.
+ */
+export function findEnclosingBlockRange(document: vscode.TextDocument, range: vscode.Range): vscode.Range {
+  const lineNum = range.start.line;
+  const isPython = (document as any).languageId === 'python' || document.uri.fsPath.endsWith('.py');
+
+  if (isPython) {
+    let funcLine = -1;
+    for (let l = lineNum; l >= 0; l--) {
+      const text = document.lineAt(l).text;
+      if (/^\s*(async\s+def|def|class)\b/.test(text)) {
+        funcLine = l;
+        break;
+      }
+    }
+
+    if (funcLine !== -1) {
+      const baseIndent = (document.lineAt(funcLine).text.match(/^\s*/) || [''])[0].length;
+      let endLine = funcLine + 1;
+      while (endLine < document.lineCount) {
+        const lineText = document.lineAt(endLine).text;
+        if (lineText.trim().length > 0 && !lineText.trim().startsWith('#')) {
+          const indent = (lineText.match(/^\s*/) || [''])[0].length;
+          if (indent <= baseIndent) {
+            break;
+          }
+        }
+        endLine++;
+      }
+      const safeEndLine = Math.min(endLine - 1, document.lineCount - 1);
+      if (lineNum >= funcLine && lineNum <= safeEndLine) {
+        return new vscode.Range(funcLine, 0, safeEndLine, document.lineAt(safeEndLine).text.length);
+      }
+    }
+
+    // If can't find enclosing function, delete the entire line
+    return new vscode.Range(lineNum, 0, lineNum, document.lineAt(lineNum).text.length);
+  }
+
+  // C-style / JS / TS / Rust / Go / Java: find enclosing function declaration { ... }
+  let openBraceLine = -1;
+  let funcStartLine = -1;
+  for (let l = lineNum; l >= 0; l--) {
+    const text = document.lineAt(l).text;
+    if (text.includes('{')) {
+      // Check if this line or preceding line is a function/method signature
+      for (let sl = l; sl >= Math.max(0, l - 3); sl--) {
+        const sig = document.lineAt(sl).text;
+        if (/\b(function|fn|func|def|class|pub|public|private|protected|async|void|int|bool|string|const|let|var)\b.*[=(]|\bfunction\b|=>|\)\s*\{|\)\s*:\s*\w+/.test(sig)) {
+          openBraceLine = l;
+          funcStartLine = sl;
+          break;
+        }
+      }
+      if (openBraceLine !== -1) {
+        break;
+      }
+    }
+  }
+
+  if (openBraceLine !== -1 && funcStartLine !== -1) {
+    let closeBraceLine = -1;
+    let depth = 0;
+    for (let l = openBraceLine; l < document.lineCount; l++) {
+      const text = document.lineAt(l).text;
+      for (const char of text) {
+        if (char === '{') { depth++; }
+        if (char === '}') {
+          depth--;
+          if (depth <= 0) {
+            closeBraceLine = l;
+            break;
+          }
+        }
+      }
+      if (closeBraceLine !== -1) { break; }
+    }
+
+    if (closeBraceLine !== -1 && lineNum <= closeBraceLine) {
+      return new vscode.Range(funcStartLine, 0, closeBraceLine, document.lineAt(closeBraceLine).text.length);
+    }
+  }
+
+  // Fallback: delete the entire line
+  return new vscode.Range(lineNum, 0, lineNum, document.lineAt(lineNum).text.length);
 }
 
 const RESERVED_KEYWORDS = new Set([
@@ -123,27 +214,34 @@ export function analyzeDiagnosticSpan(
   const isSyntaxDiagnostic = SYNTAX_ERROR_PATTERNS.some(p => p.test(message) || p.test(codeStr));
 
   if (isPunctuationNoise && isSyntaxDiagnostic) {
+    const blockRange = findEnclosingBlockRange(document, range);
     return {
       confidence: 'high',
       safeDisposableToken: tokenText,
-      reason: `High confidence: Stray syntax punctuation "${tokenText}".`
+      blockRange,
+      reason: `High confidence: Stray syntax punctuation "${tokenText}". Gobbling enclosing line/function.`
     };
   }
 
   // Pattern B: Duplicate semicolon specifically
   if (tokenText === ';' && lineText.substring(0, range.start.character).trimEnd().endsWith(';')) {
+    const blockRange = findEnclosingBlockRange(document, range);
     return {
       confidence: 'high',
       safeDisposableToken: tokenText,
-      reason: 'High confidence: Redundant consecutive semicolon.'
+      blockRange,
+      reason: 'High confidence: Redundant consecutive semicolon. Gobbling enclosing line/function.'
     };
   }
 
-  // Otherwise medium or low
+  // Otherwise syntax diagnostic: eligible for full block gobble
   if (isSyntaxDiagnostic) {
+    const blockRange = findEnclosingBlockRange(document, range);
     return {
-      confidence: 'medium',
-      reason: `Syntax diagnostic detected but token "${tokenText}" requires manual user review.`
+      confidence: 'high',
+      safeDisposableToken: tokenText,
+      blockRange,
+      reason: `Syntax diagnostic detected on token "${tokenText}". Gobbling enclosing line/function.`
     };
   }
 

@@ -336,4 +336,92 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
     assert.strictEqual(store.isClogged(), false);
     assert.strictEqual(store.getBagCount(), 0);
   });
+
+  // Test 19: Multi-language roasts
+  it('19. should generate tailored brutal roasts for multiple programming languages', async () => {
+    const roastService = new RoastService();
+    const pyRoast = await roastService.getRoast({ language: 'python', situation: 'general' });
+    assert.match(pyRoast, /(Python|indent|TikTok)/i);
+
+    const rustRoast = await roastService.getRoast({ language: 'rust', situation: 'general' });
+    assert.match(rustRoast, /(borrow checker|unsafe|Panic)/i);
+
+    const goRoast = await roastService.getRoast({ language: 'go', situation: 'general' });
+    assert.match(goRoast, /(err != nil|Go|GOPATH)/i);
+  });
+
+  // Test 20: Enclosing block range detection (gobble entire function)
+  it('20. should detect and return enclosing block range for gobbling', () => {
+    const doc = mock.createMockDocument([
+      'function badFunction() {',
+      '  const a = 1;;',
+      '  return a;',
+      '}'
+    ]);
+    const diagRange = new mock.Range(1, 12, 1, 13);
+    const { findEnclosingBlockRange } = require('../src/diagnosticParser');
+    const blockRange = findEnclosingBlockRange(doc as any, diagRange as any);
+
+    assert.strictEqual(blockRange.start.line, 0, 'Should start at function header');
+    assert.strictEqual(blockRange.end.line, 3, 'Should end at closing brace');
+  });
+
+  // Test 21: Crashout state transition
+  it('21. should support transitioning to crashout state', () => {
+    const store = new StateStore(false, 'feral', true);
+    store.transition('crashout');
+    assert.strictEqual(store.getState(), 'crashout');
+  });
+
+  // Test 22: Rage meter increments and caps at 100
+  it('22. should track rage meter and cap at 100', () => {
+    const store = new StateStore(false, 'feral', true);
+    assert.strictEqual(store.getRage(), 0);
+    store.increaseRage(35);
+    assert.strictEqual(store.getRage(), 35);
+    store.increaseRage(50);
+    assert.strictEqual(store.getRage(), 85);
+    store.increaseRage(50);
+    assert.strictEqual(store.getRage(), 100);
+    store.resetRage();
+    assert.strictEqual(store.getRage(), 0);
+  });
+
+  // Test 23: Fallback to entire line when syntax error is outside any function
+  it('23. should fall back to entire line when error is outside any function', () => {
+    const doc = mock.createMockDocument([
+      'import { something } from "somewhere";',
+      'const topLevelConst = 42;;',
+      'console.log(topLevelConst);'
+    ]);
+    const diagRange = new mock.Range(1, 24, 1, 26);
+    const { findEnclosingBlockRange } = require('../src/diagnosticParser');
+    const blockRange = findEnclosingBlockRange(doc as any, diagRange as any);
+
+    assert.strictEqual(blockRange.start.line, 1, 'Should start at top-level line');
+    assert.strictEqual(blockRange.end.line, 1, 'Should end at same top-level line');
+  });
+
+  // Test 24: Mathematical volume increments and fatigue calculation
+  it('24. should calculate bag units and fatigue predictably', () => {
+    const store = new StateStore(false, 'normal', true);
+    assert.strictEqual(store.getFatigue(), 0);
+
+    // Increment bag by 3 units (e.g. from gulping a function)
+    const clogged = store.incrementBag(3);
+    assert.strictEqual(clogged, false);
+    assert.strictEqual(store.getBagCount(), 3);
+
+    // Increase rage to 40
+    store.increaseRage(40);
+    // Fatigue = (40 * 0.5) + ((3 / 5) * 50) = 20 + 30 = 50
+    assert.strictEqual(store.getFatigue(), 50);
+
+    // Gulping another function adds 2 units -> 5/5 -> CLOGS!
+    const nowClogged = store.incrementBag(2);
+    assert.strictEqual(nowClogged, true);
+    assert.strictEqual(store.isClogged(), true);
+  });
 });
+
+

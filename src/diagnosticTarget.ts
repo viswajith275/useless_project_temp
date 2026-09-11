@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { DustyDiagnosticTarget, DustyConfidence } from './types';
-import { analyzeDiagnosticSpan } from './diagnosticParser';
+import { analyzeDiagnosticSpan, findEnclosingBlockRange } from './diagnosticParser';
 
 export function createDiagnosticFingerprint(
   uri: vscode.Uri,
@@ -82,6 +82,7 @@ export class DiagnosticTargetSelector {
       fingerprint: string;
       confidence: DustyConfidence;
       safeDisposableToken?: string;
+      blockRange?: vscode.Range;
       score: number;
     }
 
@@ -127,6 +128,7 @@ export class DiagnosticTargetSelector {
         fingerprint: fp,
         confidence: parseResult.confidence,
         safeDisposableToken: parseResult.safeDisposableToken,
+        blockRange: parseResult.blockRange,
         score
       });
     }
@@ -134,14 +136,17 @@ export class DiagnosticTargetSelector {
     scored.sort((a, b) => b.score - a.score);
     const best = scored[0];
 
-    // If even the best is severely negative from suppression, allow it only if confidence is high
-    if (best.score < -1500 && best.confidence !== 'high') {
+    // Reject only if overwhelmingly suppressed (-3000)
+    if (best.score <= -3000) {
       return undefined;
     }
+
+    const blockRange = best.blockRange || findEnclosingBlockRange(document, best.diag.range);
 
     return {
       uri: activeUri,
       range: best.diag.range,
+      blockRange,
       severity: best.diag.severity,
       source: best.diag.source,
       code: best.diag.code,

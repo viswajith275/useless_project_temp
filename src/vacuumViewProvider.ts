@@ -22,6 +22,7 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
       this.stateStore.onDidChangeState(snapshot => {
         this.postMessage({ type: 'state', state: snapshot });
         this.postMessage({ type: 'bag', value: snapshot.bagCount, capacity: snapshot.bagCapacity });
+        this.postMessage({ type: 'rage', value: snapshot.rageMeter });
         if (snapshot.lastRoast) {
           this.postMessage({ type: 'roast', text: snapshot.lastRoast });
         }
@@ -55,6 +56,7 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
     const snapshot = this.stateStore.getSnapshot();
     this.postMessage({ type: 'state', state: snapshot });
     this.postMessage({ type: 'bag', value: snapshot.bagCount, capacity: snapshot.bagCapacity });
+    this.postMessage({ type: 'rage', value: snapshot.rageMeter });
   }
 
   public postMessage(message: HostToWebviewMessage): void {
@@ -135,6 +137,17 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
       </div>
       <div class="progress-bar-track">
         <div class="progress-bar-fill" id="bagBar" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <!-- Rage Meter -->
+    <div class="meter-section rage-section" role="region" aria-label="Dusty rage meter">
+      <div class="meter-header">
+        <span class="meter-title">🔥 RAGE METER</span>
+        <span class="meter-value" id="rageValue">0%</span>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill rage-fill" id="rageBar" style="width: 0%;"></div>
       </div>
     </div>
 
