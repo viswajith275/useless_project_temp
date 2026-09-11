@@ -161,7 +161,7 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
     <!-- Dustpan / Bag Meter -->
     <div class="meter-section" role="region" aria-label="Dustpan capacity">
       <div class="meter-header">
-        <span class="meter-title">🧹 DUSTPAN / മുറം</span>
+        <span class="meter-title">🧹 DUSTPAN / MURRAM</span>
         <span class="meter-value" id="bagValue">0 / 5</span>
       </div>
       <div class="progress-bar-track">
@@ -172,7 +172,7 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
     <!-- Rage Meter -->
     <div class="meter-section rage-section" role="region" aria-label="Dusty rage meter">
       <div class="meter-header">
-        <span class="meter-title">🔥 RAGE METER / കലിപ്പ്</span>
+        <span class="meter-title">🔥 RAGE METER / KALIPPU</span>
         <span class="meter-value" id="rageValue">0%</span>
       </div>
       <div class="progress-bar-track">
