@@ -1,7 +1,7 @@
-### Ignition & Engine Control ⚡
+### Sweep Engine and Dustpan (Muram)
 
-Dusty stays asleep until you start his suction engine.
+Dusty stays asleep until you start his sweeping engine.
 
-- Click the **Ignition** button in the sidebar or run `Dusty: Toggle Engine`.
-- Check the status bar in the bottom right corner for current status.
-- If Dusty gets clogged after eating 5 errors, use the obscure unclog chord: `Ctrl+Alt+U C` (or `Cmd+Alt+U C` on Mac)!
+- Click the **SWEEP** button in the sidebar or run `Dusty: Toggle Engine`.
+- Check the status bar in the bottom right corner for real-time status.
+- When Dusty sweeps 5 syntax errors, his dustpan (മുറം) becomes full. He chokes until you click **CLEAN DUSTPAN** or hit `Cmd+Alt+U C` (`Ctrl+Alt+U C` on Windows/Linux).

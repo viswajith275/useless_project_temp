@@ -41,7 +41,7 @@ const ROAST_TEMPLATES: Record<string, string[]> = {
     'Laptop adachu vechu purathu poyi oru marathodu "Sorry" para... Nee ingane jeevichu ee koothara code adichu oxygen waste cheyyunnathinu!',
     '-47 vote kitti kashamitta StackOverflow answer copy adichathano? CID Moosa-yile Moolamkuzhiyil Sahadevan polum ithilum nalla logic undakkum!',
     'Sandesham cinemayile Shankaradi chodicha pole chodikuva: "Thanikku vere paniyille hey?" Ithilum bhedam valla thattukadayo lottery kachavadamo thudangunathaayirunnu!',
-    'Ninte coding kandu chool eduthu swantham mughathu adikkaan thonnunnu! Naaleyenkilum resignation koduthu valla kappayo vazhayo vekkeda!',
+    'Ninte code kandu chool eduthu swantham mughathu adikkaan thonnunnu! Naaleyenkilum resignation koduthu valla kappayo vazhayo vekkeda!',
     'Ee code production-il poyaal server alla, ninte career-um company-um onnake kathiyamarum! Close cheythu podey!',
     'Sachin bro... immathiri code kandal Reenu poyittu ninte company-ile security polum ninne mind cheyyilla!',
     'Shammi hero aada hero... pakshe ninte code verum zero! Tholviyude poorna roopamaanu thaan!'

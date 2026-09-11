@@ -1,7 +1,7 @@
 {
   "name": "dusty-vacuum",
-  "displayName": "Dusty the Malicious Vacuum",
-  "description": "A chaotic, harmless little vacuum cleaner in your sidebar that safely eats your syntax errors.",
+  "displayName": "Dusty the Malicious Chool",
+  "description": "A chaotic, delightfully useless Malayalam pairing broom living in your sidebar that sweeps syntax errors, throws tantrums, and roasts you in Manglish.",
   "version": "0.1.0",
   "publisher": "viswajith",
   "repository": {
@@ -17,12 +17,15 @@
     "Linters"
   ],
   "keywords": [
-    "vacuum",
+    "chool",
+    "broom",
     "dusty",
-    "fun",
+    "manglish",
+    "malayalam",
+    "roast",
     "chaos",
     "linter",
-    "diagnostics"
+    "fun"
   ],
   "main": "./out/src/extension.js",
   "activationEvents": [
@@ -237,28 +240,28 @@
     "walkthroughs": [
       {
         "id": "dustyWalkthrough",
-        "title": "Meet Dusty the Malicious Vacuum",
-        "description": "Learn how to survive pairing with a chaotic desktop vacuum in your editor.",
+        "title": "Meet Dusty the Malicious Chool",
+        "description": "Learn how to survive pairing with a bad-tempered Malayalam desktop broom in your editor.",
         "steps": [
           {
             "id": "step1",
-            "title": "Meet Dusty",
-            "description": "Dusty lives in your sidebar, watching for errors with mischievous hunger.\n[Open Dusty](command:dusty.openSidebar)",
+            "title": "Meet Dusty the Chool",
+            "description": "Dusty lives in your sidebar, watching your diagnostics with judging eyes.\n[Open Dusty](command:dusty.openSidebar)",
             "media": {
               "markdown": "media/walkthrough/step1.md"
             }
           },
           {
             "id": "step2",
-            "title": "Turn on the Engine",
-            "description": "Dusty is asleep until you crank the ignition.\n[Toggle Engine](command:dusty.toggleEngine)",
+            "title": "Sweep Engine and Dustpan",
+            "description": "Dusty is asleep until you crank the sweeping engine.\n[Toggle Engine](command:dusty.toggleEngine)",
             "media": {
               "markdown": "media/walkthrough/step2.md"
             }
           },
           {
             "id": "step3",
-            "title": "Write a Bug",
+            "title": "Feeding Syntax Errors",
             "description": "Make a syntax typo (like an extra semicolon `;;`) in your code. Dusty will detect it and target the diagnostic line.",
             "media": {
               "markdown": "media/walkthrough/step3.md"
@@ -266,16 +269,16 @@
           },
           {
             "id": "step4",
-            "title": "Watch Dusty React",
-            "description": "Watch the gutter animations and the 'Feed Dusty' CodeLens. If safe, Dusty vacuums the stray token. If dangerous, he roasts you and backs away.",
+            "title": "Rage Meter and Crashout",
+            "description": "Watch the gutter animations and the 'Feed Dusty' CodeLens. If provoked or overwhelmed, Dusty's rage peaks and he deletes random code.",
             "media": {
               "markdown": "media/walkthrough/step4.md"
             }
           },
           {
             "id": "step5",
-            "title": "Configure Chaos Intensity",
-            "description": "Tame Dusty with 'calm' mode or unleash total mischief with 'feral' mode.\n[Open Settings](command:workbench.action.openSettings?%22dusty.chaosIntensity%22)",
+            "title": "Local Ollama 3B and Audio",
+            "description": "Connect local Ollama for custom Manglish trolls or customize audio files in media/sounds.\n[Open Settings](command:workbench.action.openSettings?%22dusty%22)",
             "media": {
               "markdown": "media/walkthrough/step5.md"
             }

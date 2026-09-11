@@ -1,130 +1,98 @@
-# Dusty the Malicious Vacuum 🧹⚡
+<img width="1280" height="640" alt="git (1)" src="https://github.com/user-attachments/assets/8920b256-2ba8-4988-b824-5351134eb4bd" />
 
-A mischievous, chaotic, yet strictly harmless little vacuum cleaner living inside VS Code. Dusty watches your diagnostics, makes noise, roasts your typos, and occasionally "eats" small, disposable syntax errors.
+# Dusty the Malicious Chool
 
----
+## Basic Details
+### Team Name: **VAZHAS**
 
-## What is Dusty?
+### Team Members
+- Team Lead: Viswajith M P - GECT
+- Member 2: Ishaangoutham K S - GECT
 
-Dusty is an interactive pairing pet for VS Code. Rather than acting as a silent, sterile editor tool, Dusty provides character presence in your secondary sidebar and editor gutter.
+### Project Description
+Dusty the Malicious Chool is an interactive, bad-tempered pairing companion modeled after a traditional Kerala coconut broom (chool / ചൂൽ) living directly inside VS Code. Rather than assisting you, Dusty watches your editor diagnostics with judging eyes, sweeps your syntax errors into his dustpan (മുറം), throws full-blown tantrums, deletes broken code when his Rage Meter fills up, and personally roasts your life choices in savage Manglish with iconic Malayalam cinema references.
 
-He is designed to be:
-- **Funny & Chaotic**: He whirrs, complains, roasts your code, and occasionally vacuums empty space for no reason ("I fixed nothing").
-- **Strictly Harmless**: Dusty will **never** corrupt working code, delete statements, invent new errors, or make your real debugging problem harder. Automatic ingestion is intentionally conservative and constrained to tiny disposable syntax artifacts (like stray duplicate semicolons).
+### The Problem (that doesn't exist)
+Modern developers are suffering from a dangerous epidemic of "peace of mind" and "excessive productivity." AI tools like Copilot and ChatGPT are overly polite, apologizing for minor hallucinations and quietly fixing syntax errors. This has deprived programmers of the traditional, character-building trauma of being scolded by an angry elder with a household broom. Furthermore, stray semicolons, dangling brackets, and broken functions are sitting around in codebases without an irritable virtual broom actively sweeping them into a virtual dustpan and screaming at you.
 
----
+### The Solution (that nobody asked for)
+We built Dusty: a native VS Code pairing broom with severe anger management issues.
 
-## Features
+When you write buggy code, Dusty doesn't offer gentle auto-complete. He marches multi-frame pixelated bristles down your editor gutter, vacuums the offending token or broken function into his dustpan, and delivers brutal roasts in Manglish (*"Sandesham Shankaradi chodicha pole chodikuva: Thanikku vere paniyille hey? Poyi valla thattukadayum thudanguda!"*).
 
-- **Character Sidebar**: A pixel-art canvas vacuum with animated eyes, facial expressions, and dynamic dust bag gauge located in your sidebar.
-- **Editor Gutter Animations**: Procedurally generated multi-frame SVG animations marching down your editor gutter toward active errors.
-- **Native CodeLens**: `🧹 Feed Dusty` and `Dusty: Explain` lenses appear above lines with active syntax errors.
-- **Actionable Status Bar**: Displays current vacuum state (`Idle`, `Hunting`, `Clogged`, `Muted`, or `Off`) with direct click actions.
-- **Procedural Synthesizer Audio**: Zero-asset Web Audio synthesizer producing suction whooshes, error chirps, victory arpeggios, and thunks without downloading external sound files.
-- **Safe Automatic Ingestion**: When enabled and confident, Dusty vacuums stray syntax tokens atomically using `editor.edit()`. If an error is complex, semantic, or multi-line, Dusty backs away and leaves your code untouched.
-- **Clog Mechanic**: After eating 5 errors, Dusty's dust bag becomes clogged! He throws a fit until you unclog him using the obscure shortcut `Cmd/Ctrl + Alt + U C` or the sidebar Unclog button.
+If you dare to type while he is sweeping, he aggressively deletes what you just typed to teach you keyboard discipline. If his dustpan fills with 5 syntax crumbs, he chokes and halts your editor until you manually unclog him. And if his Rage Meter hits 100%, he enters full "Rangannan Crashout Mode", strobes your editor with an emergency apocalypse theme, and deletes random chunks of code out of pure vengeance while screaming in Manglish.
 
----
+## Technical Details
+### Technologies/Components Used
+For Software:
+- Languages used: TypeScript, JavaScript, Web Audio API, HTML5 Canvas, Theme-native CSS
+- Frameworks used: VS Code Extensibility API (`vscode` 1.85.0+), VS Code Webview API, Language Server Diagnostics
+- Libraries used: Zero external runtime npm dependencies (compiled with raw `tsc`, procedural Web Audio synthesizer, procedural SVG frame generator, native Node.js `fs` & `zlib`)
+- Tools used: VS Code Extension Development Host, Ollama (Local 3B LLM inference using `llama3.2:3b`), vsce (VS Code Extension Packager), npm, Git, Mocha (test runner)
 
-## Product Principles & Safety Contract
+For Hardware:
+- Main components: Coconut palm frond / Eerkili (virtually simulated in 60fps canvas), Mechanical keyboard (the primary victim), Monitor (subjected to emergency strobe themes)
+- Specifications: Infinite annoyance capability, 0% productivity throughput, 100% rage saturation point
+- Tools required: VS Code, a keyboard you don't mind getting yelled at for touching, an active Ollama instance for AI-generated trauma
 
-> **Core Safety Rule**: Dusty is allowed to make the coding experience more annoying. He is not allowed to make the coding problem worse.
-
-### What Dusty Can Eat:
-- Isolated stray syntax tokens (e.g. redundant `;;` or dangling stray commas).
-- Single-line ranges containing <= 5 characters.
-- High-confidence parser diagnostics where deleting the token cannot damage program logic.
-
-### What Dusty Will NEVER Touch Automatically:
-- Statements, functions, classes, or declarations.
-- Semantic and type errors (e.g. TypeScript type mismatches, missing imports).
-- Multi-line diagnostic ranges.
-- Comments or string literals.
-- Any diagnostic whose document version changed during the animation.
-- Read-only files.
-
-When in doubt, Dusty executes a safe fallback: he highlights the problem, delivers a roast, offers a CodeLens, and stops.
-
----
-
-## Commands
-
-All commands are contributed under the `Dusty` category in the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`):
-
-| Command | Title | Description |
-|---|---|---|
-| `dusty.toggleEngine` | Toggle Engine | Starts or stops the vacuum engine. |
-| `dusty.unclog` | Unclog Dust Bag | Empties the full dust bag (enabled when clogged). |
-| `dusty.feedManually` | Feed Dusty | Manually trigger safe ingestion of the active error. |
-| `dusty.insultMe` | Roast Me | Solicits a sarcastic roast from Dusty. |
-| `dusty.muteAudio` | Toggle Audio | Mutes or unmutes synthesized audio effects. |
-| `dusty.resetBag` | Reset Dust Bag | Resets the dust bag counter to 0/5. |
-| `dusty.testSound` | Test Vacuum Sound | Plays a procedural vacuum suction sound. |
-| `dusty.openSidebar` | Open Dusty in Sidebar | Focuses Dusty's character view. |
-| `dusty.explainDiagnostic`| Explain Error | Shows Dusty's commentary on a diagnostic. |
-
----
-
-## Configuration Settings
-
-Configured under `Settings > Extensions > Dusty the Vacuum`:
-
-- `dusty.enabled` *(boolean, default: `true`)*: Turn Dusty on or off.
-- `dusty.chaosIntensity` *(enum: `"calm" | "normal" | "feral"`, default: `"normal"`)*:
-  - `calm`: Rare commentary, longer cooldowns, conservative behavior.
-  - `normal`: Balanced comedy, standard cooldowns.
-  - `feral`: Hyperactive animations, frequent roasts, tantrums. *(Note: Feral mode never bypasses safety gates!)*
-- `dusty.autoIngest` *(boolean, default: `true`)*: Allow Dusty to automatically eat high-confidence syntax errors.
-- `dusty.muteAudio` *(boolean, default: `false`)*: Mute procedural audio synthesis.
-- `dusty.ingestDelayMs` *(number, default: `650`)*: Delay in milliseconds between visual approach and safe atomic ingestion.
-- `dusty.cooldownMs` *(number, default: `5000`)*: Cooldown in milliseconds between automatic chaos events.
-- `dusty.enableLLM` *(boolean, default: `false`)*: Connects to local Ollama instance for dynamically generated roasts.
-- `dusty.ollamaEndpoint` *(string, default: `"http://127.0.0.1:11434"`)*: Local Ollama URL.
-
----
-
-## Local Ollama Setup (Optional)
-
-Dusty includes a 3-tier roast engine:
-1. Deterministic contextual templates.
-2. Comprehensive fallback roast bank.
-3. Optional local Ollama integration.
-
-To use Ollama:
-1. Ensure Ollama is running locally: `ollama run llama3`.
-2. Enable `dusty.enableLLM` in VS Code settings.
-3. If Ollama is offline or times out (1200ms limit), Dusty falls back immediately to local roasts with zero lag or blocking.
-
----
-
-## Accessibility & Theme Support
-
-- **Theme Native**: Uses VS Code theme CSS variables (`--vscode-editor-background`, `--vscode-foreground`, etc.).
-- **Reduced Motion**: Respects `prefers-reduced-motion` to disable screen shakes, canvas pulsing, and scanlines.
-- **ARIA & Keyboard**: All webview controls have descriptive accessible names and focus rings.
-
----
-
-## Development & Testing
-
-### Build
+### Implementation
+For Software:
+# Installation
 ```bash
+# Clone the repository
+git clone https://github.com/viswajith275/useless_project_temp.git
+cd useless_project_temp
+
+# Install dependencies
 npm install
+
+# Compile TypeScript
 npm run compile
-```
 
-### Run Tests
-```bash
-npm test
-```
-
-### Package Extension (.vsix)
-```bash
+# Package as a VS Code VSIX extension
 npm run package
 ```
 
+# Run
+```bash
+# Install the generated VSIX directly into VS Code:
+code --install-extension dusty-vacuum-0.1.0.vsix
+
+# Or press F5 inside VS Code to launch the Extension Development Host window.
+
+# Optional: Run local Ollama 3B model for personalized Manglish roasts:
+ollama run llama3.2:3b
+```
+
+### Project Documentation
+For Software:
+
+# Screenshots
+![Dusty Sidebar View](media/icons/idle.png)
+*Dusty the Chool resting in the secondary sidebar with live state badge, speech bubble, dustpan capacity (മുറം), and rage meter.*
+
+![Editor Gutter Sweep & CodeLens](media/icons/eating.png)
+*Multi-frame pixel-art broom bristles marching down the editor gutter toward a syntax error with native 'Feed Dusty' CodeLens.*
+
+![Crashout Apocalypse Mode](media/icons/clogged.png)
+*Dusty reaching 100% Rage, triggering emergency strobes and entering full Rangannan revenge code-deletion mode.*
+
+### Project Demo
+# Video
+[Add your demo video link here]
+*Demonstration video showing Dusty detecting syntax typos, sweeping code into his dustpan, choking on errors, and unleashing full 100% rage crashout mode with custom Manglish roasts.*
+
+# Additional Demos
+[Add any extra demo materials/links]
+- VSIX Extension Package: `dusty-vacuum-0.1.0.vsix`
+- Command Palette Integration: Run `Cmd+Shift+P` -> `Dusty: Roast Me` or `Dusty: Trigger Crashout`
+
+## Team Contributions
+- Viswajith M P: Architectural design, VS Code extension host integration, diagnostic classification, procedural Web Audio synthesizer, Ollama 3B local LLM prompt engineering, and Manglish roast writing.
+- Ishaangoutham K S: Canvas pixel-art renderer, CRT filter overlay, theme-switching chaos engine, and sound effect curation.
+
 ---
+Made with ❤️ at TinkerHub Useless Projects 
 
-## License
-
-MIT
+![Static Badge](https://img.shields.io/badge/TinkerHub-24?color=%23000000&link=https%3A%2F%2Fwww.tinkerhub.org%2F)
+![Static Badge](https://img.shields.io/badge/UselessProjects--26-26?link=https%3A%2F%2Ftinkerhub.org%2Fevents%2F1M8ORET9A1%2Fuseless-projects-3.0)

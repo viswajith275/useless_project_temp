@@ -1,6 +1,7 @@
-### Safe Ingestion & CodeLens 🔍
+### Rage Meter and Crashout
 
-Notice how Dusty reacts:
-- **Editor Gutter**: Animated retro vacuum frames march toward the diagnostic.
-- **CodeLens**: A native `🧹 Feed Dusty` prompt appears directly above the error line.
-- **Safety First**: If an error is complex or multi-line, Dusty backs away and roasts you instead of corrupting your code.
+Dusty has an anger management problem:
+
+- **Typing While Cleaning**: If you keep typing while Dusty is sweeping, he gets mad, eats what you just typed, and delivers an aggressive Manglish warning.
+- **Rage Build-up**: Gulping broken functions and repeated syntax errors fills the Rage Meter (0 to 100%).
+- **Crashout**: At 100% rage, Dusty enters Crashout mode. He completely loses his mind, triggers full-screen alert strobes, and randomly deletes lines of code out of sheer revenge.

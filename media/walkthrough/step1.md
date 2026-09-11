@@ -1,9 +1,9 @@
-### Meet Dusty the Vacuum! 🧹
+### Meet Dusty the Chool
 
-Dusty is your new chaotic desktop pairing partner. He lives in your secondary sidebar and watches your diagnostics with hungry eyes.
+Dusty is a delightfully useless desktop broom living in your secondary sidebar. Instead of helping you finish your sprint, Dusty judges your code diagnostics and delivers savage Manglish roasts when you make syntax mistakes.
 
-- **Status & Bag**: Tracks how many errors he has "eaten".
-- **Chaotic, but safe**: Dusty never damages meaningful code.
-- **Roasts**: Dusty will gladly roast your syntax typos.
+- **Status and Dustpan (Muram)**: Monitors how many syntax crumbs he has swept up.
+- **Rage Meter**: Tracks how annoyed Dusty is with your code.
+- **Brutal Manglish Roasts**: Drops classic Malayalam cinema references (*Aavesham*, *Sandesham*, *CID Moosa*, *Kumbalangi Nights*) questioning your life choices.
 
-Open the sidebar view to say hello!
+Open the sidebar view to meet Dusty.

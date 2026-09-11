@@ -1,10 +1,10 @@
-### Feed Dusty an Error 🐛
+### Feeding Syntax Errors
 
-Dusty hunts syntax errors in your active editor.
+Dusty hunts for syntax errors in your active editor.
 
-Try introducing a safe disposable syntax error:
+Try writing a stray disposable syntax typo:
 ```typescript
-const message = "Hello world";; // Note the duplicate semicolon!
+const message = "Hello world";; // Note the extra semicolon
 ```
 
-Dusty will detect the diagnostic, target the line, and prepare to vacuum!
+Dusty will target the line, animate animated pixel-art broom bristles down your gutter, and sweep the token away while lecturing you on basic keyboard discipline.
