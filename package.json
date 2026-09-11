@@ -1,0 +1,260 @@
+{
+  "name": "dusty-vacuum",
+  "displayName": "Dusty the Malicious Vacuum",
+  "description": "A chaotic, harmless little vacuum cleaner in your sidebar that safely eats your syntax errors.",
+  "version": "0.1.0",
+  "publisher": "viswajith",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/viswajith275/useless_project_temp.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "Linters"
+  ],
+  "keywords": [
+    "vacuum",
+    "dusty",
+    "fun",
+    "chaos",
+    "linter",
+    "diagnostics"
+  ],
+  "main": "./out/src/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "icon": "media/icons/dusty-icon.png",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "dusty-sidebar",
+          "title": "Dusty",
+          "icon": "media/icons/dusty-activitybar.svg"
+        }
+      ]
+    },
+    "views": {
+      "dusty-sidebar": [
+        {
+          "type": "webview",
+          "id": "dusty.characterView",
+          "name": "Dusty",
+          "visibility": "visible"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "dusty.toggleEngine",
+        "title": "Toggle Engine",
+        "category": "Dusty",
+        "icon": "$(zap)"
+      },
+      {
+        "command": "dusty.unclog",
+        "title": "Unclog Dust Bag",
+        "category": "Dusty",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "dusty.insultMe",
+        "title": "Roast Me",
+        "category": "Dusty",
+        "icon": "$(flame)"
+      },
+      {
+        "command": "dusty.feedManually",
+        "title": "Feed Dusty",
+        "category": "Dusty",
+        "icon": "$(sparkle)"
+      },
+      {
+        "command": "dusty.muteAudio",
+        "title": "Toggle Audio",
+        "category": "Dusty",
+        "icon": "$(unmute)"
+      },
+      {
+        "command": "dusty.resetBag",
+        "title": "Reset Dust Bag",
+        "category": "Dusty",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "dusty.testSound",
+        "title": "Test Vacuum Sound",
+        "category": "Dusty",
+        "icon": "$(play)"
+      },
+      {
+        "command": "dusty.openSidebar",
+        "title": "Open Dusty in Sidebar",
+        "category": "Dusty",
+        "icon": "$(layout-sidebar-right)"
+      },
+      {
+        "command": "dusty.explainDiagnostic",
+        "title": "Explain Error",
+        "category": "Dusty"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "dusty.toggleEngine",
+          "when": "view == dusty.characterView",
+          "group": "navigation@1"
+        },
+        {
+          "command": "dusty.unclog",
+          "when": "view == dusty.characterView && dusty.clogged",
+          "group": "navigation@2"
+        },
+        {
+          "command": "dusty.muteAudio",
+          "when": "view == dusty.characterView",
+          "group": "navigation@3"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "dusty.unclog",
+        "key": "ctrl+alt+u c",
+        "mac": "cmd+alt+u c",
+        "when": "dusty.clogged"
+      }
+    ],
+    "configuration": {
+      "title": "Dusty the Vacuum",
+      "properties": {
+        "dusty.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable Dusty the Vacuum."
+        },
+        "dusty.chaosIntensity": {
+          "type": "string",
+          "enum": [
+            "calm",
+            "normal",
+            "feral"
+          ],
+          "enumDescriptions": [
+            "Calm: mostly visual commentary and rare interruptions. Conservative.",
+            "Normal: balanced chaos and periodic comedic vacuum reactions.",
+            "Feral: frequent animations, loud roasts, high chaos (never bypasses safety gates)."
+          ],
+          "default": "normal",
+          "description": "Chaos intensity level. Feral increases comedy frequency but strictly preserves all safety gates."
+        },
+        "dusty.autoIngest": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allow Dusty to automatically ingest small, safely disposable syntax errors (e.g. stray duplicate semicolons)."
+        },
+        "dusty.muteAudio": {
+          "type": "boolean",
+          "default": false,
+          "description": "Mute all vacuum audio effects."
+        },
+        "dusty.ingestDelayMs": {
+          "type": "number",
+          "default": 650,
+          "minimum": 300,
+          "maximum": 3000,
+          "description": "Delay in milliseconds between visual approach and safe atomic ingestion."
+        },
+        "dusty.cooldownMs": {
+          "type": "number",
+          "default": 5000,
+          "minimum": 1000,
+          "maximum": 60000,
+          "description": "Cooldown period in milliseconds between automatic chaos events."
+        },
+        "dusty.enableLLM": {
+          "type": "boolean",
+          "default": false,
+          "description": "Allow Dusty to query a local Ollama instance for contextual roasts. Disabled by default."
+        },
+        "dusty.ollamaEndpoint": {
+          "type": "string",
+          "default": "http://127.0.0.1:11434",
+          "description": "Base URL for the local Ollama instance."
+        }
+      }
+    },
+    "walkthroughs": [
+      {
+        "id": "dustyWalkthrough",
+        "title": "Meet Dusty the Malicious Vacuum",
+        "description": "Learn how to survive pairing with a chaotic desktop vacuum in your editor.",
+        "steps": [
+          {
+            "id": "step1",
+            "title": "Meet Dusty",
+            "description": "Dusty lives in your sidebar, watching for errors with mischievous hunger.\n[Open Dusty](command:dusty.openSidebar)",
+            "media": {
+              "markdown": "media/walkthrough/step1.md"
+            }
+          },
+          {
+            "id": "step2",
+            "title": "Turn on the Engine",
+            "description": "Dusty is asleep until you crank the ignition.\n[Toggle Engine](command:dusty.toggleEngine)",
+            "media": {
+              "markdown": "media/walkthrough/step2.md"
+            }
+          },
+          {
+            "id": "step3",
+            "title": "Write a Bug",
+            "description": "Make a syntax typo (like an extra semicolon `;;`) in your code. Dusty will detect it and target the diagnostic line.",
+            "media": {
+              "markdown": "media/walkthrough/step3.md"
+            }
+          },
+          {
+            "id": "step4",
+            "title": "Watch Dusty React",
+            "description": "Watch the gutter animations and the 'Feed Dusty' CodeLens. If safe, Dusty vacuums the stray token. If dangerous, he roasts you and backs away.",
+            "media": {
+              "markdown": "media/walkthrough/step4.md"
+            }
+          },
+          {
+            "id": "step5",
+            "title": "Configure Chaos Intensity",
+            "description": "Tame Dusty with 'calm' mode or unleash total mischief with 'feral' mode.\n[Open Settings](command:workbench.action.openSettings?%22dusty.chaosIntensity%22)",
+            "media": {
+              "markdown": "media/walkthrough/step5.md"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "test": "node ./out/test/runTests.js",
+    "vscode:prepublish": "npm run compile",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.24",
+    "@types/vscode": "^1.85.0",
+    "@vscode/test-electron": "^2.3.9",
+    "@vscode/vsce": "^3.2.1",
+    "mocha": "^10.3.0",
+    "typescript": "^5.4.2"
+  }
+}
