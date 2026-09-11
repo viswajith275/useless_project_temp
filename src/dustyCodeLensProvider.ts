@@ -48,21 +48,21 @@ export class DustyCodeLensProvider implements vscode.CodeLensProvider, vscode.Di
 
       const lensRange = new vscode.Range(line, 0, line, 0);
 
-      // Primary action: Feed Dusty
+      // Primary action: Sweep with Dusty
       lenses.push(
         new vscode.CodeLens(lensRange, {
-          title: '🧹 Feed Dusty',
-          tooltip: 'Have Dusty safely eat this syntax error',
+          title: '🧹 വാരിയെടുക്ക് (Sweep)',
+          tooltip: 'Dusty ചൂലുകൊണ്ട് ഈ സിന്റാക്സ് തെറ്റ് അടിച്ചുവാരി കളയട്ടെ',
           command: 'dusty.feedManually',
           arguments: [document.uri, error.range]
         })
       );
 
-      // Secondary action: Dusty Explain
+      // Secondary action: Dusty Roast/Explain
       lenses.push(
         new vscode.CodeLens(lensRange, {
-          title: 'Dusty: Explain',
-          tooltip: 'Hear Dusty roast and explain this diagnostic',
+          title: '🔥 കളിയാക്ക് (Roast)',
+          tooltip: 'ഈ തെറ്റിനെ പറ്റി Dusty-യുടെ എട്ടിന്റെ പണി റോസ്റ്റ് കേൾക്കുക',
           command: 'dusty.explainDiagnostic',
           arguments: [error.message, line]
         })

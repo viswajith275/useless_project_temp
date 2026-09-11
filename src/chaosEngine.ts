@@ -100,8 +100,8 @@ export class ChaosEngine implements vscode.Disposable {
             }
             if (this.digestTicksRemaining <= 0) {
               this.unclog();
-              this.stateStore.setRoast('*BELCH* Dusty completely digested the code clog and spat out the lint ball!');
-              void vscode.window.showInformationMessage('Dusty: *BELCH* Clog fully digested! Dusty is back to hunting.');
+              this.stateStore.setRoast('*BELCH* Dusty ചൂലുകൊണ്ട് വാരിയ കട്ട ചവറ് ദഹിപ്പിച്ച് തുപ്പി കളഞ്ഞു!');
+              void vscode.window.showInformationMessage('Dusty: *BELCH* മുറം വൃത്തിയായി! ചൂല് വീണ്ടും വേട്ട തുടങ്ങി.');
             }
           } else {
             const state = this.stateStore.getState();
@@ -134,16 +134,16 @@ export class ChaosEngine implements vscode.Disposable {
 
   private async triggerIdleRageBait(): Promise<void> {
     const rageBaitRoasts = [
-      "Why are you just staring at the screen? Did you forget how to code?",
-      "Zero syntax errors for 10 seconds... did you step away or did your brain freeze?",
-      "I'm starving over here. Type some broken syntax so I have something to eat!",
-      "Are you contemplating your life choices or just googling how to center a div again?",
-      "Your cursor has been blinking in the exact same spot. Deeply embarrassing.",
-      "Even a toddler randomly mashing keys writes faster code than this.",
-      "Is this what senior engineering looks like? Staring at 5 lines of code in silence?",
-      "Go ahead, miss a semicolon or bracket. I dare you. Give me something to delete.",
-      "I haven't vacuumed anything in ages. The lack of syntax mistakes is deeply insulting.",
-      "Don't worry, take your time. Writing mediocre code requires intense concentration."
+      "എന്തിനാ മോനേ വെറുതെ സ്ക്രീനിലേക്ക് നോക്കിയിരിക്കുന്നത്? കോഡിങ് മറന്നുപോയോ?",
+      "10 സെക്കൻഡായി ഒരു syntax error പോലുമില്ല... നീ സീറ്റിൽ നിന്ന് എണീറ്റു പോയോ അതോ തലച്ചോർ ഫ്രീസ് ആയോ?",
+      "എനിക്ക് വിശന്നിട്ട് വയ്യ! വല്ല പൊട്ടിയ സിന്റാക്സും അടിക്ക്, എനിക്ക് ചൂലുകൊണ്ട് തൂത്തുവാരാൻ!",
+      "ജീവിതം എങ്ങോട്ട് എന്ന് ചിന്തിക്കുവാണോ അതോ div എങ്ങനെ സെന്റർ ചെയ്യാം എന്ന് വീണ്ടും ഗൂഗിളിൽ തപ്പുവാണോ?",
+      "കർസർ ഒരേ സ്ഥലത്ത് കിടന്ന് മിന്നുന്നു... ദാസാ, എന്തൊരു നാണക്കേടാ ഇത്!",
+      "കീബോർഡിൽ കുഞ്ഞുപിള്ളേര് ചാടിക്കളിച്ചാൽ പോലും നിന്നെക്കാൾ വേഗത്തിൽ കോഡടിക്കും!",
+      "ഇതാണോ നിന്റെ സീനിയർ എൻജിനീയറിങ്? 5 ലൈൻ കോഡിലേക്ക് നോക്കി കണ്ണുതള്ളി ഇരിക്കൽ?",
+      "ധൈര്യമുണ്ടെങ്കിൽ ഒരു സെമികോളനോ ബ്രാക്കറ്റോ തെറ്റിച്ചു നോക്ക്! എനിക്ക് ചൂലുകൊണ്ട് അടിച്ചുമാറ്റാൻ വല്ലതും താ!",
+      "എത്ര നേരമായി ഞാൻ ചൂലുകൊണ്ട് ഒന്നും തൂത്തിട്ട്! വല്ല തെറ്റും വരുത്ത് മനുഷ്യാ!",
+      "സാരമില്ല, സാവധാനം മതി. വെറുപ്പീര് കോഡ് എഴുതാൻ ഭയങ്കര ഏകാഗ്രത വേണമല്ലോ!"
     ];
 
     const roast = rageBaitRoasts[Math.floor(Math.random() * rageBaitRoasts.length)];
@@ -151,7 +151,7 @@ export class ChaosEngine implements vscode.Disposable {
     this.viewProvider.playSound('tantrum');
     this.viewProvider.shake(2);
 
-    void vscode.window.showWarningMessage(`🧹 DUSTY (Rage Bait): "${roast}"`);
+    void vscode.window.showWarningMessage(`🧹 DUSTY (Rage Bait / കലിപ്പ്): "${roast}"`);
   }
 
   private handleConfigChange(): void {
@@ -343,7 +343,7 @@ export class ChaosEngine implements vscode.Disposable {
           // Big centered modal roast every 2 eats or high rage
           if (this.consecutiveEats % 2 === 0 || intensity === 'feral' || rage >= 70) {
             void vscode.window.showErrorMessage(
-              `🧹 DUSTY GOBBLED ${linesGulped} LINE(S) [Rage: ${rage}% | Typing Strikes: ${this.typingStrikes}]:\n\n"${roast}"`,
+              `🧹 DUSTY വാരിയെടുത്തു ${linesGulped} വരികൾ [കലിപ്പ്: ${rage}% | Strikes: ${this.typingStrikes}]:\n\n"${roast}"`,
               { modal: true }
             );
           }
@@ -436,12 +436,12 @@ export class ChaosEngine implements vscode.Disposable {
   public async feedManually(uri?: vscode.Uri, range?: vscode.Range): Promise<void> {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
-      void vscode.window.showInformationMessage('Dusty: No active editor to feed from.');
+      void vscode.window.showInformationMessage('Dusty: തൂത്തുവാരാൻ ആക്ടീവ് എഡിറ്റർ ഒന്നും കണ്ടില്ല.');
       return;
     }
 
     if (this.stateStore.isClogged()) {
-      void vscode.window.showWarningMessage('Dusty: Dust bag is full! Unclog Dusty first (Cmd/Ctrl+Alt+U C).');
+      void vscode.window.showWarningMessage('Dusty: മുറം നിറഞ്ഞു! ആദ്യം മുറം ഒഴിക്ക് (Cmd/Ctrl+Alt+U C).');
       return;
     }
 
@@ -450,7 +450,7 @@ export class ChaosEngine implements vscode.Disposable {
     const errors = diags.filter(d => d.severity === vscode.DiagnosticSeverity.Error);
 
     if (errors.length === 0) {
-      void vscode.window.showInformationMessage('Dusty: No syntax errors to eat here! Deliciously clean.');
+      void vscode.window.showInformationMessage('Dusty: ഇവിടെ തൂത്തുവാരാൻ ഒരു തെറ്റുമില്ല! ശുദ്ധം.');
       return;
     }
 
@@ -467,7 +467,7 @@ export class ChaosEngine implements vscode.Disposable {
     if (parseResult.confidence !== 'high') {
       const roast = await this.roastService.getRoast({ situation: 'unsafe', message: targetDiag.message });
       this.stateStore.setRoast(roast);
-      void vscode.window.showWarningMessage(`Dusty: Cannot eat this safely! ${parseResult.reason}`);
+      void vscode.window.showWarningMessage(`Dusty: ഇത് ചൂലുകൊണ്ട് തൊടാൻ പറ്റില്ല! ${parseResult.reason}`);
       return;
     }
 
@@ -482,7 +482,7 @@ export class ChaosEngine implements vscode.Disposable {
       this.stateStore.incrementBag();
       const roast = await this.roastService.getRoast({ situation: 'eat_success', token: parseResult.safeDisposableToken });
       this.stateStore.setRoast(roast);
-      void vscode.window.showInformationMessage(`Dusty: Chomp! Successfully vacuumed "${parseResult.safeDisposableToken || 'error'}".`);
+      void vscode.window.showInformationMessage(`Dusty: ചൂലുകൊണ്ട് അടിച്ചുവാരി "${parseResult.safeDisposableToken || 'error'}".`);
     }
   }
 
@@ -511,7 +511,7 @@ export class ChaosEngine implements vscode.Disposable {
     });
 
     void vscode.window.showWarningMessage(
-      `Dusty consumed ${percent}% of your code (${linesToDelete} lines vaporized) because his rage is rising!`
+      `Dusty: കലിപ്പ് മൂത്ത് നിന്റെ കോഡിന്റെ ${percent}% (${linesToDelete} വരികൾ) ചൂലുകൊണ്ട് അടിച്ചുവാരി ചവറ്റുകുട്ടയിലിട്ടു!`
     );
   }
 
@@ -599,7 +599,7 @@ export class ChaosEngine implements vscode.Disposable {
 
     // Big centered modal dialog in middle of screen!
     void vscode.window.showErrorMessage(
-      `🚨 DUSTY COMPLETE CRASHOUT OVERLOAD (Rage: 100%) 🚨\n\n"${crashoutRoast}"\n\n(Dusty went nuclear, cycled all IDE colors, and deleted ${percentToDelete}% of your file out of pure rage)`,
+      `🚨 DUSTY സമ്പൂർണ്ണ ക്രാഷ് ഔട്ട്! കലിപ്പ് 100%! 🚨\n\n"${crashoutRoast}"\n\n(Dusty നിയന്ത്രണം വിട്ട്, IDE നിറങ്ങൾ മാറ്റി, കലിപ്പ് കാരണം ഫയലിന്റെ ${percentToDelete}% കോഡ് ചൂലുകൊണ്ട് അടിച്ചു നിരത്തി!)`,
       { modal: true }
     );
 
@@ -626,7 +626,7 @@ export class ChaosEngine implements vscode.Disposable {
     this.stateStore.unclog();
     this.decorationManager.clear();
     this.viewProvider.playSound('victory');
-    void vscode.window.showInformationMessage('Dusty: Dust bag emptied! Vacuum motor purring happily.');
+    void vscode.window.showInformationMessage('Dusty: മുറം കാലിയാക്കി! ചൂല് വീണ്ടും തൂത്തുവാരാൻ റെഡി.');
 
     if (this.churnCount >= 3) {
       const editor = vscode.window.activeTextEditor;

@@ -8,6 +8,11 @@ class VacuumAudio {
     this.ctx = null;
     this.isMuted = false;
     this.hasUnlocked = false;
+    this.soundsBaseUri = null;
+  }
+
+  setSoundsBaseUri(baseUri) {
+    this.soundsBaseUri = baseUri;
   }
 
   ensureContext() {
@@ -39,6 +44,34 @@ class VacuumAudio {
       return;
     }
 
+    // 1. Try replaceable external audio file if base URI is provided
+    if (this.soundsBaseUri) {
+      const audioMp3 = new Audio(`${this.soundsBaseUri}/${name}.mp3`);
+      audioMp3.volume = 0.85;
+      const playPromise = audioMp3.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Try .wav
+          const audioWav = new Audio(`${this.soundsBaseUri}/${name}.wav`);
+          audioWav.volume = 0.85;
+          const wavPromise = audioWav.play();
+          if (wavPromise !== undefined) {
+            wavPromise.catch(() => {
+              this.playProcedural(name);
+            });
+          } else {
+            this.playProcedural(name);
+          }
+        });
+        return;
+      }
+    }
+
+    // 2. Procedural Web Audio fallback
+    this.playProcedural(name);
+  }
+
+  playProcedural(name) {
     const ctx = this.ensureContext();
     if (!ctx || ctx.state !== 'running') {
       return;
@@ -46,6 +79,9 @@ class VacuumAudio {
 
     try {
       switch (name) {
+        case 'sweep':
+          this.playSweep(ctx);
+          break;
         case 'suction':
           this.playSuction(ctx);
           break;
@@ -74,10 +110,39 @@ class VacuumAudio {
         case 'apocalypse':
           this.playSiren(ctx);
           break;
+        default:
+          this.playSweep(ctx);
+          break;
       }
     } catch {
       // Audio errors fail silently to protect editor experience
     }
+  }
+
+  /**
+   * Filtered scratch/brush noise simulating a broom sweeping
+   */
+  playSweep(ctx) {
+    const bufferSize = Math.floor(ctx.sampleRate * 0.22);
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(900, ctx.currentTime);
+    filter.frequency.exponentialRampToValueAtTime(350, ctx.currentTime + 0.2);
+    filter.Q.value = 2.5;
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.35, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.22);
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    noise.start();
   }
 
   /**

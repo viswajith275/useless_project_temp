@@ -11,85 +11,93 @@ function encodeSvg(svg: string): string {
 export function getDustyFrameSvg(frame: 0 | 1 | 2 | 3): string {
   switch (frame) {
     case 0:
-      // Neutral idle
+      // Neutral idle broom
       return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-        <rect x="2" y="5" width="8" height="7" rx="3" fill="#e74c3c" />
-        <circle cx="5" cy="8" r="1.5" fill="#ffffff" />
-        <circle cx="5" cy="8" r="0.75" fill="#2c3e50" />
-        <circle cx="8" cy="8" r="1.5" fill="#ffffff" />
-        <circle cx="8" cy="8" r="0.75" fill="#2c3e50" />
-        <path d="M 10 9 Q 13 8 14 10" stroke="#7f8c8d" stroke-width="1.5" fill="none" stroke-linecap="round" />
-        <circle cx="4" cy="12" r="1" fill="#34495e" />
-        <circle cx="8" cy="12" r="1" fill="#34495e" />
+        <!-- Handle -->
+        <line x1="12" y1="1" x2="8" y2="7" stroke="#8d5524" stroke-width="2" stroke-linecap="round" />
+        <!-- Binding cord -->
+        <rect x="6.5" y="7" width="3.5" height="2" rx="0.5" fill="#e74c3c" />
+        <!-- Straw bristles -->
+        <polygon points="6,9 10.5,9 12,15 4,15" fill="#f1c40f" />
+        <line x1="5.5" y1="11" x2="5.5" y2="15" stroke="#d4ac0d" stroke-width="0.8" />
+        <line x1="8" y1="10" x2="8" y2="15" stroke="#d4ac0d" stroke-width="0.8" />
+        <line x1="10.5" y1="11" x2="10.5" y2="15" stroke="#d4ac0d" stroke-width="0.8" />
+        <!-- Pixel eyes -->
+        <circle cx="6.5" cy="11.5" r="0.8" fill="#1a1a1a" />
+        <circle cx="9.5" cy="11.5" r="0.8" fill="#1a1a1a" />
       </svg>`;
 
     case 1:
-      // Approaching / nozzle extended
+      // Approaching / tilted forward
       return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-        <rect x="1" y="5" width="8" height="7" rx="3" fill="#e67e22" />
-        <circle cx="4" cy="8" r="1.6" fill="#ffffff" />
-        <circle cx="5" cy="8" r="0.8" fill="#c0392b" />
-        <circle cx="7" cy="8" r="1.6" fill="#ffffff" />
-        <circle cx="8" cy="8" r="0.8" fill="#c0392b" />
-        <path d="M 9 8 Q 12 7 15 8" stroke="#95a5a6" stroke-width="2" fill="none" stroke-linecap="round" />
-        <polygon points="14,6 16,8 14,10" fill="#e74c3c" />
-        <circle cx="3" cy="12" r="1" fill="#34495e" />
-        <circle cx="7" cy="12" r="1" fill="#34495e" />
+        <!-- Handle tilted -->
+        <line x1="14" y1="2" x2="8" y2="8" stroke="#8d5524" stroke-width="2" stroke-linecap="round" />
+        <!-- Binding cord -->
+        <rect x="6" y="8" width="4" height="2" rx="0.5" fill="#e67e22" transform="rotate(-15 8 9)" />
+        <!-- Bristles leaning -->
+        <polygon points="5,9 10,8 11,15 3,14" fill="#f39c12" />
+        <!-- Eyes wide eager -->
+        <circle cx="6" cy="11.5" r="1.1" fill="#ffffff" />
+        <circle cx="6.3" cy="11.5" r="0.6" fill="#c0392b" />
+        <circle cx="8.8" cy="11" r="1.1" fill="#ffffff" />
+        <circle cx="9.1" cy="11" r="0.6" fill="#c0392b" />
       </svg>`;
 
     case 2:
-      // Chomping / vacuuming swirl
+      // Sweeping / fast brush motion with dust sparks
       return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-        <rect x="2" y="4" width="8" height="8" rx="3" fill="#c0392b" />
-        <circle cx="5" cy="7" r="1.8" fill="#f39c12" />
-        <circle cx="5.5" cy="7" r="0.9" fill="#000000" />
-        <circle cx="8" cy="7" r="1.8" fill="#f39c12" />
-        <circle cx="8.5" cy="7" r="0.9" fill="#000000" />
-        <ellipse cx="6.5" cy="10" rx="2" ry="1.2" fill="#000000" />
-        <path d="M 10 9 L 15 9" stroke="#e74c3c" stroke-width="2.5" stroke-linecap="round" />
-        <circle cx="15" cy="9" r="1.2" fill="#f1c40f" />
-        <circle cx="3.5" cy="12" r="1.2" fill="#2c3e50" />
-        <circle cx="7.5" cy="12" r="1.2" fill="#2c3e50" />
+        <!-- Handle sweeping -->
+        <line x1="13" y1="1" x2="7" y2="7" stroke="#a0522d" stroke-width="2.2" stroke-linecap="round" />
+        <rect x="5.5" y="7" width="4" height="2.2" fill="#c0392b" />
+        <!-- Bristles flared with sweep curve -->
+        <path d="M 5 9 Q 8 8 11 9 L 14 15 Q 8 16 2 14 Z" fill="#f1c40f" />
+        <!-- Dust particles -->
+        <circle cx="1" cy="13" r="0.8" fill="#e67e22" />
+        <circle cx="15" cy="14" r="0.8" fill="#e67e22" />
+        <circle cx="14" cy="11" r="0.6" fill="#f39c12" />
+        <!-- Excited eyes -->
+        <circle cx="6" cy="11" r="1" fill="#000000" />
+        <circle cx="9" cy="11" r="1" fill="#000000" />
       </svg>`;
 
     case 3:
-      // Satisfied / exhaust puff
+      // Satisfied / sparkling clean
       return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-        <circle cx="1" cy="7" r="1" fill="#bdc3c7" opacity="0.8" />
-        <circle cx="0.5" cy="9" r="0.7" fill="#bdc3c7" opacity="0.6" />
-        <rect x="3" y="5" width="8" height="7" rx="3" fill="#27ae60" />
-        <path d="M 5 7 Q 6 6 7 7" stroke="#ffffff" stroke-width="1" fill="none" stroke-linecap="round" />
-        <path d="M 8 7 Q 9 6 10 7" stroke="#ffffff" stroke-width="1" fill="none" stroke-linecap="round" />
-        <path d="M 6 9 Q 7.5 10.5 9 9" stroke="#ffffff" stroke-width="1" fill="none" stroke-linecap="round" />
-        <path d="M 11 9 Q 13 8.5 14 10" stroke="#7f8c8d" stroke-width="1.5" fill="none" stroke-linecap="round" />
-        <circle cx="5" cy="12" r="1" fill="#34495e" />
-        <circle cx="9" cy="12" r="1" fill="#34495e" />
+        <!-- Handle -->
+        <line x1="11" y1="1" x2="8" y2="7" stroke="#8d5524" stroke-width="2" stroke-linecap="round" />
+        <rect x="6.5" y="7" width="3.5" height="2" rx="0.5" fill="#27ae60" />
+        <polygon points="6,9 10.5,9 12,15 4,15" fill="#f1c40f" />
+        <!-- Happy eyes -->
+        <path d="M 5.5 11.5 Q 6.5 10.5 7.5 11.5" stroke="#1a1a1a" stroke-width="0.8" fill="none" />
+        <path d="M 8.5 11.5 Q 9.5 10.5 10.5 11.5" stroke="#1a1a1a" stroke-width="0.8" fill="none" />
+        <!-- Sparkles -->
+        <path d="M 2 4 L 3 5 L 2 6 L 1 5 Z" fill="#2ecc71" />
+        <path d="M 13 4 L 14 5 L 13 6 L 12 5 Z" fill="#2ecc71" />
       </svg>`;
   }
 }
 
 export function getDustyCloggedSvg(): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-    <rect x="2" y="4" width="9" height="8" rx="3" fill="#8e44ad" />
-    <path d="M 4 7 L 6 9 M 6 7 L 4 9" stroke="#f1c40f" stroke-width="1.2" stroke-linecap="round" />
-    <path d="M 7 7 L 9 9 M 9 7 L 7 9" stroke="#f1c40f" stroke-width="1.2" stroke-linecap="round" />
-    <ellipse cx="6.5" cy="11" rx="1.5" ry="0.6" fill="#2c3e50" />
-    <path d="M 11 8 Q 13 7 14 9" stroke="#9b59b6" stroke-width="2" stroke-linecap="round" fill="none" />
-    <circle cx="14" cy="9" r="1.5" fill="#e74c3c" />
-    <circle cx="4" cy="12" r="1" fill="#2c3e50" />
-    <circle cx="8" cy="12" r="1" fill="#2c3e50" />
+    <line x1="12" y1="1" x2="8" y2="7" stroke="#7f8c8d" stroke-width="2" stroke-linecap="round" />
+    <rect x="6.5" y="7" width="3.5" height="2" fill="#8e44ad" />
+    <!-- Disheveled purple bristles -->
+    <polygon points="5,9 11,9 13,15 3,15" fill="#9b59b6" />
+    <!-- X eyes -->
+    <path d="M 5.5 11 L 7.5 13 M 7.5 11 L 5.5 13" stroke="#f1c40f" stroke-width="0.9" />
+    <path d="M 8.5 11 L 10.5 13 M 10.5 11 L 8.5 13" stroke="#f1c40f" stroke-width="0.9" />
+    <ellipse cx="8" cy="14" rx="1.2" ry="0.6" fill="#2c3e50" />
   </svg>`;
 }
 
 export function getDustyDisabledSvg(): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-    <rect x="2" y="5" width="8" height="7" rx="3" fill="#7f8c8d" />
-    <line x1="4" y1="8" x2="6" y2="8" stroke="#bdc3c7" stroke-width="1" />
-    <line x1="7" y1="8" x2="9" y2="8" stroke="#bdc3c7" stroke-width="1" />
-    <path d="M 10 9 Q 12 9 13 11" stroke="#95a5a6" stroke-width="1.2" fill="none" />
-    <circle cx="4" cy="12" r="1" fill="#34495e" />
-    <circle cx="8" cy="12" r="1" fill="#34495e" />
-    <text x="10" y="5" font-size="5" fill="#bdc3c7" font-family="monospace">z</text>
+    <line x1="14" y1="3" x2="8" y2="8" stroke="#7f8c8d" stroke-width="1.8" />
+    <rect x="6" y="8" width="3.5" height="1.8" fill="#95a5a6" />
+    <polygon points="5,9 9.5,9 10,14 4,14" fill="#bdc3c7" />
+    <line x1="5.5" y1="11.5" x2="7.5" y2="11.5" stroke="#7f8c8d" stroke-width="0.8" />
+    <line x1="8.5" y1="11.5" x2="10.5" y2="11.5" stroke="#7f8c8d" stroke-width="0.8" />
+    <text x="11" y="5" font-size="5" fill="#95a5a6" font-family="monospace">z</text>
   </svg>`;
 }
 
@@ -107,11 +115,14 @@ export function getDustyDisabledUri(): string {
 
 export function getDustyActivityBarSvg(): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-    <rect x="4" y="7" width="11" height="10" rx="4" fill="none" stroke="currentColor" stroke-width="1.5" />
-    <circle cx="8" cy="11" r="1.5" fill="currentColor" />
-    <circle cx="12" cy="11" r="1.5" fill="currentColor" />
-    <path d="M 15 12 C 18 10 19 14 21 14" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" />
-    <circle cx="7" cy="17" r="1.2" fill="currentColor" />
-    <circle cx="12" cy="17" r="1.2" fill="currentColor" />
+    <!-- Slanted broom handle -->
+    <line x1="19" y1="3" x2="11" y2="12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+    <!-- Binding cord band -->
+    <rect x="9" y="11" width="5" height="2.5" rx="0.8" fill="currentColor" />
+    <!-- Flared broom bristles -->
+    <path d="M 8.5 13.5 L 14.5 13.5 L 17 21 L 5 21 Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+    <line x1="8" y1="16" x2="7.5" y2="21" stroke="currentColor" stroke-width="1.2" />
+    <line x1="11.5" y1="15" x2="11.5" y2="21" stroke="currentColor" stroke-width="1.2" />
+    <line x1="15" y1="16" x2="15.5" y2="21" stroke="currentColor" stroke-width="1.2" />
   </svg>`;
 }

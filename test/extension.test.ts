@@ -422,6 +422,48 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
     assert.strictEqual(nowClogged, true);
     assert.strictEqual(store.isClogged(), true);
   });
+
+  // Test 25: Malayalam brutal meme roasts
+  it('25. should return brutal Malayalam meme roasts for crashout and insults', async () => {
+    const roastService = new RoastService();
+    const crashoutRoast = await roastService.getRoast({ situation: 'crashout' });
+    assert.ok(crashoutRoast.length > 0);
+    // Should contain Malayalam characters
+    assert.match(crashoutRoast, /[\u0D00-\u0D7F]/, 'Should contain Malayalam script');
+
+    const personalRoast = await roastService.getRoast({ situation: 'brutal_personal' });
+    assert.ok(personalRoast.length > 0);
+    assert.match(personalRoast, /[\u0D00-\u0D7F]/, 'Should contain Malayalam script');
+  });
+
+  // Test 26: Pixel-art broom SVG generation
+  it('26. should generate pixel-art broom SVG frames with handle and bristles', () => {
+    const { getDustyFrameSvg, getDustyCloggedSvg, getDustyActivityBarSvg } = require('../src/spriteGen');
+    const idleSvg = getDustyFrameSvg(0);
+    assert.ok(idleSvg.includes('<svg'));
+    assert.ok(idleSvg.includes('<line') || idleSvg.includes('<polygon'), 'Broom SVG should contain broom handle or bristles');
+
+    const cloggedSvg = getDustyCloggedSvg();
+    assert.ok(cloggedSvg.includes('<svg'));
+    assert.ok(cloggedSvg.includes('stroke="#f1c40f"'), 'Clogged broom should have X eyes');
+
+    const activityBarSvg = getDustyActivityBarSvg();
+    assert.ok(activityBarSvg.includes('viewBox="0 0 24 24"'));
+  });
+
+  // Test 27: Replaceable audio file folder structure
+  it('27. should have media/sounds folder for customizable sound effects', () => {
+    const fs = require('fs');
+    const path = require('path');
+    const soundsDir = path.join(__dirname, '../../media/sounds');
+    assert.strictEqual(fs.existsSync(soundsDir), true, 'media/sounds directory must exist');
+    const readmeFile = path.join(soundsDir, 'README.md');
+    assert.strictEqual(fs.existsSync(readmeFile), true, 'media/sounds/README.md must exist');
+    const readmeContent = fs.readFileSync(readmeFile, 'utf8');
+    assert.ok(readmeContent.includes('sweep'), 'README should document sweep sound');
+    assert.ok(readmeContent.includes('crashout'), 'README should document crashout sound');
+  });
 });
+
 
 

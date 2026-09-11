@@ -99,25 +99,26 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
     const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'media', 'style.css'));
     const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'media', 'main.js'));
     const audioUri = webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'media', 'audio.js'));
+    const soundsUri = webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'media', 'sounds'));
     const nonce = this.getNonce();
 
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} data:; style-src ${webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} data:; media-src ${webview.cspSource} data:; style-src ${webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}';">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="${styleUri}" rel="stylesheet" />
-  <title>Dusty the Vacuum</title>
+  <title>Dusty the Broom</title>
 </head>
-<body class="dusty-body">
+<body class="dusty-body" data-sounds-uri="${soundsUri}">
   <div class="crt-overlay" aria-hidden="true"></div>
 
   <div class="container" id="appContainer">
     <!-- Character Stage -->
-    <div class="stage" id="stage" role="region" aria-label="Dusty vacuum character animation">
+    <div class="stage" id="stage" role="region" aria-label="Dusty broom character animation">
       <div class="vacuum-canvas-wrap">
-        <canvas id="dustyCanvas" width="160" height="120" role="img" aria-label="Dusty the animated vacuum"></canvas>
+        <canvas id="dustyCanvas" width="160" height="120" role="img" aria-label="Dusty the pixelated broom"></canvas>
       </div>
       <div class="state-badge" id="stateBadge" aria-live="polite">IDLE</div>
     </div>
@@ -125,14 +126,14 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
     <!-- Speech Bubble / Roast Monitor -->
     <div class="bubble-wrap">
       <div class="speech-bubble" id="speechBubble" role="status" aria-live="polite">
-        "Purring quietly. Feed me some syntax mistakes."
+        "ചൂല് റെഡിയാണ്. വല്ല പൊട്ടിയ സിന്റാക്സും ഉണ്ടെങ്കിൽ കാണിക്ക്, തൂത്തുവാരി കളയാം!"
       </div>
     </div>
 
-    <!-- Bag Meter -->
-    <div class="meter-section" role="region" aria-label="Dust bag capacity">
+    <!-- Dustpan / Bag Meter -->
+    <div class="meter-section" role="region" aria-label="Dustpan capacity">
       <div class="meter-header">
-        <span class="meter-title">DUST BAG</span>
+        <span class="meter-title">🧹 DUSTPAN / മുറം</span>
         <span class="meter-value" id="bagValue">0 / 5</span>
       </div>
       <div class="progress-bar-track">
@@ -143,7 +144,7 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
     <!-- Rage Meter -->
     <div class="meter-section rage-section" role="region" aria-label="Dusty rage meter">
       <div class="meter-header">
-        <span class="meter-title">🔥 RAGE METER</span>
+        <span class="meter-title">🔥 RAGE METER / കലിപ്പ്</span>
         <span class="meter-value" id="rageValue">0%</span>
       </div>
       <div class="progress-bar-track">
@@ -158,28 +159,28 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
     </div>
 
     <!-- Actions Control Panel -->
-    <div class="controls-grid" role="group" aria-label="Dusty action controls">
-      <button class="btn btn-primary" id="btnEngine" title="Start or Stop vacuum suction engine">
-        <span class="btn-icon">⚡</span>
-        <span id="btnEngineText">IGNITION</span>
+    <div class="controls-grid" role="group" aria-label="Dusty broom action controls">
+      <button class="btn btn-primary" id="btnEngine" title="Start or Stop broom sweeping engine">
+        <span class="btn-icon">🧹</span>
+        <span id="btnEngineText">SWEEP</span>
       </button>
 
-      <button class="btn btn-danger" id="btnUnclog" title="Empty the clogged dust bag">
-        <span class="btn-icon">🧹</span>
-        <span>UNCLOG</span>
+      <button class="btn btn-danger" id="btnUnclog" title="Empty the dustpan and clean the broom">
+        <span class="btn-icon">🗑️</span>
+        <span>CLEAN DUSTPAN</span>
       </button>
 
       <button class="btn btn-secondary" id="btnFeed" title="Feed active syntax error to Dusty">
-        <span class="btn-icon">🍽️</span>
-        <span>FEED</span>
+        <span class="btn-icon">🍂</span>
+        <span>SWEEP ERROR</span>
       </button>
 
-      <button class="btn btn-secondary" id="btnInsult" title="Ask Dusty to roast your code">
+      <button class="btn btn-secondary" id="btnInsult" title="Ask Dusty to roast your code in Malayalam">
         <span class="btn-icon">🔥</span>
         <span>ROAST ME</span>
       </button>
 
-      <button class="btn btn-secondary" id="btnMute" title="Mute or unmute synthesized vacuum sounds">
+      <button class="btn btn-secondary" id="btnMute" title="Mute or unmute synthesized broom sounds">
         <span class="btn-icon" id="muteIcon">🔊</span>
         <span id="btnMuteText">AUDIO</span>
       </button>
