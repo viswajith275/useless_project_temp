@@ -87,11 +87,13 @@ For Software:
 
 ### Project Demo
 # Video
-[Add your demo video link here]
+[Example Video](media/video/example.mov)
+
 *Demonstration video showing Dusty detecting syntax typos, sweeping code into his dustpan, choking on errors, and unleashing full 100% rage crashout mode with custom Manglish roasts.*
 
 # Additional Demos
-[Add any extra demo materials/links]
+- **https://dusty-hazel.vercel.app**
+
 - VSIX Extension Package: `dusty-vacuum-0.1.0.vsix`
 - Command Palette Integration: Run `Cmd+Shift+P` -> `Dusty: Roast Me` or `Dusty: Trigger Crashout`
 
