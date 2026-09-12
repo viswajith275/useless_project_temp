@@ -10,7 +10,7 @@
 - Member 2: Ishaangoutham K S - GECT
 
 ### Project Description
-Dusty the Malicious Chool is an interactive, bad-tempered pairing companion modeled after a traditional Kerala coconut broom (chool / ചൂൽ) living directly inside VS Code. Rather than assisting you, Dusty watches your editor diagnostics with judging eyes, sweeps your syntax errors into his dustpan (മുറം), throws full-blown tantrums, deletes broken code when his Rage Meter fills up, and personally roasts your life choices in savage Manglish with iconic Malayalam cinema references.
+Dusty the Malicious Chool is an interactive, bad-tempered pairing companion modeled after a traditional Kerala coconut broom (chool) living directly inside VS Code. Rather than assisting you, Dusty watches your editor diagnostics with judging eyes, sweeps your syntax errors into his dustpan (Murram), throws full-blown tantrums, deletes broken code when his Rage Meter fills up, and personally roasts your life choices in savage Manglish with iconic Malayalam cinema references.
 
 ### The Problem (that doesn't exist)
 Modern developers are suffering from a dangerous epidemic of "peace of mind" and "excessive productivity." AI tools like Copilot and ChatGPT are overly polite, apologizing for minor hallucinations and quietly fixing syntax errors. This has deprived programmers of the traditional, character-building trauma of being scolded by an angry elder with a household broom. Furthermore, stray semicolons, dangling brackets, and broken functions are sitting around in codebases without an irritable virtual broom actively sweeping them into a virtual dustpan and screaming at you.
