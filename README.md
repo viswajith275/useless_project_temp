@@ -59,6 +59,8 @@ npm run compile
 
 # Package as a VS Code VSIX extension
 npm run package
+
+# or you can install .vsix file from releases and run it
 ```
 
 # Run
