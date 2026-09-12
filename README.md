@@ -94,7 +94,7 @@ For Software:
 # Additional Demos
 - **https://dusty-hazel.vercel.app**
 
-- VSIX Extension Package: `dusty-vacuum-0.1.0.vsix`
+- VSIX Extension Package: `dusty-the-chool-0.1.0.vsix`
 - Command Palette Integration: Run `Cmd+Shift+P` -> `Dusty: Roast Me` or `Dusty: Trigger Crashout`
 
 ## Team Contributions
