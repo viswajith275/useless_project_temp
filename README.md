@@ -49,7 +49,7 @@ For Software:
 ```bash
 # Clone the repository
 git clone https://github.com/viswajith275/useless_project_temp.git
-cd useless_project_temp
+cd useless_project_temp/Dusty_The_Chool
 
 # Install dependencies
 npm install
@@ -64,7 +64,7 @@ npm run package
 # Run
 ```bash
 # Install the generated VSIX directly into VS Code:
-code --install-extension dusty-vacuum-0.1.0.vsix
+code --install-extension dusty-the-chool-0.1.0.vsix
 
 # Or press F5 inside VS Code to launch the Extension Development Host window.
 
@@ -76,18 +76,18 @@ ollama run llama3.2:3b
 For Software:
 
 # Screenshots
-![Dusty Sidebar View](media/icons/idle.png)
-*Dusty the Chool resting in the secondary sidebar with live state badge, speech bubble, dustpan capacity (മുറം), and rage meter.*
+![Dusty Sidebar View](Dusty_The_Chool/media/icons/idle.png)
+*Dusty the Chool resting in the secondary sidebar with live state badge, speech bubble, dustpan capacity (murram), and rage meter.*
 
-![Editor Gutter Sweep & CodeLens](media/icons/eating.png)
+![Editor Gutter Sweep & CodeLens](Dusty_The_Chool/media/icons/eating.png)
 *Multi-frame pixel-art broom bristles marching down the editor gutter toward a syntax error with native 'Feed Dusty' CodeLens.*
 
-![Crashout Apocalypse Mode](media/icons/clogged.png)
+![Crashout Apocalypse Mode](Dusty_The_Chool/media/icons/clogged.png)
 *Dusty reaching 100% Rage, triggering emergency strobes and entering full Rangannan revenge code-deletion mode.*
 
 ### Project Demo
 # Video
-[Example Video](media/video/example.mov)
+[Example Video](Dusty_The_Chool/media/video/example.mov)
 
 *Demonstration video showing Dusty detecting syntax typos, sweeping code into his dustpan, choking on errors, and unleashing full 100% rage crashout mode with custom Manglish roasts.*
 

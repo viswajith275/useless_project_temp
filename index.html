@@ -86,6 +86,21 @@ button { font: inherit; color: inherit; border: none; background: none; }
 .nav-links a { color: var(--ink-muted); transition: color 0.15s; }
 .nav-links a:hover { color: var(--ink); }
 .header-actions { display: flex; align-items: center; gap: 10px; }
+.btn-download-header {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 40px; padding: 0 16px; gap: 8px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-straw);
+  color: #140e0a;
+  font-weight: 700; font-size: 12px;
+  box-shadow: 0 4px 12px rgba(243, 156, 18, 0.25);
+  cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+  text-decoration: none;
+}
+.btn-download-header:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(243, 156, 18, 0.35);
+}
 .btn-icon {
   display: inline-flex; align-items: center; justify-content: center;
   min-width: 44px; min-height: 44px; padding: 0 14px; gap: 8px;
@@ -837,6 +852,138 @@ button { font: inherit; color: inherit; border: none; background: none; }
   color: var(--ink);
 }
 
+/* Get Dusty / Marketing Download Section */
+.get-dusty-section {
+  padding: 96px 0;
+  border-top: 1px solid var(--line);
+  background: linear-gradient(180deg, #14100e 0%, #120e0c 40%, #0f0b09 100%);
+}
+.get-dusty-card {
+  background: var(--surface);
+  border: 1px solid rgba(243, 156, 18, 0.35);
+  border-radius: var(--radius-lg);
+  padding: 48px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(243, 156, 18, 0.08);
+  display: grid;
+  grid-template-columns: 1.4fr 0.9fr;
+  gap: 40px;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.get-dusty-card::before {
+  content: "";
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, rgba(243, 156, 18, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.get-dusty-kicker {
+  display: inline-block;
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-straw);
+  margin-bottom: 14px;
+}
+.get-dusty-card h2 {
+  font-size: clamp(28px, 3.6vw, 40px);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.get-dusty-card h2 span { color: var(--accent-straw); }
+.get-dusty-lead {
+  font-size: 16px;
+  color: var(--ink-muted);
+  line-height: 1.65;
+  max-width: 520px;
+  margin-bottom: 28px;
+}
+.get-dusty-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.btn-download-primary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 52px; padding: 0 28px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-straw);
+  color: #140e0a;
+  font-weight: 700; font-size: 15px;
+  box-shadow: 0 10px 28px rgba(243, 156, 18, 0.3);
+  cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+  text-decoration: none;
+}
+.btn-download-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(243, 156, 18, 0.4);
+}
+.btn-download-secondary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 52px; padding: 0 22px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line-strong);
+  background: var(--surface-raised);
+  color: var(--ink);
+  font-weight: 600; font-size: 14px;
+  cursor: pointer; transition: background 0.15s, border-color 0.15s;
+  text-decoration: none;
+}
+.btn-download-secondary:hover {
+  background: var(--surface-overlay);
+  border-color: var(--accent-straw);
+}
+.get-dusty-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+.get-dusty-meta strong {
+  color: var(--ink-muted);
+  font-weight: 500;
+}
+.get-dusty-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.highlight-pill {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+.highlight-pill .pill-icon {
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.highlight-pill strong {
+  display: block;
+  font-size: 13px;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.highlight-pill span {
+  font-size: 12px;
+  color: var(--ink-muted);
+  line-height: 1.45;
+}
+
 /* Install & Packaging Section */
 .install-grid {
   display: grid;
@@ -922,6 +1069,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
   .roast-showcase { grid-template-columns: 1fr; }
   .states-dashboard { grid-template-columns: 1fr; }
   .install-grid { grid-template-columns: 1fr; }
+  .get-dusty-card { grid-template-columns: 1fr; padding: 32px 24px; }
   .spec-strip { grid-template-columns: repeat(2, 1fr); gap: 20px; }
 }
 
@@ -956,9 +1104,13 @@ button { font: inherit; color: inherit; border: none; background: none; }
       <a href="#roasts">Roast Engine</a>
       <a href="#states">States</a>
       <a href="#commands">Commands</a>
+      <a href="#get-dusty">Download</a>
       <a href="#install">Install</a>
     </nav>
     <div class="header-actions">
+      <a class="btn-download-header" href="https://github.com/viswajith275/useless_project_temp/releases" target="_blank" rel="noopener noreferrer" title="Download from GitHub Releases">
+        ↓ Download VSIX
+      </a>
       <button class="btn-icon" id="audioToggleBtn" title="Toggle procedural Web Audio">
         <span class="sound-indicator" id="audioLed"></span>
         <span id="audioLabel">AUDIO: ON</span>
@@ -977,7 +1129,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
         </p>
 
         <div class="hero-cta">
-          <a class="btn-primary" href="#install">Package & Install VSIX</a>
+          <a class="btn-primary" href="https://github.com/viswajith275/useless_project_temp/releases" target="_blank" rel="noopener noreferrer">Download VSIX from Releases</a>
           <a class="btn-secondary" href="#simulator">Try Interactive Simulator</a>
         </div>
 
@@ -1509,6 +1661,65 @@ button { font: inherit; color: inherit; border: none; background: none; }
       </div>
     </section>
 
+    <!-- Get Dusty / Marketing Download -->
+    <section class="get-dusty-section" id="get-dusty">
+      <div class="container">
+        <div class="get-dusty-card">
+          <div>
+            <span class="get-dusty-kicker">OFFICIAL RELEASE · TINKERHUB USELESS PROJECTS</span>
+            <h2>Stop being productive.<br>Install <span>Dusty</span> instead.</h2>
+            <p class="get-dusty-lead">
+              One VSIX. Zero runtime npm deps. A bad-tempered Kerala coconut broom that lives in your secondary sidebar, sweeps syntax crumbs into a bamboo murram, and roasts you in pure Manglish cinema energy. Available now on GitHub Releases.
+            </p>
+            <div class="get-dusty-cta-row">
+              <a class="btn-download-primary" href="https://github.com/viswajith275/useless_project_temp/releases" target="_blank" rel="noopener noreferrer">
+                ↓ Download Latest VSIX
+              </a>
+              <a class="btn-download-secondary" href="https://github.com/viswajith275/useless_project_temp" target="_blank" rel="noopener noreferrer">
+                View Repository
+              </a>
+            </div>
+            <div class="get-dusty-meta">
+              <span><strong>v0.1.0</strong> · Dusty-The-Chool</span>
+              <span>VS Code 1.85+</span>
+              <span>0 runtime npm deps</span>
+              <span>MIT License</span>
+            </div>
+          </div>
+          <div class="get-dusty-highlights">
+            <div class="highlight-pill">
+              <span class="pill-icon">🧹</span>
+              <div>
+                <strong>One-click VSIX install</strong>
+                <span>Grab the release asset, then <code style="font-family:DM Mono,monospace;color:var(--accent-straw);font-size:11px;">code --install-extension dusty-*.vsix</code></span>
+              </div>
+            </div>
+            <div class="highlight-pill">
+              <span class="pill-icon"></span>
+              <div>
+                <strong>Hunger, mischief &amp; crashout</strong>
+                <span>Clean code for too long and Dusty deletes a working line out of spite.</span>
+              </div>
+            </div>
+            <div class="highlight-pill">
+              <span class="pill-icon"></span>
+              <div>
+                <strong>60+ Manglish cinema roasts</strong>
+                <span>Sandesham, Aavesham, Premalu &amp; more — plus optional local Ollama 3B.</span>
+              </div>
+            </div>
+            <div class="highlight-pill">
+              <span class="pill-icon"></span>
+              <div>
+                <strong>Safety-gated sabotage</strong>
+                <span>Only ≤5-char syntax tokens auto-ingest. Working statements stay protected.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Installation & Packaging -->
     <section class="section" id="install">
       <div class="container">
@@ -1517,7 +1728,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
           <div>
             <h2>Installation & Build Workflow</h2>
             <p class="section-desc">
-              Built with zero unnecessary dependencies. Compiles with raw TypeScript compiler (tsc) and packages to standard VSIX.
+              Prefer the pre-built VSIX from <a href="https://github.com/viswajith275/useless_project_temp/releases" target="_blank" rel="noopener noreferrer" style="color:var(--accent-straw);text-decoration:underline;">GitHub Releases</a>, or build from source with zero unnecessary dependencies.
             </p>
           </div>
         </div>
@@ -1530,7 +1741,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
             </div>
             <pre><code id="installScriptText"><span class="comment"># 1. Clone repository</span>
 <span class="cmd">git clone</span> https://github.com/viswajith275/useless_project_temp.git
-<span class="cmd">cd</span> useless_project_temp
+<span class="cmd">cd</span> useless_project_temp/Dusty_The_Chool
 
 <span class="comment"># 2. Compile TypeScript & package VSIX</span>
 <span class="cmd">npm install</span>
@@ -1538,7 +1749,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
 <span class="cmd">npm run package</span>
 
 <span class="comment"># 3. Install VSIX into VS Code</span>
-<span class="cmd">code --install-extension</span> dusty-vacuum-0.1.0.vsix
+<span class="cmd">code --install-extension</span> dusty-the-chool-0.1.0.vsix
 
 <span class="comment"># 4. (Optional) Run local Ollama 3B model for custom roasts</span>
 <span class="cmd">ollama run</span> llama3.2:3b</code></pre>
@@ -1546,12 +1757,16 @@ button { font: inherit; color: inherit; border: none; background: none; }
 
           <div class="install-checklist">
             <div class="install-checklist-card">
+              <dt>Fastest path: Releases</dt>
+              <dd>Download the VSIX from <a href="https://github.com/viswajith275/useless_project_temp/releases" target="_blank" rel="noopener noreferrer" style="color:var(--accent-straw);">GitHub Releases</a> and install with <code style="font-family:DM Mono,monospace;font-size:11px;color:var(--accent-straw);">code --install-extension</code>.</dd>
+            </div>
+            <div class="install-checklist-card">
               <dt>VS Code Engine 1.85+</dt>
               <dd>Uses WebviewViewProvider and native Diagnostic collection APIs.</dd>
             </div>
             <div class="install-checklist-card">
               <dt>Node.js & npm</dt>
-              <dd>Required solely to compile TypeScript into CommonJS output.</dd>
+              <dd>Required solely to compile TypeScript into CommonJS output when building from source.</dd>
             </div>
             <div class="install-checklist-card">
               <dt>Local Ollama (Optional)</dt>
@@ -1573,6 +1788,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
         <span>Dusty the Malicious Chool: TinkerHub Useless Projects Entry</span>
       </div>
       <div class="footer-links">
+        <a href="https://github.com/viswajith275/useless_project_temp/releases" target="_blank" rel="noopener noreferrer">Download Releases</a>
         <a href="https://github.com/viswajith275/useless_project_temp" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
         <a href="#top">Back to Top</a>
       </div>
