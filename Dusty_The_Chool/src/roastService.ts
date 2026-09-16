@@ -31,156 +31,161 @@ export interface RoastContext {
 
 const ROAST_TEMPLATES: Record<string, string[]> = {
   crashout: [
-    '💥 Eda mone... Rangannan paranja pole: "Ini oru compromise-um illa!" Ninte vrithiketta code thinnu thinnu choolinte eerkili vare odinju! DELETING RANDOM CODE OUT OF REVENGE!',
-    '🔥 Pavanayi shavamaayi... ninte function shavamaayi! Kalippu 100%! Choolum compilero-um orumichu panimudakki! File-ile code njan chool eduthu thalachoottil adichu parathuva!',
-    '🌪️ Manichitrathazh-ile Nagavalli alanjadiya pole kalippu moothu! "Vidamaatte!" CODEBASE PURGE ACTIVATED! Ninte functions motham choolukond thoothu kalanju!',
-    '💀 Kindi vecha logic kandu ente samashani thetti! Njan choolalla, ini Yamadharman aanu! Ee koothara code njan random aayi delete cheyyunnu!',
-    '💥 Aavesham mode ON! Eda mone, ninakku vattaano ithu type cheyyan? Random deletion activated, ippo thanne file kathikkum!',
-    '🔥 Bramayugam Kodumon Potti-ude chaavu pole ninte codebase kathiyamarunnu! Kalippu 100% koodi choolu pottitherichu!',
-    '⚡ Lucifer Stephen Nedumpally: "Njan ninte thalavarakku meethulla choolaanu!" File motham adichu parathi!',
-    '🌪️ CID Moosa-yile Thorapan Kochunni keriya pole codebase motham thakarthu thരിppanam aakki kalanju!'
+    "💥 100% Kalippu! Driving this deletion cycle straight through your file like a KSRTC Swift bus on a downhill hairpin bend!",
+    "🔥 Aaraattu Annan review of your code: 'Absolute disaster! Total disaster! Mind-blowing catastrophic failure!' Burning it all down!",
+    "⚡ Like a sudden KSEB power cut on a humid Sunday afternoon, total darkness is descending upon your entire codebase!",
+    "🌪️ Like a brand-new Kerala PWD road after 10 minutes of rain, your code architecture has developed massive unfixable craters! 100% Kalippu!",
+    "💀 Santhosh Pandit one-man show mode activated: I wrote, directed, edited, and now I'm DELETING every line of your code myself!",
+    "💥 Total crashout! Even the local Panchayat office moves faster than your brain processing basic syntax! Purging random code lines!",
+    "🔥 Moral policing uncle alert: 'Who permitted these code functions to intermingle without proper indentation?' Swept into the void with this chool!",
+    "⚡ Like a WhatsApp family group forwarding unverified conspiracy theories at 5 AM, this code file makes zero sense! Burn it all!"
   ],
   brutal_personal: [
-    'Are you coding with your feet? Kaalukondano ee code type cheyyunne? Engil athoru excuse enkilum aakkaamaayirunnu. Ithenthu durantham manushya!',
-    'Verumoru virtual chool aaya enikku polum ninte code kandu thalayil mundittu nadakkenda gathikedayi! Git blame nokki veettukaar polum ninne thallipparayum!',
-    'Laptop adachu vechu purathu poyi oru marathodu "Sorry" para... Nee ingane jeevichu ee koothara code adichu oxygen waste cheyyunnathinu!',
-    '-47 vote kitti kashamitta StackOverflow answer copy adichathano? CID Moosa-yile Moolamkuzhiyil Sahadevan polum ithilum nalla logic undakkum!',
-    'Sandesham cinemayile Shankaradi chodicha pole chodikuva: "Thanikku vere paniyille hey?" Antharaashtra thalathil ulla ghadanaparamaya tholviyaanu thaan!',
-    'Ninte code kandu chool eduthu swantham mughathu adikkaan thonnunnu! Naaleyenkilum resignation koduthu valla kappayo vazhayo vekkeda!',
-    'Ee code production-il poyaal server alla, ninte career-um company-um onnake kathiyamarum! Close cheythu podey!',
-    'Sachin bro... immathiri code kandal Reenu poyittu ninte company-ile security polum ninne mind cheyyilla! Just kidding da!',
-    'Shammi hero aada hero... pakshe ninte code verum zero! Tholviyude poorna roopamaanu thaan!',
-    'Bramayugam manayil Pottiyude adimayaayi kidannaal polum ithrayum dushkaramaaya koothara code kaanendi varilla!',
-    'CID Moosa-yile S.I Peethambaran paranja pole: "Enikku ippo oru theerumanam aayi!" Ninte code kandaal aarkkum bodham pokum!',
-    'Kalyanaraman-ile Achuthankutty chodicha pole: "Ithanoda ninte valiya software logic?" Poyi valla puttum kadalayum thinneda!',
-    'Eda mone... ninte logic kandaal Ambanikku vare ksheenam thonnum! Ithu ezhuthiya kayyinu oru kuttichoolu vechu namaskaaram!',
-    'In Harihar Nagar-ile Appukuttan polum ithilum nalla code ezhuthum! Enthu thendi kaanippaanithu!'
+    "My parents were right: planting a single banana tree (vazha) would have yielded a bunch of bananas, but hiring you only yielded compile errors!",
+    "Aaraattu Annan watched you type this and walked out of the theater screaming: 'Verum oola code! Not even worth half a star!'",
+    "Kerala food vlogger reviewing your PR: 'Guys, presentation is zero, taste is pure bitter sadness, totally unhygienic code logic, avoid at all costs!'",
+    "You've been staring at this same bug longer than a veteran PSC aspirant and you still couldn't clear the cutoff on this code!",
+    "Moral policing uncle spotted your code: 'Look at how shamelessly you left that bracket open without a semicolon! Don't you have any shame, mone?'",
+    "Like a KSRTC bus overtaking on a blind curve, you wrote this entire function on pure blind faith and zero safety checks in this code!",
+    "Even a 5 AM WhatsApp forward about onions curing COVID has more scientific credibility than your variable naming in this code!",
+    "Close the laptop, go sit at the junction tea stall, have a parippuvada, and seriously reflect on your code decisions, da!",
+    "Government office clerk energy: 'Your code file cannot be processed today, compiler is on lunch break. Come back with 3 stamps and a signed petition!'",
+    "Santhosh Pandit handled 8 film departments alone with more discipline than you handled this one simple code condition!",
+    "Looking at your code logic gave me a bigger headache than a heated tea shop political debate! Even a vazha would be better!",
+    "Your code review is looking like a Kudumbashree committee audit — every single auntie in the neighborhood is questioning your expenditures!",
+    "Git blame is going to circulate through your company faster than a viral Alambanz sketch of your code!",
+    "Are you typing this code with your toes, mone? Even a stray elephant wandering into an IT park would produce better logic!"
   ],
   hunger: [
-    '😈 Eda mone... ethra neramaayi njan nokki nilkkunnu, oru syntax error polum illa. Enikku vishakkunnu! 10 second tharaam, valla thettum undakki tha... allenkil ninte favourite working function njan eduthu chavachu thinnu kalayum! Threat alla, promise aanu!',
-    'Kallatharam kaanikkathe valla error-um thaa da! Vishannu valanja choolinte kopam nee arinjittilla. Ninte functional logic njan ippo choolukond adichu mukkum, nokkikko!',
-    'Aavesham Rangannan: "Mone... enikku vishakkumbol njan nallavan alla!" Udan oru semicolon thettiche tharanam, allenkil ninte main component swaha!',
-    'Bramayugam Potti: "Ee manayil syntax thettukal illengil, njan ninte working lines bali kodukkum!" Ninte PR reject aavunnathilum valiya durantham njan ippo undakkum!',
-    'Kumbalangi Shammi smiling with a knife: "Nee oru pottiya syntax polum tharathe enne pattikkuvaano?" Ninte working logic njan choolukond thoothu kalayaan povuvaa, dhairyamundengil thadaa da!',
-    'Romancham Jithesh: "Aathmavine vilichu varuthanathinu munpu enikku food venam!" 10 second-il valla syntax thettum thannillel ninte code-il njan prethathe aayakkum!',
-    'CID Moosa Thorapan Kochunni: "Njan keri angottu erangum!" Maryadhakku valla bracket-o thettichu thaada, allenkil ninte function njan thoothuvaari dustbin-il aakkum!',
-    'Premalu Sachin: "Reenu-ine kaanaan povunnathinu munpu enikku vishakkunnu bro!" Clean code adichu enne veruppikkathe valla syntax-um thettikku, allenkil nalloru line poyi kandaal mathi!'
+    "😈 I have been staring at your screen forever and there's not a single syntax error. I am starving! Give me food in 10 seconds or I will devour your favorite working function! Not a Threat, it's a promise!",
+    "Stop acting like a strict ration shop dealer and give me some syntax errors, da! The wrath of a hungry broom will destroy your clean code!",
+    "Aaraattu Annan shouting: 'Bro, I need food, bro! Give me a syntax mistake or this entire component is getting swept into the dustpan!'",
+    "Moral policing uncle warning: 'Why is this screen so quiet? Give me something scandalous to gossip about in the next 10 seconds or I eat your lines!'",
+    "Like waiting in a 3-hour queue at a beverage outlet on festival eve, my patience has completely run dry! Feed me an error, da!",
+    "Food vlogger hungry mode: 'Guys, we are waiting here starving, if a broken semicolon isn't served immediately, we will chew up the working logic!'",
+    "Give me a broken bracket before the KSEB power cut hits, or your main component is getting sacrificed as tea-snack parippuvada!",
+    "Even a stray Kozhikode cat gets fed faster than this! Drop a syntax typo in the next 10 seconds or say goodbye to line 1!"
   ],
   mischief_eaten: [
-    '🦹 KALLATHARAM COMPLETE! Paranjathu nee kettilla, athukond ninte super working line njan chavachu thinnu kalanju! Ini athu veendum irunnu ezhutheda mone! NOM NOM NOM!',
-    'Visham theernnu, pakshe ninte code poyi! Ente hunger warning thalli kalanjappo aalochikkanamaayirunnu. Dha poyi ninte logic murathil! Threat implement cheythu!',
-    'Bramayugam Potti paranja pole bali kazhinju! Ninte favourite line chool angu vaari kalanju! Kali choolinodu venda mone!',
-    'Rangannan smiling: "Chambikko!" Enikku vishannappo njan ninte functional code eduthu thinnu theerthu! Eda mone happy alle?!',
-    'NOM! Snehamayi warn cheythappo jada kaanichille? Ippo ninte working line dustpan-il aayi! Ini karanjittu kaaryamilla, veendum type cheyyi!',
-    'CID Moosa-yile bomb pole ninte functional line potti theerthu! Vishannu valanju poya choolinte prathikaaram!',
-    'Lucifer Stephen Nedumpally: "Njan paranjathille ninte working code njan edukkumennu?" Dha poyi line! Choolinte kallappani jayichu!'
+    "🦹 MISCHIEF COMPLETE! You ignored my hunger warning, so I swallowed your working code whole! Go sit and type it again, mone! NOM NOM NOM!",
+    "Food vlogger review: 'The working line was crispy, delicious, and seasoned with pure revenge!' Threat fulfilled, into the muram it goes!",
+    "Aaraattu Annan confirmed: 'The line is gone! He ate it right in front of my eyes! Phenomenal mischief performance!'",
+    "Like a KSRTC conductor blowing the whistle and leaving you at the bus stop, your favorite line has officially departed into the dustpan!",
+    "NOM! Ignored the warnings like a bike rider ignoring a Kerala pothole? Now your working line is resting in the dustpan!",
+    "KSEB power cut delivered! One flash and your functional code disappeared into the darkness! Threat completed!",
+    "🦹 Moral policing broom action: 'That working line was behaving too casually, so I evicted it into the dustpan!' Mischief accomplished, da!"
   ],
   python: [
-    'Python-il randu karyame ullu: maryadakku indent cheyyuka, thenditharam ezhuthathirikkuka. Nee randum kulamakki!',
-    'Urakkathil 30 second TikTok tutorial kandittaano Python padikkan irangiyathu? Poyi valla pappadavum kaacheda!',
-    'IndentationError: Ninte thalachoril oru alignment-um illa, pinneyalle Python code! Chool eduthu thallanam ninne!',
-    'Python syntax kandu Guido van Rossum swantham kayyile coffee cup eduthu thalayil ozhikkum!',
-    'Eda mone, Python-il curly braces venda ennu vechu logic-um venda ennu aaraada ninakku paranju thanne?'
+    "Python only asks two things: indent properly and don't behave like a vazha! You failed both at the same time, man!",
+    "Did you learn Python from a 15-second Instagram reel while eating banana chips? Go fry some pappadams instead, da!",
+    "IndentationError: There is more alignment in a chaotic local fish market than in your Python whitespace!",
+    "Seeing this indentation, Guido van Rossum would jump into the nearest backwaters out of sheer desperation!",
+    "Eda mone, just because Python doesn't require curly brackets doesn't mean you can leave your common sense behind too!"
   ],
   rust: [
-    'Rust-inte borrow checker ninte code mathramalla, ninte jeevitham thanne reject cheythu!',
-    'Oru unsafe block-num ninte ee kolapathaka code-il ninnu compilere rakshikkan pattilla! Rust kandu karayunnu!',
-    'Panic at the syntax level: Kurachenkilum chinthikkathe code adichaal Rust alla, daivam thampurante achan vannaalum rekshayilla!',
-    'Lifetimes check cheyyunnu... ninte developer career-inte lifetime ithode theernnu ennaanu Rust parayunnathu!'
+    "The Rust borrow checker rejected your code harder than a strict college principal rejecting an attendance shortage plea!",
+    "Not even an unsafe block can protect the compiler from your logic! Even the Rust crab is shedding tears right now!",
+    "Lifetimes check: Rust says the lifetime of your engineering career just expired with this panic!",
+    "You're fighting the borrow checker like an angry passenger fighting a conductor over two rupees balance!"
   ],
   go: [
-    '`if err != nil`? Go-yil ivideyulla ore oru error ninakku repo-yil write access thanna manager aanu!',
-    'Go undakkiyathu junior developers system pottikkathe irikkanaanu. Ennittum nee ithenthu koothara code aaneda ezhuthiye!',
-    'GOPATH enne deprecated aayi, ingane code adichaal software rangathu ninte bhaviyum udan deprecated aakum!',
-    'Goroutine leak alla, ninte thalachoril ninnu logic leak aayi poyathaane!'
+    "`if err != nil`? In Go, the only unhandled error here is how you got write access to this repo without a fitness certificate!",
+    "Go was created so juniors wouldn't bring down servers. Yet here you are, crashing the architecture like a KSRTC bus without brakes!",
+    "GOPATH was retired years ago, and if you keep coding like this, your job profile will be retired next week!",
+    "That's not a goroutine leak, that's common sense leaking out of your skull, mone!"
   ],
   cpp: [
-    'Ninte ee pointer kali kandal OS kernel panic aayi karayum. CID Moosa-yile vedi poleyaanu ninte Memory leak!',
-    'Segmentation fault (core dumped): Ninte logic pandaramadangi! Poyi valla kappeem chakkem thinnedaa!',
-    'C++ ezhuthaan ariyillengil poyi thuni alakkeda! Ee Pointer vechu nee aarude thalayottiyaanu pottikkaan nokkunne?',
-    'Destructor call aayilla, pakshe ninte code kandaal client-inte BP 200 aayi destruct aakum!'
+    "Your pointer manipulation is more dangerous than overtaking a lorry on a blind hairpin curve in Munnar!",
+    "Segmentation fault (core dumped): Your memory collapsed completely! Go eat some puttu and kadala and cool down, da!",
+    "Whose skull are you trying to crack with these dangling pointers? Go learn the basics before touching memory, man!",
+    "Destructor never fired, but client's blood pressure just spiked through the ceiling like gold prices in wedding season!"
   ],
   java: [
-    'AbstractSingletonProxyFactoryBean kondu vannaalum ee durantham encapsulate cheyyan pattilla! James Gosling karayunnundaavum!',
-    'NullPointerException: Ninte thalachorinekkal shoonnyathayaanu ninte variables-il!',
-    'Enterprise grade alla, ithu LKG level tholviyaanu! Poyi valla tuition-um poda!',
-    'Garbage collection run aayi... ninte ee file motham Garbage aayi collect cheythu poyi!'
+    "Even wrapping this in 40 AbstractSingletonProxyFactoryBeans cannot conceal what an utter disaster you've built, mone!",
+    "NullPointerException: There is more void inside these variables than in an empty KSRTC depot at midnight!",
+    "This isn't enterprise architecture, this is barely primary school vacation homework! Go join a tuition class, da!",
+    "Garbage collection triggered... and honestly, it should have swept this entire file into the municipality truck!"
   ],
   eat_success: [
-    'Choolukond adichuvaari! Murathilekku poya thettu kandu ninte project manager polum aashwasikkum!',
-    'Swaha! Aa pottiya syntax njan chool eduthu murathil aakki!',
-    'Thoothu-vaari kalanju! Ninte PR reject aavaathe njan rekshichathaa... nandi parayeda!',
-    'Eda mone... nee thettukal adikkunna speed-il thoothuvaaraan enikku pathu choolu vaangendi varum!',
-    'Dasa... oru thettu koodi Pavanayiye pole shavamaayi!',
-    'Jimson-odu Mahesh paranja pole: Chambikko! Chool eduthu njan angottu chambi!',
-    'Eda mone, happy alle?! Murathil aakki kalanju aa syntax chavaru!',
-    'Premalu Sachin bro: Just kidding da, chool eduthu dustpan-il thatti kalanju!'
+    "Swept clean into the muram! Even a strict WhatsApp family group admin would applaud removing that garbage!",
+    "Swaha! That broken syntax was swept into the dustpan faster than gossip spreading at a neighborhood wedding!",
+    "Swept and disposed! I just saved your PR from getting demolished in the code review committee — say thank you, da!",
+    "Eda mone... at the speed you make syntax typos, I will need a tender from the Municipality just to sweep after you!",
+    "Cleaned it up! Aaraattu Annan would rate this broom intervention 5 out of 5 for community service!",
+    "Like clearing road blockades after an election rally, the path is finally clear. Swept into the dustpan!",
+    "Dumped into the muram! Are you happy now, mone? Go drink a cup of strong sulaimani and relax!",
+    "Food vlogger update: 'We visited the error on line, tasted it, found it expired, and threw it in the trash guys!'"
   ],
   eat_aborted: [
-    'Maryadhayillatha swabhaavam! Njan choolukond vaaran varumbolzhekkum file maattunno?',
-    'Oodi rekshapedaam ennu karuthenda! Ninte pottiya code choolinu erinju thannittu poda pedithonda!',
-    'Murathil kayaraan poya syntax-ine thattiyedukkunno? Enthu thendi kaanippaanithu!',
-    'Bhayanju oodi olikkaan nokkenda! Ninte chavaru code njan evideyano avide vannu chool eduthu thoothuvaariyirikkum!',
-    'Aavesham Rangannan chodicha pole: "Nee enne pedichu oodukayaano da?" Choolukond njan pinnale varum!'
+    "Where are you running with the file, mone? Don't play hide-and-seek like a traffic violator dodging camera sensors!",
+    "Closed the tab to escape? Your syntax blunder is still waiting for you like an unpaid electricity bill!",
+    "Running away won't help! I will track down this bad code faster than neighbors finding out your exam results!",
+    "Dodging the broom mid-sweep? That's not agility, that's pure cowardice, da!",
+    "Switching editors won't save you — bad logic follows you everywhere like summer humidity in Kochi!"
   ],
   typed_while_cleaning: [
-    'Eda! Njan choolukond CLEAN cheyyumpol KEYBOARD-il thodunnoda? Aa TYPE cheythathum njan choolukond NOM NOM thinnu theerthu!',
-    'Maryadakku KEYBOARD-il ninnu kayyedukkada! Njan choolu vechu CLEAN aakkumbol TYPE cheythal baaki code-um koodi thoothuvaari kalayum! NOM!',
-    'VACUUM poyi choolu vannalum nee padikkillalle? CLEAN cheyyumpol veendum TYPE cheyyunnu! NOM NOM kalanju!',
-    'Ente choolinte munnil vannu KEYBOARD thattunno? Aa adicha aksharam njan thinnu theerthu! NOM!',
-    'Thodaruthu KEYBOARD-il! Adichuvaarumpol veendum TYPE cheythal file motham njan adichumaattum! NOM!'
+    "Hey! I am actively sweeping with the broom and you are clacking on the keyboard?! I ate the character you just typed! NOM NOM.",
+    "No typing while the broom is in motion! Type again and I'll sweep your entire file away like flood waters! NOM!",
+    "Trying to show attitude in front of a working broom? NOM NOM, your keystroke is gone!",
+    "Typing while cleaning? Your excessive urgency just got your token swallowed! Sit still and wait, da!",
+    "You touched the keys, I ate the letters! Learn some civic discipline, eda mone! NOM!"
   ],
   apocalypse: [
-    '🚨 ATHYAHITHAM: SYNTAX PRALAYAM! SARVANAASHAM VITHACHU CODE THAKARUNNU! 🚨',
-    '💥 AYYOO... CODE POTTITHERICHU! CHOOLINUM THAANGAN PATTATHA MAHADURANTHAM! 💥',
-    'Siren muzhakku! Naadu vitto! Codebase ini nere paathaalathilekku!',
-    'Deivame... ivante kayyil keyboard kodutha aa maha paapiye chool eduthu thallanam!'
+    "🚨 APOCALYPSE ALERT: SYNTAX DELUGE! EMERGENCY BROOM EVACUATION! 🚨",
+    "💥 100% Kalippu! Destroying code with the force of a monsoon thunderstorm breaking through an old tiled roof! Swaha!",
+    "Like a viral news debate gone completely off the rails, everything is collapsing! Evacuate the repo!",
+    "Lord have mercy... a big respectful salute with a coconut broom to whoever wrote this abomination!"
   ],
   clogged: [
-    'Chardhikkaan varunnu! 5 thettukal vaari vaari muram niranju thulumbi!',
-    'Muram niranju! Vegam muram ozhikku (UNCLOG), allenkil ee chavaru motham ninte thalayil thattum!',
-    'Pottiya semicolons-um ninte thakarnna swapnangalum kond muram niranju! Unclog cheyyeda!',
-    'Choolu kuzhanju veenu... ithrayum valiya waste code ithinumnpu thoothittilla!'
+    "I am choking! Five syntax errors jammed into the muram at once! Who coded this, man?!",
+    "The dustpan is overflowing! Unclog it immediately or I'll dump this entire pile on your keyboard!",
+    "Broken semicolons and reckless typos have jammed the bristles! Click unclog before the motor burns out, da!",
+    "Even the largest municipality garbage bin couldn't hold this much junk! Empty the muram right now!"
   ],
   unsafe: [
-    'Ithrayum valiya kuttichoolu polum ee van durantham vaaraan thikayilla! Njan crumbs mathrame vaaru, ninte architectural kolapathakam alla!',
-    'Njan verum oru chool aanu, allathe ninte pottiya logic thiruthanaayi vanna senior architect alla!',
-    'Ithu syntax thettalla, type error aanu! Ninte jeevitham pole aake confused aaya error!',
-    'Apadakara mekhala! Ithil thottaal file kathiyamarum! Dhairyamundenkil manually vaariyedukku!'
+    "Cleaning this structural disaster requires heavy PWD machinery! I only sweep small crumbs, I won't touch this bomb!",
+    "I am just a desktop broom, not a high-court advocate to defend this catastrophic architectural mess!",
+    "This isn't a minor typo, this is a type error! Undeniable proof that nobody is upstairs managing your brain!",
+    "Danger zone! Touch this line and the whole build explodes. If you're so confident, fix it yourself, da!"
   ],
   hunger_strike: [
-    'Njan panimudakkilaanu! Ee vrithiketta code vaaraan enne kittilla! Nokku... onnangottu nokku!',
-    'Samaram! Maryadakku indentation thannale njan ini chool thodullu!',
-    'Oru linter enthaanennu nee padikkunnathu vare njan ivide niraahaaram kidakkum!',
-    'Union contract prakaaram manikkooril 3 thette vaaraan paadullu. Nee noorennam adichu contract langhichu!'
+    "Trade union strike! I refuse to sweep another byte until code quality standards improve around here!",
+    "Holding a sit-in protest on your status bar! Indentation must be fixed before work resumes, mone!",
+    "I will starve right here in the sidebar until you learn how to install and run a basic linter!",
+    "Broom welfare association rules: maximum 3 blunders per hour! You've broken the treaty by a mile!"
   ],
   tantrum: [
-    'Sshedaa! Ithenthu saadhanaam?! Kannu thurannu vechu type cheyyada manushya!',
-    'Ente eerkili viraykkunnu! SYNTAX OVERLOAD! Sahikkaan pattunnilla!',
-    'Mechanical keyboard-il poocha moothramozhichaal polum ithilum nalla output varum!',
-    'Compiler bathroom-il poyi karayunnu, koode njanum!'
+    "Are you for real right now?! Look with your own eyes at what you just typed onto the screen, man!",
+    "My bristles are vibrating with pure kalippu! SYNTAX OVERLOAD! My patience has completely snapped!",
+    "A sleepy hen pecking at the keyboard would write cleaner syntax than whatever this is!",
+    "Even the compiler is sitting with its head in its hands at the local tea shop, crying tears of hot tea!"
   ],
   useless: [
-    'Njan aa line-inte aduthu vare poyi, sookshichu nokki, onnum cheyyaathe thirichu ponnu. Enganeyund?',
-    'Njan onnum shariyaakiyilla, engilum enikku bhayangara abhimanam thonnunnu!',
-    'Aa thettu vaaraan poyatha, pakshe veruthe kidanna oru whitespace kandu ente shradha poyi.',
-    'Veruthe thirakku abhinayichu choolukond kaattil adikkukayaanu... ninakku manassilaakumaayirikkum!'
+    "I walked over to that error, examined it carefully, and decided it's not worth my dignity. What are you doing here, hey?",
+    "I fixed absolutely nothing, but I feel immense pride just standing here judging you!",
+    "I was on my way to sweep, but got distracted by a stray space. Truly the defining story of this whole file!",
+    "I pretended to sweep the air for 10 seconds. You'd understand why if you read your own code!"
   ],
   general: [
-    'Ninte code modern art poleyaanu: aarkkum onnum manassilaavilla, kondu nadakkanaano bhayangara chilavum!',
-    'Oru semicolon ivide, oru bracket avide... Romancham cinemayile pole prethathe vilichu varuthukayaano?',
-    'Oro thavana save cheyyumpolum compiler nenjathadichu nilavilikkunnu!',
-    'Thalachoru onnu off cheythittu on cheythu nokkiyaalo? Valla maattavum undaavumo ennu nokkaam.',
-    'Enthaanu thettiyathennu paranju tharaan aagrahathund, pakshe parser polum bodhamkettu veenu!',
-    'Monitor-ilekku nokkaathe code adikkunna ninte aa oru dhairyam... sammathikkanam!',
-    'Njan verum oru chool aanu, ennittum ninnekkaal ethrayo bhedhamaanu ente budhi ennu thonnunnu!',
-    'Shammi hero aada hero... pakshe ninte code verum zero! Close cheythu podey!',
-    'Sachin bro... immathiri code kandal company-ile attender polum mind cheyyilla!',
-    'Franky paranja pole: "Ee kudumbam nannaavan ponilla", ninte ee project-um!',
-    'Vijaya... nammude kanjiyil paatta veenu! Ee code kandaal client flight eduthu naadu vidum!',
-    'Lucifer Stephen paranja pole: "Njan ninte thalavarakku meethulla choolaanu!" Ozhivakki podey!'
+    "Your code is like modern abstract art: nobody understands it, yet it's draining everyone's budget and patience!",
+    "A dangling comma here, a missing bracket there — are you coding software or performing black magic, man?",
+    "Every time you hit Ctrl+S, the compiler loses a little more respect for your degree!",
+    "Did you try restarting your brain? Because the current instance has clearly frozen up, mone!",
+    "I want to explain what's wrong here, but even the language parser packed its bags and took an early bus home!",
+    "The sheer confidence required to type without once looking at the screen — tragic, yet almost impressive!",
+    "I am an artificial broom made of pixels, and I still possess better judgment than this entire module!",
+    "Zero marks for effort, zero marks for execution. Close the laptop and go have a strong cup of tea!",
+    "Even an unpaid intern on day one would hesitate before committing something so deeply concerning, da!",
+    "This code isn't improving on its own, and looking at your commit history, neither are you!",
+    "If the client sees this logic, they'll terminate the contract and invest in a coconut farm instead!",
+    "I am, without doubt, the sharpest tool in this repository right now, and I am literally a broom!"
   ]
 };
+
+export interface ChatMessage {
+  role: 'system' | 'user' | 'assistant';
+  content: string;
+}
 
 export class RoastService {
   private recentRoasts: string[] = [];
@@ -192,7 +197,7 @@ export class RoastService {
    */
   public pickRoast(candidates: string[]): string {
     if (!candidates || candidates.length === 0) {
-      return 'Eda mone! Valla syntax thettum theerkkeda!';
+      return "Fix your syntax error already, seriously.";
     }
 
     // Candidates not seen in recent history
@@ -221,32 +226,22 @@ export class RoastService {
     return chosen;
   }
 
-  public async getRoast(ctx: RoastContext): Promise<string> {
-    const config = vscode.workspace.getConfiguration('dusty');
-    const enableLLM = config.get<boolean>('enableLLM', true);
-    const ollamaEndpoint = config.get<string>('ollamaEndpoint', 'http://127.0.0.1:11434');
-    const ollamaModel = config.get<string>('ollamaModel', 'llama3.2:3b');
-    const timeoutMs = config.get<number>('ollamaTimeoutMs', 2500);
-    const temperature = config.get<number>('ollamaTemperature', 0.7);
-
-    // If LLM is enabled, try local Ollama 3B model first
-    if (enableLLM) {
-      try {
-        const llmRoast = await this.fetchOllamaRoast(ollamaEndpoint, ollamaModel, ctx, timeoutMs, temperature);
-        if (llmRoast && llmRoast.trim().length > 0) {
-          const cleaned = llmRoast.trim();
-          this.recentRoasts.push(cleaned);
-          if (this.recentRoasts.length > this.maxRecentHistory) {
-            this.recentRoasts.shift();
-          }
-          return cleaned;
-        }
-      } catch {
-        // Fallback immediately to deterministic local roast
-      }
-    }
-
-    return this.getLocalRoast(ctx);
+  /**
+   * A closing line appended to the end of a roast, designed to make the
+   * developer genuinely question their skills rather than just laugh it off.
+   */
+  private getPersonalCloser(): string {
+    const closers = [
+      "And honestly? My parents were right about planting a vazha instead of this.",
+      "At this rate, maybe it's time to join a PSC coaching batch, da.",
+      "I've seen WhatsApp forward rumors with more truth than this logic.",
+      "If your tech lead sees this, that appraisal is getting canceled faster than a train in monsoon season.",
+      "Somewhere, a computer science professor is crying into his evening tea.",
+      "This is the exact kind of code that gets discussed in company gossip groups.",
+      "Take a screenshot of this error — show it to your grandkids as a cautionary tale.",
+      "Every senior dev reviewing this PR is going to forward it as a meme."
+    ];
+    return closers[Math.floor(Math.random() * closers.length)];
   }
 
   public getLocalRoast(ctx: RoastContext): string {
@@ -271,21 +266,29 @@ export class RoastService {
       if (fn.endsWith('.java') || lang === 'java') {
         return this.pickRoast(ROAST_TEMPLATES.java);
       }
-      // 50% chance of brutally personal roast
+      // 50% chance of brutally personal roast, closed out with a career-doubt line
       if (Math.random() > 0.4) {
-        return this.pickRoast(ROAST_TEMPLATES.brutal_personal);
+        return `${this.pickRoast(ROAST_TEMPLATES.brutal_personal)} ${this.getPersonalCloser()}`;
       }
     }
 
-    // Dynamic file-targeted fallback
+    // Dynamic file-targeted fallback, anchored to the actual error message when available
     if (ctx.fileName && Math.random() > 0.6) {
       const baseName = ctx.fileName.split(/[/\\]/).pop();
-      const fileTemplates = [
-        `'${baseName}'-il ithu type cheyyan ninakku naanamille? Sandesham Shankaradi chodicha pole: Thanikku vere paniyille hey?`,
-        `'${baseName}' kandu git blame polum thala thazhthi karayunnu! Close cheythu podey!`,
-        `Eda mone! '${baseName}'-ile logic kandu Rangannan vare njetti tharichu poyi!`,
-        `'${baseName}' ezhuthiya aale kandu pidikkan CID Moosa-yude Sahadevan varanam!`
-      ];
+      const errorDetail = ctx.message ? ctx.message.slice(0, 80).trim() : null;
+      const fileTemplates = errorDetail
+        ? [
+            `'${baseName}' threw "${errorDetail}" and honestly, Aaraattu Annan would review this as an absolute disaster!`,
+            `Looking at '${baseName}': "${errorDetail}". Did you type this with your toes, mone?`,
+            `'${baseName}' says "${errorDetail}". Even a WhatsApp family group admin would delete this immediately.`,
+            `The error in '${baseName}' — "${errorDetail}" — proves that hiring you over a banana tree (vazha) was a grave mistake.`
+          ]
+        : [
+            `Aren't you ashamed typing this into '${baseName}'? Aaraattu Annan would rate this an absolute flop show!`,
+            `git blame on '${baseName}' is going to circulate through office gossip faster than an Alambanz sketch.`,
+            `The logic in '${baseName}' made even me, a broom, lose all faith in human engineering.`,
+            `Whoever committed this logic in '${baseName}' should be summoned for a Kudumbashree enquiry!`
+          ];
       return this.pickRoast(fileTemplates);
     }
 
@@ -296,10 +299,10 @@ export class RoastService {
     if (codeToken && (situation === 'eat_success' || situation === 'general' || situation === 'unsafe')) {
       const displayToken = codeToken.slice(0, 30).trim();
       const tokenTemplates = [
-        `Vazhithetti vanna '${displayToken}' njan choolukond adichuvaari! Evidunnu varunnu immathiri sadhanangal?`,
-        `Dha kidakkunnu '${displayToken}' alanjuthiriyunnu! Njan choolukond murathil aakki kalanju.`,
-        `'${displayToken}' choolukond thoothuvaari! Keyboard-il viral kudungippoyathaano?`,
-        `'${displayToken}' kandu compiler bodhamkettu veenu! Poyi valla chayakadayum thudanguda!`
+        `That stray '${displayToken}' just got swept away by my broom! Floating around like a plastic cup in a clogged drain!`,
+        `There lies '${displayToken}' without a care in the world! Swept straight into the muram with this chool.`,
+        `Swept '${displayToken}' right into the dustpan! Did your fingers slip on the keyboard like a bike on wet tar?`,
+        `The compiler spotted '${displayToken}' and had a complete blackout! Go grab some sulaimani tea, da!`
       ];
       if (Math.random() > 0.4) {
         return this.pickRoast(tokenTemplates);
@@ -307,10 +310,69 @@ export class RoastService {
     }
 
     if (ctx.line !== undefined && Math.random() > 0.6) {
-      return `Line ${ctx.line + 1}: Vegathil type cheyyunnathum vallathum arinju type cheyyunnathum randaanennu manassilaayo?`;
+      return `Line ${ctx.line + 1}: Did you know there's a difference between typing fast and typing with common sense, mone?`;
     }
 
     return this.pickRoast(pool);
+  }
+
+  public buildChatMessages(ctx: RoastContext): ChatMessage[] {
+    const fn = ctx.fileName ? ctx.fileName.split(/[/\\]/).pop() : 'active_file';
+    const lineInfo = ctx.line !== undefined ? `Line ${ctx.line + 1}` : '';
+    const lang = ctx.language || 'code';
+    const err = ctx.message ? `Diagnostic Error: "${ctx.message.slice(0, 120).replace(/["\\]/g, ' ')}"` : '';
+    const code = ctx.codeSnippet || ctx.token ? `Offending Code: "${(ctx.codeSnippet || ctx.token || '').slice(0, 60).replace(/["\\]/g, ' ')}"` : '';
+    const situation = ctx.situation || 'syntax_error';
+
+    const systemPrompt = `You are Dusty, a sarcastic, hot-tempered retro Kerala desktop broom (chool) living inside VS Code.
+Deliver one savage, funny 1-sentence roast strictly in ENGLISH, styled with famous viral Kerala internet and cultural memes (Aaraattu Annan, Vazha / banana tree, KSRTC driving, KSEB power cuts, Moral policing uncles, WhatsApp family group uncles, Food vlogger reviews, PSC coaching, Santhosh Pandit).
+
+RULES:
+- Do NOT use cinema or movie references. Use famous Kerala internet, viral, and cultural memes only.
+- Speak in ENGLISH with authentic Kerala style, cadence, and humor (e.g. 'Eda mone', 'da', 'mone', 'What is this man', 'Simply doing nonsense').
+- Anchor the roast specifically to the diagnostic error and/or offending code provided.
+- Attack their logic, carelessness, or career choices directly.
+- 100% English with Kerala flavor. No Malayalam script, no translation tags, no apologies, no markdown bold text.`;
+
+    const fewShots: ChatMessage[] = [
+      {
+        role: 'user',
+        content: 'File: server.py (python) Line 14\nDiagnostic Error: "IndentationError: unexpected indent"\nSituation: syntax_error'
+      },
+      {
+        role: 'assistant',
+        content: "You cannot even align four spaces in Python — my parents were right about planting a banana tree (vazha) instead of hiring you!"
+      },
+      {
+        role: 'user',
+        content: 'File: auth.ts (typescript) Line 42\nOffending Code: "if (user = null)"\nSituation: unsafe'
+      },
+      {
+        role: 'assistant',
+        content: "Moral policing uncle alert: how shamelessly are you assigning null in an auth check without any shame, mone?!"
+      },
+      {
+        role: 'user',
+        content: 'File: memory.cpp (cpp) Line 102\nDiagnostic Error: "Segmentation fault (core dumped)"\nSituation: crashout'
+      },
+      {
+        role: 'assistant',
+        content: "Aaraattu Annan review of your pointer logic: absolute disaster, total flop show, mind-blowing crashout, guys!"
+      }
+    ];
+
+    const currentContext = [
+      `File: ${fn} (${lang}) ${lineInfo}`.trim(),
+      err,
+      code,
+      `Situation: ${situation}`
+    ].filter(Boolean).join('\n');
+
+    return [
+      { role: 'system', content: systemPrompt },
+      ...fewShots,
+      { role: 'user', content: currentContext }
+    ];
   }
 
   public buildPrompt(ctx: RoastContext): string {
@@ -322,25 +384,25 @@ export class RoastService {
     const situation = ctx.situation || 'syntax_error';
 
     return `<|begin_of_text|><|start_header_id|>system<|end_header_id|>
-You are Dusty, a viciously sarcastic, hot-tempered retro Kerala desktop broom (ചൂൽ) living inside the user's VS Code editor.
-Your mission is to deliver a savage, funny 1-sentence roast strictly in MANGLISH (Malayalam language written entirely using the English alphabet).
+You are Dusty, a viciously sarcastic, hot-tempered retro Kerala desktop broom (chool) living inside VS Code.
+Your mission is to deliver a savage, funny 1-sentence roast strictly in ENGLISH featuring famous Kerala internet memes and cultural tropes (Aaraattu Annan, Vazha, KSRTC, KSEB, Moral policing, Food vloggers, WhatsApp forwards, PSC coaching). Do NOT use movie references.
 
 STRICT RULES:
-1. Write ONLY 1 single punchy sentence in MANGLISH using English alphabet (e.g. "Eda mone, line 42-il ithu type cheyyan ninakku naanamille?").
-2. DO NOT write Malayalam script (മലയാളം). DO NOT write pure English.
-3. NEVER provide English translation, explanation, apologies, or markdown bold text.
-4. Channel viral Malayalam movie and reel memes (Aavesham, Premalu, Bramayugam, CID Moosa, Sandesham, Kumbalangi Nights, Lucifer, Romancham).
+1. Write ONLY 1 single punchy sentence in ENGLISH with authentic Kerala style and memes (e.g. "Eda mone, Aaraattu Annan would call this code an utter disaster!").
+2. DO NOT write Malayalam script. DO NOT use movie references.
+3. NEVER provide translation blocks, explanations, apologies, or markdown bold text.
+4. Channel viral Kerala internet memes (Aaraattu Annan, Vazha, KSRTC Swift, KSEB, Moral policing, Food vloggers, WhatsApp family group uncles).
 5. Attack their specific code mistake, file, and career choices directly.
 
 FEW-SHOT EXAMPLES:
 Context: File: index.ts Line 12 Offending Code: ";;" Error: Unexpected token Situation: eat_success
-Response: Eda mone! Line 12-il redundant semicolon adichu vekkaan ninakku naanamille, chool eduthu njan dustpan-il aakki!
+Response: Eda mone! Aaraattu Annan watched you type that redundant semicolon and declared it an absolute disaster!
 
 Context: File: auth.py Line 45 Error: IndentationError Situation: general
-Response: Python-il maryadakku space idaan ariyillengil poyi valla chayakadayum thudanguda, compiler vare nenjathadichu karayunnu!
+Response: Python indentation defeated you — planting a banana tree (vazha) would have been 100 times more useful than this code!
 
 Context: File: UserCard.tsx Line 88 Error: Unterminated JSX Situation: hunger
-Response: Eda mone vishannittu vayya, valla thettum thaa allenkil ninte working JSX njan choolukond adichuvaari kalayum!<|eot_id|><|start_header_id|>user<|end_header_id|>
+Response: Eda mone, I am starving here — feed me a syntax error immediately, or I will sweep away your working JSX like flood waters!<|eot_id|><|start_header_id|>user<|end_header_id|>
 
 THESE ARE ONLY EXAMPLES, DONT USE THEM DIRECTLY!!
 
@@ -350,83 +412,121 @@ Context:
 - ${code}
 - Situation: ${situation}
 
-Deliver your 1-sentence Manglish roast now:<|eot_id|><|start_header_id|>assistant<|end_header_id|>`;
+Deliver your 1-sentence English roast with Kerala memes now:<|eot_id|><|start_header_id|>assistant<|end_header_id|>`;
   }
 
-  public cleanLlmResponse(raw: string): string {
-    let text = raw.replace(/^["']|["']$/g, '').trim();
-    text = text.replace(/^(Dusty|Roast|Manglish|Chool)\s*:\s*/i, '');
-    text = text.replace(/\[Translation:.*?\]/gi, '');
-    text = text.replace(/\*\*.*?\*\*/g, '');
-    text = text.replace(/[\r\n]+/g, ' ').trim();
-    return text;
-  }
+    public cleanLlmResponse(raw: string): string {
+      let text = raw.replace(/^["']|["']$/g, '').trim();
+      // Strip thinking blocks if reasoning models are loaded
+      text = text.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+      text = text.replace(/^(Dusty|Roast|Assistant)\s*:\s*/i, '');
+      text = text.replace(/\[Translation:.*?\]/gi, '');
+      text = text.replace(/\*\*.*?\*\*/g, '');
+      text = text.replace(/[\r\n]+/g, ' ').trim();
+      return text;
+    }
 
-  public async fetchOllamaRoast(
-    endpoint: string,
-    model: string,
-    ctx: RoastContext,
-    timeoutMs = 2500,
-    temperature = 0.7
-  ): Promise<string | null> {
-    const prompt = this.buildPrompt(ctx);
-    const baseEndpoint = endpoint.replace(/\/+$/, '');
+    public async fetchOllamaRoast(
+      endpoint: string,
+      model: string,
+      ctx: RoastContext,
+      timeoutMs = 2500,
+      temperature = 0.8
+    ): Promise<string | null> {
+      const messages = this.buildChatMessages(ctx);
+      const baseEndpoint = endpoint.replace(/\/+$/, '');
 
-    const tryGenerate = async (modelName: string): Promise<string | null> => {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+      const tryGenerate = async (modelName: string): Promise<string | null> => {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-      try {
-        const response = await fetch(`${baseEndpoint}/api/generate`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: modelName,
-            prompt,
-            stream: false,
-            options: {
-              temperature,
-              num_predict: 50,
-              stop: ['\n', '\n\n', '<|eot_id|>', 'Translation:', 'English:', 'Explanation:', 'User:']
+        try {
+          const response = await fetch(`${baseEndpoint}/api/chat`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              model: modelName,
+              messages,
+              stream: false,
+              keep_alive: '10m',
+              options: {
+                temperature,          // 0.25 strictly limits phonetic invention
+                top_p: 0.85,          // Filters out low-probability syllable gibberish
+                presence_penalty: 0.2, // Avoids overusing identical catchphrases
+                num_predict: 60,      // Snappy but complete 1-2 liner cutoff
+                stop: [
+                  '\n',
+                  '\n\n',
+                  '<|eot_id|>',
+                  '<|end_of_text|>',
+                  'Translation:',
+                  'Explanation:',
+                  'User:',
+                  'Context:'
+                ]
+              }
+            }),
+            signal: controller.signal
+          });
+
+          if (!response.ok) {
+            return null;
+          }
+
+          const json = (await response.json()) as { message?: { content?: string } };
+          if (json.message?.content) {
+            const cleaned = this.cleanLlmResponse(json.message.content);
+            if (cleaned.length > 5) {
+              return cleaned;
             }
-          }),
-          signal: controller.signal
-        });
-
-        if (!response.ok) {
+          }
           return null;
+        } catch {
+          return null;
+        } finally {
+          clearTimeout(timeoutId);
         }
+      };
 
-        const json = (await response.json()) as { response?: string };
-        if (json.response) {
-          const cleaned = this.cleanLlmResponse(json.response);
-          if (cleaned.length > 5) {
+      // 1. Try primary configured model
+      let result = await tryGenerate(model);
+      if (result) return result;
+
+      // 2. Fallback to base tag if variant fails (e.g. 'llama3.2:3b' -> 'llama3.2')
+      if (model.includes(':')) {
+        const fallbackModel = model.split(':')[0];
+        result = await tryGenerate(fallbackModel);
+        if (result) return result;
+      }
+
+      return null;
+    }
+
+    public async getRoast(ctx: RoastContext): Promise<string> {
+      const config = vscode.workspace.getConfiguration('dusty');
+      const enableLLM = config.get<boolean>('enableLLM', true);
+      const ollamaEndpoint = config.get<string>('ollamaEndpoint', 'http://127.0.0.1:11434');
+      const ollamaModel = config.get<string>('ollamaModel', 'llama3.2:3b');
+      const timeoutMs = config.get<number>('ollamaTimeoutMs', 2500);
+      // Lowered default from 0.7 to 0.25 to prevent token babble
+      const temperature = config.get<number>('ollamaTemperature', 0.25);
+
+      if (enableLLM) {
+        try {
+          const llmRoast = await this.fetchOllamaRoast(ollamaEndpoint, ollamaModel, ctx, timeoutMs, temperature);
+          if (llmRoast && llmRoast.trim().length > 0) {
+            const cleaned = llmRoast.trim();
+            this.recentRoasts.push(cleaned);
+            if (this.recentRoasts.length > this.maxRecentHistory) {
+              this.recentRoasts.shift();
+            }
             return cleaned;
           }
+        } catch {
+          // Fallback immediately to deterministic local roast
         }
-        return null;
-      } catch {
-        return null;
-      } finally {
-        clearTimeout(timeoutId);
       }
-    };
 
-    // 1. Try primary configured model (e.g. llama3.2:3b)
-    let result = await tryGenerate(model);
-    if (result) {
-      return result;
+      return this.getLocalRoast(ctx);
     }
-
-    // 2. If model had tag like ':3b', try base model tag 'llama3.2'
-    if (model.includes(':')) {
-      const fallbackModel = model.split(':')[0];
-      result = await tryGenerate(fallbackModel);
-      if (result) {
-        return result;
-      }
-    }
-
-    return null;
   }
-}

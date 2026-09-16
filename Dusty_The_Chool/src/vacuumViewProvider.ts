@@ -29,6 +29,51 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
         }
       })
     );
+
+    if (typeof vscode.workspace.createFileSystemWatcher === 'function') {
+      try {
+        const pattern = new vscode.RelativePattern(vscode.Uri.joinPath(this.extensionUri, 'media', 'sounds'), '*');
+        const watcher = vscode.workspace.createFileSystemWatcher(pattern);
+        const sync = () => this.syncCustomSounds();
+        watcher.onDidCreate(sync, null, this.disposables);
+        watcher.onDidChange(sync, null, this.disposables);
+        watcher.onDidDelete(sync, null, this.disposables);
+        this.disposables.push(watcher);
+      } catch {
+        // Ignore watcher errors in restricted environments
+      }
+    }
+  }
+
+  public getCustomSoundsMap(webview: vscode.Webview): Record<string, string> {
+    const map: Record<string, string> = {};
+    try {
+      const soundsDiskDir = vscode.Uri.joinPath(this.extensionUri, 'media', 'sounds').fsPath;
+      if (fs.existsSync(soundsDiskDir)) {
+        const files = fs.readdirSync(soundsDiskDir).filter(f => /\.(mp3|wav|ogg|m4a|aac)$/i.test(f));
+        for (const file of files) {
+          const dot = file.lastIndexOf('.');
+          if (dot > 0) {
+            const key = file.substring(0, dot).toLowerCase();
+            const fileUri = vscode.Uri.joinPath(this.extensionUri, 'media', 'sounds', file);
+            map[key] = webview.asWebviewUri(fileUri).toString();
+          }
+        }
+      }
+    } catch {}
+    return map;
+  }
+
+  public syncCustomSounds(): void {
+    if (this.view) {
+      const soundsUri = this.view.webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'media', 'sounds'));
+      this.postMessage({
+        type: 'customSounds',
+        files: this.getCustomSoundFiles(),
+        soundsBaseUri: soundsUri.toString(),
+        soundsMap: this.getCustomSoundsMap(this.view.webview)
+      });
+    }
   }
 
   public resolveWebviewView(
@@ -54,7 +99,8 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
           this.postMessage({
             type: 'customSounds',
             files: this.getCustomSoundFiles(),
-            soundsBaseUri: soundsUri.toString()
+            soundsBaseUri: soundsUri.toString(),
+            soundsMap: this.getCustomSoundsMap(webviewView.webview)
           });
         }
         this.onWebviewMessage(rawMsg);
@@ -70,7 +116,8 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
     this.postMessage({
       type: 'customSounds',
       files: this.getCustomSoundFiles(),
-      soundsBaseUri: soundsUri.toString()
+      soundsBaseUri: soundsUri.toString(),
+      soundsMap: this.getCustomSoundsMap(webviewView.webview)
     });
   }
 
@@ -134,7 +181,7 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} data:; media-src ${webview.cspSource} data:; connect-src ${webview.cspSource} data:; style-src ${webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} https: data:; media-src ${webview.cspSource} https: data: blob:; connect-src ${webview.cspSource} https: data: blob:; style-src ${webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}';">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="${styleUri}" rel="stylesheet" />
   <title>Dusty the Broom</title>
@@ -203,7 +250,7 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
         <span>SWEEP ERROR</span>
       </button>
 
-      <button class="btn btn-secondary" id="btnInsult" title="Ask Dusty to roast your code in Malayalam">
+      <button class="btn btn-secondary" id="btnInsult" title="Ask Dusty to roast your code with Kerala memes">
         <span class="btn-icon">🔥</span>
         <span>ROAST ME</span>
       </button>

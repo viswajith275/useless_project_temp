@@ -1,7 +1,7 @@
 {
   "name": "dusty-the-chool",
   "displayName": "Dusty the Chool",
-  "description": "A chaotic, delightfully useless Malayalam pairing broom living in your sidebar that sweeps syntax errors, throws tantrums, and roasts you in Manglish.",
+  "description": "A chaotic, delightfully useless Kerala pairing broom living in your sidebar that sweeps syntax errors, throws tantrums, and roasts you with Kerala memes in English.",
   "version": "0.1.0",
   "publisher": "viswajith",
   "repository": {
@@ -20,8 +20,8 @@
     "chool",
     "broom",
     "dusty",
-    "manglish",
-    "malayalam",
+    "english",
+    "kerala",
     "roast",
     "chaos",
     "linter",
@@ -209,7 +209,7 @@
         "dusty.enableLLM": {
           "type": "boolean",
           "default": true,
-          "description": "Allow Dusty to query a local Ollama instance for personalized Manglish roasts. Falls back gracefully to local templates if offline."
+          "description": "Allow Dusty to query a local Ollama instance for personalized Kerala meme roasts in English. Falls back gracefully to local templates if offline."
         },
         "dusty.ollamaEndpoint": {
           "type": "string",
@@ -219,7 +219,7 @@
         "dusty.ollamaModel": {
           "type": "string",
           "default": "llama3.2:3b",
-          "description": "Ollama 3B model (e.g. llama3.2:3b, llama3.2, phi3:mini, qwen2.5:3b) for personalized Manglish roasts."
+          "description": "Ollama 3B model (e.g. llama3.2:3b, llama3.2, phi3:mini, qwen2.5:3b) for personalized Kerala meme roasts in English."
         },
         "dusty.ollamaTimeoutMs": {
           "type": "number",
@@ -283,7 +283,7 @@
           {
             "id": "step5",
             "title": "Local Ollama 3B and Audio",
-            "description": "Connect local Ollama for custom Manglish trolls or customize audio files in media/sounds.\n[Open Settings](command:workbench.action.openSettings?%22dusty%22)",
+            "description": "Connect local Ollama for custom Kerala meme roasts or customize audio files in media/sounds.\n[Open Settings](command:workbench.action.openSettings?\"dusty\")",
             "media": {
               "markdown": "media/walkthrough/step5.md"
             }

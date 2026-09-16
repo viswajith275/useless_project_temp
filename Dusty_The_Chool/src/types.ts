@@ -21,6 +21,7 @@ export type DustyConfidence = 'high' | 'medium' | 'low';
 export type ChaosIntensity = 'calm' | 'normal' | 'feral';
 
 export type SoundName =
+  | 'sweep'
   | 'suction'
   | 'error'
   | 'clog'
@@ -80,7 +81,7 @@ export type HostToWebviewMessage =
   | { type: 'shake'; intensity: number }
   | { type: 'graffiti'; text: string }
   | { type: 'reducedMotion'; enabled: boolean }
-  | { type: 'customSounds'; files: string[]; soundsBaseUri: string };
+  | { type: 'customSounds'; files: string[]; soundsBaseUri: string; soundsMap?: Record<string, string> };
 
 export type WebviewToHostMessage =
   | { type: 'toggleEngine' }

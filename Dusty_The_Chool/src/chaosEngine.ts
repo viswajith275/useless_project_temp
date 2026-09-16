@@ -123,8 +123,8 @@ export class ChaosEngine implements vscode.Disposable {
             }
             if (this.digestTicksRemaining <= 0) {
               this.unclog();
-              this.stateStore.setRoast('*BELCH* Dusty choolukond vaariya katta chavaru dahippichu thuppi kalanju!');
-              void vscode.window.showInformationMessage('Dusty: *BELCH* Muram vrithiyaayi! Choolu veendum thettu vetaan thudangi.');
+              this.stateStore.setRoast('*BELCH* Dusty digested and spat out all the heavy garbage he swept with his broom!');
+              void vscode.window.showInformationMessage('Dusty: *BELCH* Dustpan is clean! The broom is back on the hunt for errors.');
             }
           } else {
             const state = this.stateStore.getState();
@@ -198,7 +198,7 @@ export class ChaosEngine implements vscode.Disposable {
     this.stateStore.setRoast(roast);
 
     void vscode.window.showWarningMessage(
-      `😈 DUSTY (Bheeshani / Vishakkunnu!): "${roast}"\n\n(Chool vishannu valayunnu! Udan thettukal tharillel working code thinnu kalayum!)`
+      `😈 DUSTY (Hunger Threat): "${roast}"\n\n(The broom is starving! Give me syntax errors soon or your working code gets devoured!)`
     );
   }
 
@@ -274,7 +274,7 @@ export class ChaosEngine implements vscode.Disposable {
       this.stateStore.setRoast(roast);
 
       void vscode.window.showErrorMessage(
-        `🦹 DUSTY (Mischief Executed / Kallappani):\n\n"${roast}"\n\n(Bheeshani satyamaayi! Thettukal tharathathukond ninte working line choolukond adichuvaari thinnu kalanju!)`,
+        `🦹 DUSTY (Mischief Executed):\n\n"${roast}"\n\n(The threat was real! Because you gave me no errors, the broom swept away and ate your working line!)`,
         { modal: true }
       );
 
@@ -291,16 +291,16 @@ export class ChaosEngine implements vscode.Disposable {
 
   private async triggerIdleRageBait(): Promise<void> {
     const rageBaitRoasts = [
-      "Enthina mone veruthe screen-ilekku nokki irikkunne? Coding marannu poyo?",
-      "10 second aayi oru syntax error polum illa... Nee seat-il ninnu eneettu poyo atho thalachor freeze aayo?",
-      "Enikku vishannittu vayya! Valla pottiya syntax-um adikku, enikku choolukond thoothuvaaraan!",
-      "Jeevitham engottu ennu chinthikkuvaano atho div engane center cheyyaam ennu veendum google-il thappuvaano?",
-      "Cursor ore sthalathu kidannu minnunnu... Dasa, enthoru nanamkeda ithu!",
-      "Keyboard-il kunju pilleru chaadikkalichaal polum ninnekkaal vegathil code adikkum!",
-      "Ithano ninte senior engineering? 5 line code-ilekku nokki kannuthalli irikkal?",
-      "Dhairyamundenkil oru semicolon-o bracket-o thettichu nokku! Enikku choolukond adichumaattaan vallathum thaa!",
-      "Ethra neramaayi njan choolukond onnum thoothittu! Valla thettum varuthu manushya!",
-      "Saaramilla, saavhadhanam mathi. Veruppeeru code ezhuthaan bhayangara concentration venamallo!"
+      "Why are you simply staring at the screen, mone? Did you forget how to code?",
+      "Ten seconds without a single syntax error... Did you walk away from your seat or did your brain freeze?",
+      "I am starving here! Type some broken syntax so I have something to sweep with my broom!",
+      "Are you contemplating where life went wrong, or googling how to center a div again, man?",
+      "Cursor blinking in the exact same spot... Dasa, what an embarrassment this is!",
+      "Even a toddler hopping on a keyboard would write code faster than you, da!",
+      "Is this your senior engineering? Staring blankly at 5 lines of code with your eyes bulging out?",
+      "If you have the guts, break a semicolon or a bracket! Give me something to sweep away with this broom!",
+      "How long has it been since this broom swept anything! Make some mistakes, manushya!",
+      "Take your time, no rush. Writing annoying code obviously requires intense concentration, mone!"
     ];
 
     const roast = this.roastService.pickRoast(rageBaitRoasts);
@@ -406,7 +406,7 @@ export class ChaosEngine implements vscode.Disposable {
 
       // 3. Normal Ingestion Pipeline with Apocalyptic Effects
       this.stateStore.transition('approaching');
-      this.viewProvider.playSound('tantrum');
+      this.viewProvider.playSound('sweep');
       this.viewProvider.shake(5);
 
       // Apocalypse effect across visible lines
@@ -509,7 +509,7 @@ export class ChaosEngine implements vscode.Disposable {
           // Big centered modal roast every 2 eats or high rage
           if (this.consecutiveEats % 2 === 0 || intensity === 'feral' || rage >= 70) {
             void vscode.window.showErrorMessage(
-              `🧹 DUSTY vaariyeduthu ${linesGulped} varikal [Kalippu: ${rage}% | Strikes: ${this.typingStrikes}]:\n\n"${roast}"`,
+              `🧹 DUSTY swept up ${linesGulped} lines [Kalippu: ${rage}% | Strikes: ${this.typingStrikes}]:\n\n"${roast}"`,
               { modal: true }
             );
           }
@@ -652,7 +652,7 @@ export class ChaosEngine implements vscode.Disposable {
     });
 
     if (editSuccess) {
-      this.viewProvider.playSound('victory');
+      this.viewProvider.playSound('sweep');
       this.viewProvider.shake(2);
       this.stateStore.incrementBag();
       const roast = await this.roastService.getRoast({ situation: 'eat_success', token: parseResult.safeDisposableToken });
@@ -774,7 +774,7 @@ export class ChaosEngine implements vscode.Disposable {
 
     // Big centered modal dialog in middle of screen!
     void vscode.window.showErrorMessage(
-      `🚨 DUSTY SAMPURNA CRASHOUT! Kalippu 100%! 🚨\n\n"${crashoutRoast}"\n\n(Dusty control poyi, IDE colors maatti, kalippu kaaranam file-inte ${percentToDelete}% code choolukond adichu thakarthu!)`,
+      `🚨 DUSTY TOTAL CRASHOUT! Kalippu 100%! 🚨\n\n"${crashoutRoast}"\n\n(Dusty lost all control, cycled IDE colors, and smashed ${percentToDelete}% of the file's code with the broom out of pure rage!)`,
       { modal: true }
     );
 

@@ -15,10 +15,10 @@ export function registerCommands(
       const nowEnabled = stateStore.toggleEngine();
       if (nowEnabled) {
         viewProvider.playSound('suction');
-        void vscode.window.showInformationMessage('Dusty: Choolu ready! Pottiya syntax thoothuvaaraan thudangi.');
+        void vscode.window.showInformationMessage('Dusty: Broom ready! Started sweeping away broken syntax.');
         chaosEngine.scheduleDiagnosticCheck(100);
       } else {
-        void vscode.window.showInformationMessage('Dusty: Choolu rest edukkukayaanu. Poyi vere valla paniyum nokku.');
+        void vscode.window.showInformationMessage('Dusty: Broom is taking rest. Go find some other work, man.');
       }
     })
   );
@@ -48,7 +48,7 @@ export function registerCommands(
   context.subscriptions.push(
     vscode.commands.registerCommand('dusty.muteAudio', () => {
       const isMuted = stateStore.toggleMute();
-      const msg = isMuted ? 'Dusty: Sound off cheythu. Silent sweeping mode active.' : 'Dusty: Sound on aakki. Volume kettu njettikko!';
+      const msg = isMuted ? 'Dusty: Sound muted. Silent sweeping mode active.' : 'Dusty: Sound unmuted. Volume up for loud broom chaos!';
       void vscode.window.showInformationMessage(msg);
     })
   );
@@ -58,16 +58,16 @@ export function registerCommands(
     vscode.commands.registerCommand('dusty.resetBag', () => {
       stateStore.resetBag();
       viewProvider.playSound('victory');
-      void vscode.window.showInformationMessage('Dusty: Muram kaaliyaakki 0/5.');
+      void vscode.window.showInformationMessage('Dusty: Dustpan emptied 0/5.');
     })
   );
 
   // 7. Test Sound
   context.subscriptions.push(
     vscode.commands.registerCommand('dusty.testSound', () => {
-      viewProvider.playSound('suction');
+      viewProvider.playSound('sweep');
       viewProvider.shake(1);
-      void vscode.window.showInformationMessage('Dusty: Choolinte sweep sound test cheyyunnu!');
+      void vscode.window.showInformationMessage('Dusty: Testing broom sweep sound!');
     })
   );
 
@@ -92,7 +92,7 @@ export function registerCommands(
       if (ed) {
         await chaosEngine.triggerCrashout(ed);
       } else {
-        void vscode.window.showWarningMessage('Dusty: Aadhyam oru editor thurakku, ennittu venam enikku kalippu moothu code adichu thakarkkaan!');
+        void vscode.window.showWarningMessage('Dusty: Open an editor first, then I can crash out and smash code with 100% kalippu!');
       }
     })
   );

@@ -10,7 +10,7 @@
 - Member 2: Ishaangoutham K S - GECT
 
 ### Project Description
-Dusty the Chool is an interactive, bad-tempered pairing companion modeled after a traditional Kerala coconut broom (chool) living directly inside VS Code. Rather than assisting you, Dusty watches your editor diagnostics with judging eyes, sweeps your syntax errors into his dustpan (Murram), throws full-blown tantrums, deletes broken code when his Rage Meter fills up, and personally roasts your life choices in savage Manglish with iconic Malayalam cinema references.
+Dusty the Chool is an interactive, bad-tempered pairing companion modeled after a traditional Kerala coconut broom (chool) living directly inside VS Code. Rather than assisting you, Dusty watches your editor diagnostics with judging eyes, sweeps your syntax errors into his dustpan (Murram), throws full-blown tantrums, deletes broken code when his Rage Meter fills up, and personally roasts your life choices with famous Kerala memes in English.
 
 ### The Problem (that doesn't exist)
 Modern developers are suffering from a dangerous epidemic of "peace of mind" and "excessive productivity." AI tools like Copilot and ChatGPT are overly polite, apologizing for minor hallucinations and quietly fixing syntax errors. This has deprived programmers of the traditional, character-building trauma of being scolded by an angry elder with a household broom. Furthermore, stray semicolons, dangling brackets, and broken functions are sitting around in codebases without an irritable virtual broom actively sweeping them into a virtual dustpan and screaming at you.
@@ -18,17 +18,17 @@ Modern developers are suffering from a dangerous epidemic of "peace of mind" and
 ### The Solution (that nobody asked for)
 We built Dusty: a native VS Code pairing broom with severe anger management issues.
 
-When you write buggy code, Dusty doesn't offer gentle auto-complete. He marches multi-frame pixelated bristles down your editor gutter, vacuums the offending token or broken function into his dustpan, and delivers brutal roasts in Manglish (*"Sandesham Shankaradi chodicha pole chodikuva: Thanikku vere paniyille hey? Poyi valla thattukadayum thudanguda!"*).
+When you write buggy code, Dusty doesn't offer gentle auto-complete. He marches multi-frame pixelated bristles down your editor gutter, vacuums the offending token or broken function into his dustpan, and delivers brutal Kerala meme roasts in English (*"Aaraattu Annan review of your code: 'Utter disaster, total flop show, mind-blowing crashout, guys!' My parents were right about planting a banana tree (vazha) instead of hiring you!"*).
 
-If you dare to type while he is sweeping, he aggressively deletes what you just typed to teach you keyboard discipline. If his dustpan fills with 5 syntax crumbs, he chokes and halts your editor until you manually unclog him. And if his Rage Meter hits 100%, he enters full "Rangannan Crashout Mode", strobes your editor with an emergency apocalypse theme, and deletes random chunks of code out of pure vengeance while screaming in Manglish.
+If you dare to type while he is sweeping, he aggressively deletes what you just typed to teach you keyboard discipline. If his dustpan fills with 5 syntax crumbs, he chokes and halts your editor until you manually unclog him. And if his Rage Meter hits 100%, he enters full "Crashout Mode", strobes your editor with an emergency apocalypse theme, and deletes random chunks of code out of pure vengeance while screaming with Kerala meme roasts.
 
 ### Key Chaotic Features
-- **Hunger & Mischief Engine**: Writing bug-free code for too long? Dusty gets bored and hungry! After a randomized 35–45s without any syntax errors, Dusty issues a menacing Manglish threat (*"Enikku vishakkunnu! 10 second tharaam, valla thettum undakki thaa... allenkil ninte favourite working function njan chavachu thinnu kalayum!"*). If ignored for another 11–21s, Dusty commits petty sabotage, eating a working functional code line with a mischievous cackle!
+- **Hunger & Mischief Engine**: Writing bug-free code for too long? Dusty gets bored and hungry! After a randomized 35–45s without any syntax errors, Dusty issues a menacing Kerala meme threat (*"I am starving! Give me food in 10 seconds or I will devour your favorite working function! Not a Threat, it's a promise!"*). If ignored for another 11–21s, Dusty commits petty sabotage, eating a working functional code line with a mischievous cackle!
 - **State-Reactive Side Panel Ambiance**: The side panel background, borders, and glows dynamically morph to match Dusty's emotional state—from gentle Kerala bamboo coir warmth (`IDLE`), to alert amber (`HUNTING`), fiery crimson (`EATING`), menacing dark pumpkin (`HUNGER`), villainous ultraviolet (`MISCHIEF`), choking dust purple (`CLOGGED`), and full neon red catastrophe (`CRASHOUT`).
-- **Animated Kerala Murram (മുറം)**: A traditional woven bamboo dustpan beside the broom with authentic reed texture, dynamic dust crumb accumulation, and animated forward-tilting to catch fallen syntax crumbs.
-- **Local LLM Integration**: Built-in few-shot prompt structure engineered specifically for Ollama running `llama3.2:3b` (could use any other non thinking model) at temperature 0.7 to generate almost, personalized Manglish roasts with zero English leakage.
+- **Animated Kerala Bamboo Dustpan (Murram)**: A traditional woven bamboo dustpan beside the broom with authentic reed texture, dynamic dust crumb accumulation, and animated forward-tilting to catch fallen syntax crumbs.
+- **Local LLM Integration**: Built-in few-shot prompt structure engineered specifically for Ollama running `llama3.2:3b` (could use any other non thinking model) at temperature 0.7 to generate personalized Kerala meme roasts in English.
 - **LRU Dialogue De-Duplication**: Integrated history ring buffer ensures roasts, rage baits, and threats never repeat consecutively.
-- **Viral Malayalam Cinema Meme Bank**: 60+ curated savage trolls referencing *Aavesham, Premalu, Bramayugam, CID Moosa, Sandesham, Kumbalangi Nights, Romancham, Lucifer*, and *Kalyanaraman*.
+- **Viral Kerala Meme Bank**: 60+ curated savage trolls referencing *Aaraattu Annan, Vazha, KSRTC Swift, KSEB power cuts, Moral policing uncles, Food vloggers, WhatsApp family groups, PSC coaching*, and *Santhosh Pandit*.
 
 ## Technical Details
 ### Technologies/Components Used
@@ -70,7 +70,7 @@ code --install-extension dusty-the-chool-0.1.0.vsix
 
 # Or press F5 inside VS Code to launch the Extension Development Host window.
 
-# Optional: Run local Ollama 3B model for personalized Manglish roasts:
+# Optional: Run local Ollama 3B model for personalized Kerala meme roasts in English:
 ollama run llama3.2:3b
 ```
 
@@ -85,22 +85,22 @@ For Software:
 *Multi-frame pixel-art broom bristles marching down the editor gutter toward a syntax error with native 'Feed Dusty' CodeLens.*
 
 ![Crashout Apocalypse Mode](Dusty_The_Chool/media/icons/clogged.png)
-*Dusty reaching 100% Rage, triggering emergency strobes and entering full Rangannan revenge code-deletion mode.*
+*Dusty reaching 100% Rage, triggering emergency strobes and entering full revenge code-deletion mode.*
 
 ### Project Demo
 # Video
-[Example Video](Dusty_The_Chool/media/video/example.mov)
+[Watch Dusty in Action (Demo Video)](https://github.com/viswajith275/useless_project_temp/releases/download/v0.1.0/dusty_demo.mp4)
 
-*Demonstration video showing Dusty detecting syntax typos, sweeping code into his dustpan, choking on errors, and unleashing full 100% rage crashout mode with custom Manglish roasts.*
+*Demonstration video showing Dusty detecting syntax typos, sweeping code into his dustpan, choking on errors, and unleashing full 100% rage crashout mode with custom Kerala meme roasts.*
 
-# Additional Demos
-- **https://dusty-hazel.vercel.app**
+# Live Web Companion & Interactive Simulator
+- **Live Demo:** [dusty-hazel.vercel.app](https://dusty-hazel.vercel.app)
 
 - VSIX Extension Package: `dusty-the-chool-0.1.0.vsix`
 - Command Palette Integration: Run `Cmd+Shift+P` -> `Dusty: Roast Me` or `Dusty: Trigger Crashout`
 
 ## Team Contributions
-- Viswajith M P: Architectural design, VS Code extension host integration, diagnostic classification, procedural Web Audio synthesizer, Ollama 3B local LLM prompt engineering, and Manglish roast writing.
+- Viswajith M P: Architectural design, VS Code extension host integration, diagnostic classification, procedural Web Audio synthesizer, Ollama 3B local LLM prompt engineering, and Kerala meme roast writing.
 - Ishaangoutham K S: Canvas pixel-art renderer, CRT filter overlay, theme-switching chaos engine, and sound effect curation.
 
 ---

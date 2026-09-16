@@ -27,15 +27,15 @@ export class DustyStatusBar implements vscode.Disposable {
   private update(snapshot: DustyStateSnapshot): void {
     if (!snapshot.enabled) {
       this.item.text = '$(debug-disconnect) Dusty: Off (Rest)';
-      this.item.tooltip = 'Choolu off aanu. Click cheythu on aakkuka.';
+      this.item.tooltip = 'Dusty is resting. Click to start sweeping.';
       this.item.command = 'dusty.toggleEngine';
       this.item.backgroundColor = undefined;
       return;
     }
 
     if (snapshot.state === 'clogged') {
-      this.item.text = `$(warning) Dusty: Muram niranju! (${snapshot.bagCount}/${snapshot.bagCapacity})`;
-      this.item.tooltip = 'Muram niranju thulumbi! Click cheythu muram ozhikku (Cmd/Ctrl+Alt+U C).';
+      this.item.text = `$(warning) Dusty: Dustpan Full! (${snapshot.bagCount}/${snapshot.bagCapacity})`;
+      this.item.tooltip = 'Dustpan is overflowing! Click to unclog (Cmd/Ctrl+Alt+U C).';
       this.item.command = 'dusty.unclog';
       this.item.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
       return;
@@ -43,7 +43,7 @@ export class DustyStatusBar implements vscode.Disposable {
 
     if (snapshot.muted) {
       this.item.text = '$(mute) Dusty: Muted (Silent)';
-      this.item.tooltip = 'Sound off aanu. Sidebar thurakkaan click cheyyuka.';
+      this.item.tooltip = 'Sound is muted. Click to open sidebar.';
       this.item.command = 'dusty.openSidebar';
       this.item.backgroundColor = undefined;
       return;
@@ -51,37 +51,37 @@ export class DustyStatusBar implements vscode.Disposable {
 
     switch (snapshot.state) {
       case 'hunting':
-        this.item.text = '$(search) Dusty: Hunting... (Thirayunnu)';
-        this.item.tooltip = 'Thoothuvaaraan syntax thettukal thirayunnu...';
+        this.item.text = '$(search) Dusty: Hunting...';
+        this.item.tooltip = 'Hunting for broken syntax to sweep...';
         this.item.command = 'dusty.openSidebar';
         this.item.backgroundColor = undefined;
         break;
 
       case 'approaching':
       case 'eating':
-        this.item.text = '$(flame) Dusty: Sweeping! (Vaariyedukkunnu)';
-        this.item.tooltip = 'Choolu thettine lakshyamittu adichuvaarunnu!';
+        this.item.text = '$(flame) Dusty: Sweeping!';
+        this.item.tooltip = 'Target locked! Sweeping error into dustpan!';
         this.item.command = 'dusty.openSidebar';
         this.item.backgroundColor = undefined;
         break;
 
       case 'hungerStrike':
-        this.item.text = '$(stop) Dusty: Strike (Samaram)';
-        this.item.tooltip = 'Vrithiketta code kandu choolu panimudakkilaanu!';
+        this.item.text = '$(stop) Dusty: Strike (Trade Union)';
+        this.item.tooltip = 'Dusty went on strike due to terrible code quality!';
         this.item.command = 'dusty.openSidebar';
         this.item.backgroundColor = undefined;
         break;
 
       case 'tantrum':
-        this.item.text = '$(zap) Dusty: Kalippu Ilaki!';
-        this.item.tooltip = 'Syntax thettu kandu choolinte samashani thetti!';
+        this.item.text = '$(zap) Dusty: Tantrum (Kalippu)!';
+        this.item.tooltip = 'Syntax errors caused the broom to lose its mind!';
         this.item.command = 'dusty.openSidebar';
         this.item.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground');
         break;
 
       case 'crashout':
         this.item.text = '$(flame) Dusty: CRASHOUT! (100%)';
-        this.item.tooltip = 'Choolinu kalippu 100%! File thachudaykkaan irangiyirikkunnu!';
+        this.item.tooltip = '100% Kalippu! Dusty is on a rampage deleting code!';
         this.item.command = 'dusty.openSidebar';
         this.item.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground');
         break;
@@ -90,7 +90,7 @@ export class DustyStatusBar implements vscode.Disposable {
         // Idle
         const rageLabel = snapshot.rageMeter > 0 ? ` [Kalippu: ${snapshot.rageMeter}%]` : '';
         this.item.text = `🧹 Dusty: Idle (${snapshot.bagCount}/${snapshot.bagCapacity})${rageLabel}`;
-        this.item.tooltip = `Choolu ready aanu. Muram: ${snapshot.bagCount}/${snapshot.bagCapacity}. Kalippu: ${snapshot.rageMeter}%. Sidebar thurakkaan click cheyyuka.`;
+        this.item.tooltip = `Dusty is ready. Dustpan: ${snapshot.bagCount}/${snapshot.bagCapacity}. Kalippu: ${snapshot.rageMeter}%. Click to open sidebar.`;
         this.item.command = 'dusty.openSidebar';
         this.item.backgroundColor = undefined;
         break;

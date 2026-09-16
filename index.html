@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#120e0c" />
-  <meta name="description" content="Dusty the Malicious Chool: A bad-tempered Malayalam desktop broom extension for VS Code that sweeps syntax errors, sabotages clean code, and roasts you in Manglish." />
-  <title>Dusty the Malicious Chool: The Malayalam Pairing Broom for VS Code</title>
+  <meta name="description" content="Dusty the Malicious Chool: A bad-tempered Kerala desktop broom extension for VS Code that sweeps syntax errors, sabotages clean code, and roasts you with famous Kerala memes in English." />
+  <title>Dusty the Malicious Chool: The Kerala Pairing Broom for VS Code</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
@@ -536,6 +536,183 @@ button { font: inherit; color: inherit; border: none; background: none; }
   font-family: "DM Mono", monospace; font-size: 13px; color: var(--accent-straw);
 }
 
+/* Video Showcase Section (Section 03) */
+.video-section-box {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.video-summary-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 20px 24px;
+}
+.summary-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.summary-col strong {
+  font-family: "DM Mono", monospace;
+  font-size: 13px;
+  color: var(--accent-straw);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.summary-col p {
+  font-size: 13px;
+  color: var(--ink-muted);
+  line-height: 1.5;
+}
+.video-player-frame {
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--elevation);
+}
+.video-player-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  background: #161210;
+  border-bottom: 1px solid var(--line);
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+}
+.video-header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+  font-weight: 600;
+}
+.video-rec-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-rage);
+}
+.video-stream-tag {
+  color: var(--accent-straw);
+  background: rgba(243, 156, 18, 0.15);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+}
+.video-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #090706;
+  overflow: hidden;
+}
+.demo-video-element {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  background: #000;
+}
+.video-callout-footer {
+  padding: 14px 20px;
+  background: #14100e;
+  border-top: 1px solid var(--line);
+  font-family: "DM Mono", monospace;
+  font-size: 12px;
+  color: var(--ink-muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.video-callout-footer code {
+  color: var(--accent-straw);
+  background: var(--surface-raised);
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+}
+
+/* Soundboard Matrix */
+.soundboard-wrap {
+  margin-top: 24px;
+  background: #14100e;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 20px;
+}
+.soundboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.soundboard-title {
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  color: var(--accent-straw);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+.soundboard-sub {
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+.soundboard-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+.sound-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 8px;
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+}
+.sound-btn:hover {
+  background: var(--surface-overlay);
+  border-color: var(--accent-straw);
+  transform: translateY(-2px);
+}
+.sound-btn:active {
+  transform: translateY(0);
+}
+.sound-btn-icon {
+  font-size: 18px;
+}
+.sound-btn-label {
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+  color: var(--ink);
+  font-weight: 600;
+}
+.sound-btn-type {
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+  color: var(--ink-faint);
+}
+
 /* Interactive Simulator Section */
 .simulator-layout {
   display: grid;
@@ -1064,6 +1241,8 @@ button { font: inherit; color: inherit; border: none; background: none; }
   .hero { grid-template-columns: 1fr; padding: 40px 0 60px; }
   .concept-grid { grid-template-columns: 1fr; }
   .arch-grid { grid-template-columns: 1fr; }
+  .video-summary-strip { grid-template-columns: 1fr; }
+  .soundboard-grid { grid-template-columns: repeat(3, 1fr); }
   .simulator-layout { grid-template-columns: 1fr; }
   .vscode-editor-frame { border-right: none; border-bottom: 1px solid var(--line); }
   .roast-showcase { grid-template-columns: 1fr; }
@@ -1078,6 +1257,9 @@ button { font: inherit; color: inherit; border: none; background: none; }
   .nav-links { display: none; }
   .section-title-wrap { grid-template-columns: 1fr; gap: 8px; }
   .spec-strip { grid-template-columns: 1fr; }
+  .soundboard-grid { grid-template-columns: repeat(2, 1fr); }
+  .video-player-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .video-callout-footer { flex-direction: column; align-items: flex-start; gap: 8px; }
   .data-table th, .data-table td { padding: 10px 12px; }
   .footer-row { flex-direction: column; align-items: flex-start; }
 }
@@ -1100,6 +1282,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
     <nav class="nav-links">
       <a href="#concept">Concept</a>
       <a href="#architecture">Architecture</a>
+      <a href="#demo">Demo</a>
       <a href="#simulator">Simulator</a>
       <a href="#roasts">Roast Engine</a>
       <a href="#states">States</a>
@@ -1130,25 +1313,26 @@ button { font: inherit; color: inherit; border: none; background: none; }
 
         <div class="hero-cta">
           <a class="btn-primary" href="https://github.com/viswajith275/useless_project_temp/releases" target="_blank" rel="noopener noreferrer">Download VSIX from Releases</a>
-          <a class="btn-secondary" href="#simulator">Try Interactive Simulator</a>
+          <a class="btn-secondary" href="#demo">Watch Walkthrough ↓</a>
+          <a class="btn-secondary" href="#simulator">Try Simulator</a>
         </div>
 
         <dl class="spec-strip">
           <div class="spec-item">
-            <dt>Dustpan Capacity</dt>
-            <dd>5 Crumbs</dd>
+            <dt>Dustpan Buffer</dt>
+            <dd>5 Crumbs Max</dd>
           </div>
           <div class="spec-item">
-            <dt>Hunger Interval</dt>
-            <dd>35s - 45s</dd>
+            <dt>Hunger Engine</dt>
+            <dd>35s &plusmn; 5s</dd>
           </div>
           <div class="spec-item">
-            <dt>Roast Catalog</dt>
-            <dd>60+ Quotes</dd>
+            <dt>Local LLM</dt>
+            <dd>Ollama 3B Ready</dd>
           </div>
           <div class="spec-item">
-            <dt>Dependencies</dt>
-            <dd>0 Runtime npm</dd>
+            <dt>Meme Vault</dt>
+            <dd>60+ English Roasts</dd>
           </div>
         </dl>
       </div>
@@ -1203,7 +1387,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
 
         <div class="speech-container">
           <div class="speech-role">DUSTY DIAGNOSTIC MONITOR</div>
-          <div class="speech-text" id="heroSpeechText">Njan nokki kondirikkunnu. Code ezhuthikko. Thett undakki nokk.</div>
+          <div class="speech-text" id="heroSpeechText">I am watching your cursor with judging eyes. Go ahead, write your code. Make one mistake and see what happens.</div>
         </div>
       </div>
     </section>
@@ -1254,10 +1438,10 @@ button { font: inherit; color: inherit; border: none; background: none; }
             <span class="concept-tag">THE SOLUTION (THAT NOBODY ASKED FOR)</span>
             <h3>Dusty: A Native Pairing Broom with Severe Anger Management Issues</h3>
             <p>
-              We built Dusty directly into the VS Code extension host. Instead of polite autocomplete, Dusty marches multi-frame pixelated bristles down your editor gutter, vacuums syntax artifacts into his bamboo dustpan (മുറം), and questions your career choices in unfiltered Manglish.
+              We built Dusty directly into the VS Code extension host. Instead of polite autocomplete, Dusty marches multi-frame pixelated bristles down your editor gutter, vacuums syntax artifacts into his bamboo dustpan (Murram), and questions your career choices in unfiltered Kerala-style English with famous memes.
             </p>
             <p>
-              If you dare to type while he cleans, he aggressively deletes what you just typed to teach you keyboard discipline. If his dustpan reaches 5 crumbs, he chokes until you manually unclog him. And if his Rage Meter hits 100%, he enters Rangannan Crashout Mode, strobes your editor with an emergency apocalypse theme, and purges code lines out of sheer revenge.
+              If you dare to type while he cleans, he aggressively deletes what you just typed to teach you keyboard discipline. If his dustpan reaches 5 crumbs, he chokes until you manually unclog him. And if his Rage Meter hits 100%, he enters full Crashout Mode, strobes your editor with an emergency apocalypse theme, and purges code lines out of sheer revenge.
             </p>
 
             <div class="concept-list">
@@ -1280,7 +1464,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
             </div>
 
             <div class="concept-quote-callout">
-              "Sandesham Shankaradi chodicha pole chodikuva: Thanikku vere paniyille hey? Poyi valla thattukadayum thudanguda!"
+              "Like Shankaradi in Sandesham: 'You are an international-level structural failure! Don't you have any other work? Go open a tea stall!'"
             </div>
           </article>
         </div>
@@ -1345,6 +1529,78 @@ button { font: inherit; color: inherit; border: none; background: none; }
               <strong>35s &plusmn; 5s</strong>
             </div>
           </article>
+
+          <article class="arch-card">
+            <div class="arch-card-header">
+              <span class="arch-card-kicker">AUDIO PIPELINE</span>
+              <span class="arch-card-code">media/audio.js</span>
+            </div>
+            <h3>Zero-Asset Preloaded Wave Buffer</h3>
+            <p>
+              Authentic Kerala meme audio files and Web Audio synthesis are preloaded into an in-memory <code style="color:var(--accent-straw);font-family:DM Mono,monospace;">AudioBuffer</code> cache with native Content Security Policy nonces. Zero latency, no audio clipping, and seamless recovery from browser autoplay policies.
+            </p>
+            <div class="arch-metric">
+              <span>Audio Synthesis</span>
+              <strong>Web Audio + Real PCM WAV</strong>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Video Showcase (Section 03) -->
+    <section class="section" id="demo">
+      <div class="container">
+        <div class="section-title-wrap">
+          <span class="section-index">03</span>
+          <div>
+            <h2>Extension Walkthrough &amp; Video Demo</h2>
+            <p class="section-desc">
+              Watch Dusty monitor an active VS Code session in real-time: syntax crumb ingestion, dustpan capacity choking, hunger sabotage, and 100% rage crashouts.
+            </p>
+          </div>
+        </div>
+
+        <div class="video-section-box">
+          <!-- Summary of the Extension -->
+          <div class="video-summary-strip">
+            <div class="summary-col">
+              <strong>🧹 Syntax Ingestion</strong>
+              <p>Safe auto-ingestion of single-line syntax artifacts (&le;5 characters) into a 5-crumb bamboo dustpan (Murram).</p>
+            </div>
+            <div class="summary-col">
+              <strong>😈 Hunger &amp; Sabotage</strong>
+              <p>Writing bug-free code for 35 seconds starves Dusty, provoking hilarious Kerala meme ultimatums and line deletions.</p>
+            </div>
+            <div class="summary-col">
+              <strong>💥 Crashout Mode</strong>
+              <p>100% Rage triggers the Chaos Apocalypse editor theme, red sirens, and vengeance code purges with famous cinema memes in English.</p>
+            </div>
+          </div>
+
+          <!-- Video Player Card -->
+          <div class="video-player-frame">
+            <div class="video-player-header">
+              <div class="video-header-title">
+                <span class="video-rec-dot"></span>
+                <span>DUSTY_EXTENSION_WALKTHROUGH.MP4</span>
+              </div>
+              <span class="video-stream-tag">DIRECT STREAM</span>
+            </div>
+
+            <div class="video-viewport">
+              <video id="dustyDemoVideo" class="demo-video-element" controls playsinline preload="metadata">
+                <!-- Replace this URL with your GitHub Releases asset download link -->
+                <source src="https://github.com/viswajith275/useless_project_temp/releases/download/v0.1.0/dusty-demo.mp4" type="video/mp4" />
+                Your browser does not support HTML5 video streaming.
+              </video>
+            </div>
+
+            <div class="video-callout-footer">
+              <span><strong>Host URL:</strong> Paste your GitHub Release asset link directly into the <code>&lt;source src="..."&gt;</code> above to stream with 0MB Vercel bandwidth.</span>
+              <a href="https://github.com/viswajith275/useless_project_temp/releases" target="_blank" rel="noopener noreferrer" style="color:var(--accent-straw);text-decoration:underline;">GitHub Releases &rarr;</a>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1353,7 +1609,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
     <section class="section" id="simulator">
       <div class="container">
         <div class="section-title-wrap">
-          <span class="section-index">03</span>
+          <span class="section-index">04</span>
           <div>
             <h2>Interactive VS Code Simulator</h2>
             <p class="section-desc">
@@ -1478,7 +1734,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
     <section class="section" id="roasts">
       <div class="container">
         <div class="section-title-wrap">
-          <span class="section-index">04</span>
+          <span class="section-index">05</span>
           <div>
             <h2>3-Tier Roast Engine & Local LLM Integration</h2>
             <p class="section-desc">
@@ -1490,14 +1746,14 @@ button { font: inherit; color: inherit; border: none; background: none; }
         <div class="roast-showcase">
           <div class="roast-info">
             <span class="kicker">OLLAMA 3B PIPELINE</span>
-            <h3>No Cloud. Zero External Calls. Pure Manglish Trauma.</h3>
+            <h3>No Cloud. Zero External Calls. Pure Kerala Meme Trauma.</h3>
             <p>
-              When local Ollama is active, Dusty queries lightweight models (llama3.2:3b, phi3:mini, qwen2.5:3b) at 0.7 temperature with context from your active file name, language, and error token. If offline, he falls back instantly to his built-in cinema vault.
+              When local Ollama is active, Dusty queries lightweight models (llama3.2:3b, phi3:mini, qwen2.5:3b) at 0.7 temperature with context from your active file name, language, and error token. If offline, he falls back instantly to his built-in meme vault.
             </p>
 
             <div class="roast-pipeline-steps">
               <div class="pipeline-step"><span class="step-dot"></span> Tier 1: Local Ollama (llama3.2:3b contextual generation)</div>
-              <div class="pipeline-step"><span class="step-dot"></span> Tier 2: 60+ Malayalam cinema meme bank (Aavesham, Sandesham, Premalu)</div>
+              <div class="pipeline-step"><span class="step-dot"></span> Tier 2: 60+ Kerala meme bank in English (Aaraattu Annan, Vazha, KSRTC, KSEB)</div>
               <div class="pipeline-step"><span class="step-dot"></span> Tier 3: LRU de-duplication buffer (no consecutive repeats)</div>
             </div>
           </div>
@@ -1518,6 +1774,46 @@ button { font: inherit; color: inherit; border: none; background: none; }
             </div>
           </div>
         </div>
+
+        <!-- Procedural & Meme Soundboard Matrix -->
+        <div class="soundboard-wrap">
+          <div class="soundboard-header">
+            <span class="soundboard-title">DUSTY AUDIO SYNTHESIS &amp; MEME SFX MATRIX</span>
+            <span class="soundboard-sub">CLICK TO AUDITION SYNTHESIZED SFX</span>
+          </div>
+          <div class="soundboard-grid">
+            <button class="sound-btn" id="sfxSweepBtn" title="Play broom sweep noise filter">
+              <span class="sound-btn-icon">🧹</span>
+              <span class="sound-btn-label">Sweep Broom</span>
+              <span class="sound-btn-type">Bandpass Noise</span>
+            </button>
+            <button class="sound-btn" id="sfxSuctionBtn" title="Play token ingestion suction">
+              <span class="sound-btn-icon">🌀</span>
+              <span class="sound-btn-label">Ingest Token</span>
+              <span class="sound-btn-type">Resonant Suction</span>
+            </button>
+            <button class="sound-btn" id="sfxHungerBtn" title="Play 35s clean code hunger whine">
+              <span class="sound-btn-icon">🥺</span>
+              <span class="sound-btn-label">Hunger Whine</span>
+              <span class="sound-btn-type">Descending Saw</span>
+            </button>
+            <button class="sound-btn" id="sfxMischiefBtn" title="Play working line deletion mischief nom">
+              <span class="sound-btn-icon">🦹</span>
+              <span class="sound-btn-label">Mischief Nom</span>
+              <span class="sound-btn-type">Glissando Bite</span>
+            </button>
+            <button class="sound-btn" id="sfxClogBtn" title="Play 5-crumb murram clog thud">
+              <span class="sound-btn-icon">🧱</span>
+              <span class="sound-btn-label">Murram Clog</span>
+              <span class="sound-btn-type">Lowpass Thud</span>
+            </button>
+            <button class="sound-btn" id="sfxCrashoutBtn" title="Play 100% Rangannan rage apocalypse siren">
+              <span class="sound-btn-icon">🚨</span>
+              <span class="sound-btn-label">Crashout Siren</span>
+              <span class="sound-btn-type">Oscillating Alarm</span>
+            </button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1525,7 +1821,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
     <section class="section" id="states">
       <div class="container">
         <div class="section-title-wrap">
-          <span class="section-index">05</span>
+          <span class="section-index">06</span>
           <div>
             <h2>The Seven Emotional States</h2>
             <p class="section-desc">
@@ -1593,7 +1889,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
     <section class="section" id="commands">
       <div class="container">
         <div class="section-title-wrap">
-          <span class="section-index">06</span>
+          <span class="section-index">07</span>
           <div>
             <h2>Commands & Configuration Reference</h2>
             <p class="section-desc">
@@ -1635,7 +1931,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
                 <td><code>dusty.insultMe</code></td>
                 <td>Roast Me</td>
                 <td><kbd>Palette</kbd></td>
-                <td>Generate an on-demand personal Manglish roast targeting current file code.</td>
+                <td>Generate an on-demand personal Kerala meme roast in English targeting current file code.</td>
               </tr>
               <tr>
                 <td><code>dusty.muteAudio</code></td>
@@ -1647,13 +1943,13 @@ button { font: inherit; color: inherit; border: none; background: none; }
                 <td><code>dusty.crashout</code></td>
                 <td>Trigger Crashout</td>
                 <td><kbd>Palette</kbd></td>
-                <td>Engage Rangannan mode, cycle theme to Chaos Apocalypse, and purge lines.</td>
+                <td>Engage crashout mode, cycle theme to Chaos Apocalypse, and purge lines.</td>
               </tr>
               <tr>
                 <td><code>dusty.explainDiagnostic</code></td>
                 <td>Dusty: Explain</td>
                 <td><kbd>CodeLens</kbd></td>
-                <td>Deliver a sarcastic Malayalam explanation of the active compiler error.</td>
+                <td>Deliver a sarcastic explanation of the active compiler error with Kerala humor.</td>
               </tr>
             </tbody>
           </table>
@@ -1669,7 +1965,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
             <span class="get-dusty-kicker">OFFICIAL RELEASE · TINKERHUB USELESS PROJECTS</span>
             <h2>Stop being productive.<br>Install <span>Dusty</span> instead.</h2>
             <p class="get-dusty-lead">
-              One VSIX. Zero runtime npm deps. A bad-tempered Kerala coconut broom that lives in your secondary sidebar, sweeps syntax crumbs into a bamboo murram, and roasts you in pure Manglish cinema energy. Available now on GitHub Releases.
+              One VSIX. Zero runtime npm deps. A bad-tempered Kerala coconut broom that lives in your secondary sidebar, sweeps syntax crumbs into a bamboo murram, and roasts you with pure Kerala meme energy in English. Available now on GitHub Releases.
             </p>
             <div class="get-dusty-cta-row">
               <a class="btn-download-primary" href="https://github.com/viswajith275/useless_project_temp/releases" target="_blank" rel="noopener noreferrer">
@@ -1704,8 +2000,8 @@ button { font: inherit; color: inherit; border: none; background: none; }
             <div class="highlight-pill">
               <span class="pill-icon"></span>
               <div>
-                <strong>60+ Manglish cinema roasts</strong>
-                <span>Sandesham, Aavesham, Premalu &amp; more — plus optional local Ollama 3B.</span>
+                <strong>60+ Kerala meme roasts in English</strong>
+                <span>Aaraattu Annan, Vazha, KSRTC, KSEB &amp; more — plus optional local Ollama 3B.</span>
               </div>
             </div>
             <div class="highlight-pill">
@@ -1724,7 +2020,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
     <section class="section" id="install">
       <div class="container">
         <div class="section-title-wrap">
-          <span class="section-index">07</span>
+          <span class="section-index">08</span>
           <div>
             <h2>Installation & Build Workflow</h2>
             <p class="section-desc">
@@ -1985,57 +2281,92 @@ button { font: inherit; color: inherit; border: none; background: none; }
 
     const audio = new ProceduralAudioEngine();
 
-    /* Real Cinema Roasts Catalog from src/roastService.ts */
+    /* Real Kerala Meme Roasts Catalog from src/roastService.ts */
     const ROAST_CATALOG = [
       {
-        quote: "Sandesham cinemayile Shankaradi chodicha pole chodikuva: Thanikku vere paniyille hey? Antharaashtra thalathil ulla ghadanaparamaya tholviyaanu thaan!",
-        source: "Sandesham (1991)",
+        quote: "My parents were right: planting a single banana tree (vazha) would have yielded a bunch of bananas, but hiring you only yielded compile errors!",
+        source: "Kerala Parents Wisdom",
         situation: "BRUTAL PERSONAL"
       },
       {
-        quote: "Aavesham Rangannan: Mone... enikku vishakkumbol njan nallavan alla! Udan oru semicolon thettiche tharanam, allenkil ninte main component swaha!",
-        source: "Aavesham (2024)",
+        quote: "Aaraattu Annan shouting: 'Bro, I need food, bro! Give me a syntax mistake or this entire component is getting swept into the dustpan!'",
+        source: "Aaraattu Annan Meme",
         situation: "HUNGER"
       },
       {
-        quote: "Eda mone... Rangannan paranja pole: Ini oru compromise-um illa! Ninte vrithiketta code thinnu thinnu choolinte eerkili vare odinju! DELETING RANDOM CODE OUT OF REVENGE!",
-        source: "Aavesham (2024)",
+        quote: "100% Kalippu! Driving this deletion cycle straight through your file like a KSRTC Swift bus on a downhill hairpin bend!",
+        source: "KSRTC Swift Meme",
         situation: "CRASHOUT"
       },
       {
-        quote: "Sachin bro... immathiri code kandal Reenu poyittu ninte company-ile security polum ninne mind cheyyilla! Just kidding da!",
-        source: "Premalu (2024)",
+        quote: "Kerala food vlogger reviewing your PR: 'Guys, presentation is zero, taste is pure bitter sadness, totally unhygienic code logic, avoid at all costs!'",
+        source: "Food Vlogger Review",
         situation: "BRUTAL PERSONAL"
       },
       {
-        quote: "Bramayugam Potti: Ee manayil syntax thettukal illengil, njan ninte working lines bali kodukkum! Ninte PR reject aavunnathilum valiya durantham njan ippo undakkum!",
-        source: "Bramayugam (2024)",
-        situation: "HUNGER"
+        quote: "Like a sudden KSEB power cut on a humid Sunday afternoon, total darkness is descending upon your entire codebase!",
+        source: "KSEB Load Shedding",
+        situation: "CRASHOUT"
       },
       {
-        quote: "CID Moosa-yile Moolamkuzhiyil Sahadevan polum ithilum nalla logic undakkum! Git blame nokki veettukaar polum ninne thallipparayum!",
-        source: "CID Moosa (2003)",
+        quote: "Moral policing uncle spotted your code: 'Look at how shamelessly you left that bracket open without a semicolon! Don't you have any shame, mone?'",
+        source: "Sadacharam Uncle",
         situation: "BRUTAL PERSONAL"
       },
       {
-        quote: "KALLATHARAM COMPLETE! Paranjathu nee kettilla, athukond ninte super working line njan chavachu thinnu kalanju! NOM NOM NOM!",
+        quote: "MISCHIEF COMPLETE! You ignored my hunger warning, so I swallowed your working code whole! Go sit and type it again, mone! NOM NOM NOM!",
         source: "Mischief Engine",
         situation: "MISCHIEF"
       },
       {
-        quote: "Kumbalangi Shammi smiling with a knife: Nee oru pottiya syntax polum tharathe enne pattikkuvaano? Ninte working logic njan choolukond thoothu kalayaan povuvaa!",
-        source: "Kumbalangi Nights (2019)",
-        situation: "HUNGER"
+        quote: "You've been staring at this same bug longer than a veteran PSC aspirant and you still couldn't clear the cutoff on this code!",
+        source: "PSC Coaching Batch",
+        situation: "BRUTAL PERSONAL"
       },
       {
-        quote: "Lucifer Stephen Nedumpally: Njan ninte thalavarakku meethulla choolaanu! File motham adichu parathi!",
-        source: "Lucifer (2019)",
+        quote: "Santhosh Pandit one-man show mode activated: I wrote, directed, edited, and now I'm DELETING every line of your code myself!",
+        source: "Santhosh Pandit Solo",
         situation: "CRASHOUT"
       },
       {
-        quote: "Pavanayi shavamaayi... ninte function shavamaayi! Kalippu 100%! Choolum compilero-um orumichu panimudakki!",
-        source: "Nadodikkattu (1987)",
-        situation: "CRASHOUT"
+        quote: "Even a 5 AM WhatsApp forward about onions curing COVID has more scientific credibility than your variable naming in this code!",
+        source: "WhatsApp Family Group",
+        situation: "BRUTAL PERSONAL"
+      },
+      {
+        quote: "Sandesham Shankaradi: 'You are an international-level structural failure! Don't you have any other work? Go start a tea stall instead!'",
+        source: "Sandesham (1991)",
+        situation: "BRUTAL PERSONAL"
+      },
+      {
+        quote: "Joji from Kilukkam shouting: 'You really are a banana tree (vazha), man! I should pay 500 rupees doctor fees to get your code examined!'",
+        source: "Kilukkam (1991)",
+        situation: "BRUTAL PERSONAL"
+      },
+      {
+        quote: "Anjooran from Godfather looking at your pull request: 'Who permitted you to commit this stray syntax error without my permission?!'",
+        source: "Godfather (1991)",
+        situation: "BRUTAL PERSONAL"
+      },
+      {
+        quote: "Python only asks two things: indent properly and don't behave like a vazha! You failed both at the same time, man!",
+        source: "Python Meme Logic",
+        situation: "LANGUAGE SPECIFIC"
+      },
+      {
+        quote: "The Rust borrow checker rejected your code harder than a strict college principal rejecting an attendance shortage plea!",
+        source: "Rust Safety Vault",
+        situation: "LANGUAGE SPECIFIC"
+      },
+      {
+        quote: "`if err != nil`? In Go, the only unhandled error here is how you got write access to this repo without a fitness certificate!",
+        source: "Go Runtime Audit",
+        situation: "LANGUAGE SPECIFIC"
+      },
+      {
+        quote: "Your pointer manipulation is more dangerous than overtaking a lorry on a blind hairpin curve in Munnar!",
+        source: "C++ Memory Gate",
+        situation: "LANGUAGE SPECIFIC"
       }
     ];
 
@@ -2053,6 +2384,36 @@ button { font: inherit; color: inherit; border: none; background: none; }
       audio.playSuction();
     }
     document.getElementById('triggerNextRoastBtn').addEventListener('click', displayNextRoast);
+
+    // Procedural & Meme Soundboard Matrix
+    const sfxTriggers = [
+      { id: 'sfxSweepBtn', fn: () => audio.playSweep(), name: 'Sweep Broom' },
+      { id: 'sfxSuctionBtn', fn: () => audio.playSuction(), name: 'Ingest Token' },
+      { id: 'sfxHungerBtn', fn: () => audio.playHunger(), name: 'Hunger Whine' },
+      { id: 'sfxMischiefBtn', fn: () => audio.playMischief(), name: 'Mischief Nom' },
+      { id: 'sfxClogBtn', fn: () => audio.playClog(), name: 'Murram Clog' },
+      { id: 'sfxCrashoutBtn', fn: () => audio.playCrashout(), name: 'Crashout Siren' }
+    ];
+    sfxTriggers.forEach(item => {
+      const btn = document.getElementById(item.id);
+      if (btn) {
+        btn.addEventListener('click', () => {
+          item.fn();
+          showToast(`Auditioning: ${item.name}`);
+        });
+      }
+    });
+
+    // Video Player Stream Handler
+    const demoVideo = document.getElementById('dustyDemoVideo');
+    if (demoVideo) {
+      demoVideo.addEventListener('play', () => {
+        audio.playSweep();
+      });
+      demoVideo.addEventListener('error', () => {
+        console.info('Set your release video URL in <source src="..."> to stream directly from GitHub Releases.');
+      });
+    }
 
     /* State Details Data Matrix */
     const STATE_CONFIGS = {
@@ -2073,7 +2434,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
       eating: {
         index: "STATE 3 OF 7",
         title: "EATING: Digesting Syntax Crumb",
-        desc: "Atomic edit replaces the syntax artifact. The crumb is placed inside Dusty's dustpan (മുറം) while dissolution overlays flash on the affected span.",
+        desc: "Atomic edit replaces the syntax artifact. The crumb is placed inside Dusty's dustpan (Murram) while dissolution overlays flash on the affected span.",
         audio: "Triple-burst gulp / gobble",
         gutter: "Sweep dissolution pulse"
       },
@@ -2185,7 +2546,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
     // Add Error
     document.getElementById('simAddErrorBtn').addEventListener('click', () => {
       if (simState === 'clogged') {
-        heroSpeechText.textContent = "മുറം full aanu! Adhyam Cmd+Alt+U C adichu vrithiyaakku!";
+        heroSpeechText.textContent = "The dustpan is full! Empty it first with Cmd+Alt+U C before feeding me more crumbs!";
         audio.playClog();
         logSim("Dusty rejected error: Murram buffer is clogged.");
         return;
@@ -2201,21 +2562,21 @@ button { font: inherit; color: inherit; border: none; background: none; }
 
       setSimulationState('hunting');
       audio.playError();
-      heroSpeechText.textContent = "Aha! Double semicolon duplicate token kandupidichu. Feed Dusty click cheyy!";
+      heroSpeechText.textContent = "Aha! Caught a stray duplicate semicolon. Click 'Feed Dusty' to sweep it!";
       logSim("Diagnostic targeted: Stray duplicate semicolon (line 4).");
     });
 
     // Feed / Sweep
     function executeSweep() {
       if (!simHasError) {
-        heroSpeechText.textContent = "Error onnum illallo. Enikku pani thaa mone!";
+        heroSpeechText.textContent = "There are no syntax errors here. Give me some real broken code!";
         logSim("Sweep aborted: No active diagnostic target.");
         return;
       }
       if (simCrumbs >= 5) {
         setSimulationState('clogged');
         audio.playClog();
-        heroSpeechText.textContent = "Chool choking! 5 crumbs aayi. Cmd+Alt+U C adichu vrithiyaakku!";
+        heroSpeechText.textContent = "Dusty is choking! Hit the 5-crumb limit. Press Cmd+Alt+U C to unclog!";
         logSim("Clog threshold reached: Ingestion suspended.");
         return;
       }
@@ -2236,10 +2597,10 @@ button { font: inherit; color: inherit; border: none; background: none; }
       if (simCrumbs >= 5) {
         setSimulationState('clogged');
         audio.playClog();
-        heroSpeechText.textContent = "മുറം full! Chool chokes dramatically. Run dusty.unclog.";
+        heroSpeechText.textContent = "Dustpan is full! Dusty chokes dramatically. Run dusty.unclog to empty.";
         logSim("Atomic edit done. Dustpan full (5/5). State: CLOGGED.");
       } else {
-        heroSpeechText.textContent = "Token ingested cleanly. Ini adutha thettu evide?";
+        heroSpeechText.textContent = "Syntax token ingested cleanly into dustpan. Where is your next mistake?";
         logSim(`Atomic edit: line 4 swept. Dustpan now ${simCrumbs}/5.`);
         setTimeout(() => {
           if (simState === 'eating') setSimulationState('idle');
@@ -2251,7 +2612,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
     document.getElementById('codeLensFeedBtn').addEventListener('click', executeSweep);
     document.getElementById('codeLensExplainBtn').addEventListener('click', () => {
       audio.playSuction();
-      heroSpeechText.textContent = "Sarcastic Explain: Randu semicolon ezhuthiyaal code double fast aakumo? Poyi valla puttum thinnu!";
+      heroSpeechText.textContent = "Sarcastic Explain: Do you think typing two semicolons makes your JavaScript run twice as fast? Go sit down and reflect!";
       logSim("CodeLens action: Dusty: Explain executed.");
     });
 
@@ -2261,7 +2622,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
       audio.playHunger();
       simRage = Math.min(100, simRage + 20);
       updateRageVisual();
-      heroSpeechText.textContent = "Vishakkunnu! 35 seconds aayi thettu cheythittilla. Valla syntax error-um thaada!";
+      heroSpeechText.textContent = "I am starving! 35 seconds without a single syntax error. Feed me a broken bracket or pay the price!";
       logSim("Hunger warning triggered: 35s clean code penalty.");
     });
 
@@ -2271,7 +2632,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
       audio.playMischief();
       const row2 = document.getElementById('codeRow2');
       row2.classList.add('deleted-line');
-      heroSpeechText.textContent = "KALLATHARAM COMPLETE! Ninte working line 2 njan thinnu kalanju! NOM NOM NOM!";
+      heroSpeechText.textContent = "PETTY MISCHIEF COMPLETE! You ignored my hunger warning, so I swallowed working line 2 whole! NOM NOM NOM!";
       logSim("Mischief sabotage: Working line 2 deleted out of hunger!");
       setTimeout(() => {
         row2.classList.remove('deleted-line');
@@ -2284,7 +2645,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
       updateCrumbsVisual();
       setSimulationState('idle');
       audio.playVictory();
-      heroSpeechText.textContent = "*BELCH* Muram vrithiyaayi! Choolu veendum thettu vetaan thudangi.";
+      heroSpeechText.textContent = "*BELCH* Dustpan is emptied! The chool is ready to hunt syntax crumbs again.";
       logSim("Dustpan emptied via dusty.unclog. State: IDLE.");
     });
 
@@ -2294,7 +2655,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
       updateRageVisual();
       setSimulationState('crashout');
       audio.playCrashout();
-      heroSpeechText.textContent = "RANGANNAN CRASHOUT! Ini oru compromise-um illa! Codebase purge in progress!";
+      heroSpeechText.textContent = "RANGANNAN CRASHOUT! No compromises now! Codebase apocalypse purge in progress!";
       logSim("EMERGENCY: Rangannan crashout engaged. Theme changed to Chaos Apocalypse.");
     });
 

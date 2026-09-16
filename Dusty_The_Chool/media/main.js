@@ -34,6 +34,18 @@
   let rageMeter = 0;
   let animTick = 0;
   let particles = [];
+  let lastTimestamp = 0;
+  let particleAccumulator = 0;
+
+  function emitParticles(count, dt) {
+    particleAccumulator += dt;
+    while (particleAccumulator >= 1) {
+      for (let c = 0; c < count; c++) {
+        spawnParticle();
+      }
+      particleAccumulator -= 1;
+    }
+  }
 
   // Unlock Web Audio on user gesture
   function unlockAudio() {
@@ -113,8 +125,8 @@
         break;
 
       case 'customSounds':
-        if (window.vacuumAudio && msg.soundsBaseUri) {
-          window.vacuumAudio.initCustomSounds(msg.soundsBaseUri, msg.files || []);
+        if (window.vacuumAudio && (msg.soundsBaseUri || msg.soundsMap)) {
+          window.vacuumAudio.initCustomSounds(msg.soundsBaseUri, msg.files || [], msg.soundsMap);
         }
         break;
 
@@ -381,8 +393,18 @@
     ctx.restore();
   }
 
-  function draw() {
-    animTick++;
+  function draw(timestamp) {
+    if (!lastTimestamp) {
+      lastTimestamp = timestamp || performance.now();
+    }
+    const current = timestamp || performance.now();
+    const elapsed = current - lastTimestamp;
+    lastTimestamp = current;
+
+    // Normalize to standard 60Hz reference tick (16.667ms = 1.0 tick). Clamped to prevent jumps on background tab.
+    const dt = Math.min(Math.max(elapsed / (1000 / 60), 0), 3.0);
+    animTick += dt;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     const centerX = 75;
@@ -398,13 +420,11 @@
     } else if (currentState === 'crashout' || rageMeter >= 90) {
       sweepAngle = Math.sin(animTick * 0.6) * 0.75;
       sweepX = Math.sin(animTick * 0.6) * 26;
-      spawnParticle();
-      spawnParticle();
+      emitParticles(2, dt);
     } else if (currentState === 'eating' || currentState === 'approaching') {
       sweepAngle = Math.sin(animTick * 0.3) * 0.42;
       sweepX = Math.sin(animTick * 0.3) * 18;
-      spawnParticle();
-      spawnParticle();
+      emitParticles(2, dt);
     } else if (currentState === 'clogged') {
       sweepAngle = 0.32; // Drooping under heavy dust load
     } else if (currentState === 'tantrum') {
@@ -413,7 +433,7 @@
     } else if (currentState === 'mischief') {
       sweepAngle = Math.sin(animTick * 0.45) * 0.38;
       sweepX = Math.sin(animTick * 0.45) * 14;
-      spawnParticle();
+      emitParticles(1, dt);
     } else if (currentState === 'hunger') {
       sweepAngle = Math.sin(animTick * 0.15) * 0.22;
       sweepX = Math.sin(animTick * 0.15) * 8;
@@ -429,8 +449,8 @@
     // --- 2. Draw Dust Particles flying into Murram ---
     for (let i = particles.length - 1; i >= 0; i--) {
       const p = particles[i];
-      p.x += p.vx;
-      p.y += p.vy;
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
       ctx.fillStyle = p.color;
       ctx.fillRect(p.x, p.y, p.size, p.size);
       if (p.x > 130 || p.x < 30) {

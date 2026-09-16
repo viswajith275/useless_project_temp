@@ -22,7 +22,7 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
     const activeEditor = {
       document: doc as any,
       visibleRanges: [new mock.Range(0, 0, 10, 0)],
-      setDecorations: () => {}
+      setDecorations: () => { }
     } as any;
 
     const diag1 = new mock.Diagnostic(
@@ -306,7 +306,7 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
     const mockEditor = {
       document: mock.createMockDocument(['const x = 1;']) as any,
       visibleRanges: [new mock.Range(0, 0, 1, 0)],
-      setDecorations: () => {}
+      setDecorations: () => { }
     } as any;
 
     assert.doesNotThrow(() => {
@@ -424,16 +424,16 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
     assert.strictEqual(store.isClogged(), true);
   });
 
-  // Test 25: Manglish brutal meme roasts
-  it('25. should return brutal Manglish meme roasts for crashout and insults', async () => {
+  // Test 25: Kerala-style English meme roasts
+  it('25. should return brutal Kerala-style English meme roasts for crashout and insults', async () => {
     const roastService = new RoastService();
     const crashoutRoast = await roastService.getRoast({ situation: 'crashout' });
     assert.ok(crashoutRoast.length > 0);
-    assert.match(crashoutRoast, /(Rangannan|Pavanayi|Nagavalli|Yamadharman|Aavesham|chool|kalippu|code|Bramayugam|Lucifer|Thorapan)/i, 'Should contain Manglish troll references');
+    assert.match(crashoutRoast, /(Aaraattu Annan|KSRTC|KSEB|Pandit|kalippu|chool|code|Panchayat|WhatsApp|deluge|monsoon)/i, 'Should contain Kerala meme troll references');
 
     const personalRoast = await roastService.getRoast({ situation: 'brutal_personal' });
     assert.ok(personalRoast.length > 0);
-    assert.match(personalRoast, /(Sahadevan|Shankaradi|Reenu|Shammi|StackOverflow|code|Git blame|Achuthankutty|Ambani|Appukuttan|Potti|Peethambaran)/i, 'Should contain Manglish troll references');
+    assert.match(personalRoast, /(Aaraattu Annan|vazha|KSRTC|KSEB|WhatsApp|parippuvada|PSC|Food vlogger|Moral policing|Pandit|Kudumbashree|Git blame|StackOverflow|code)/i, 'Should contain Kerala meme troll references');
   });
 
   // Test 26: Pixel-art broom SVG generation
@@ -451,8 +451,8 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
     assert.ok(activityBarSvg.includes('viewBox="0 0 24 24"'));
   });
 
-  // Test 28: Ollama 3B Manglish prompt builder & response cleaning
-  it('28. should build rich contextual 3B Manglish prompt and clean LLM responses', () => {
+  // Test 28: Ollama 3B Kerala meme prompt builder & response cleaning
+  it('28. should build rich contextual 3B English prompt with Kerala memes and clean LLM responses', () => {
     const roastService = new RoastService();
     const prompt = roastService.buildPrompt({
       fileName: '/workspace/src/authController.ts',
@@ -467,10 +467,10 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
     assert.ok(prompt.includes('authController.ts'), 'Prompt must target the file name');
     assert.ok(prompt.includes('Line 42'), 'Prompt must target the 1-indexed line number');
     assert.ok(prompt.includes('createToken'), 'Prompt must include the code snippet');
-    assert.ok(prompt.includes('MANGLISH'), 'Prompt must enforce Manglish output');
-    assert.ok(prompt.includes('Aavesham') || prompt.includes('Sandesham'), 'Prompt must include Malayalam cinema tropes');
+    assert.ok(prompt.includes('ENGLISH'), 'Prompt must enforce English output');
+    assert.ok(prompt.includes('Aaraattu Annan') || prompt.includes('KSRTC'), 'Prompt must include Kerala meme tropes');
 
-    const dirtyResponse = '"Dusty: Eda mone, line 42-il ithu type cheyyan ninakku nanamille! [Translation: Are you not ashamed?]"';
+    const dirtyResponse = '"Dusty: Eda mone, line 42 has an error! [Translation: Are you not ashamed?]"';
     const cleaned = roastService.cleanLlmResponse(dirtyResponse);
     assert.strictEqual(cleaned.includes('[Translation:'), false, 'Should strip translation block');
     assert.strictEqual(cleaned.startsWith('"') || cleaned.endsWith('"'), false, 'Should strip quotes');
@@ -482,7 +482,7 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
     const mockStateStore = new StateStore(false, 'normal', true);
     const mockUri = mock.Uri.file(path.join(__dirname, '../..'));
     const { VacuumViewProvider } = require('../src/vacuumViewProvider');
-    const provider = new VacuumViewProvider(mockUri as any, mockStateStore, () => {});
+    const provider = new VacuumViewProvider(mockUri as any, mockStateStore, () => { });
 
     const files = provider.getCustomSoundFiles();
     assert.ok(Array.isArray(files), 'getCustomSoundFiles must return an array');
@@ -498,15 +498,15 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
   });
 
   // Test 31: Hunger and mischief roasts
-  it('31. should return hungry warning and mischievous deletion roasts with meme references', async () => {
+  it('31. should return hungry warning and mischievous deletion roasts with Kerala memes', async () => {
     const roastService = new RoastService();
     const hungerRoast = await roastService.getRoast({ situation: 'hunger' });
     assert.ok(hungerRoast.length > 0);
-    assert.match(hungerRoast, /(vishannu|food|thettum|working|clean|aakrantham|Rangannan|Potti|Shammi|Threat|Kallatharam)/i);
+    assert.match(hungerRoast, /(starving|food|error|working|clean|Aaraattu Annan|Threat|ration|parippuvada|vlogger|Moral policing)/i);
 
     const mischiefRoast = await roastService.getRoast({ situation: 'mischief_eaten' });
     assert.ok(mischiefRoast.length > 0);
-    assert.match(mischiefRoast, /(NOM|working|Swaha|theerthu|thettum|Chambikko|prathikaaram|bali|chool|kalanju|KALLATHARAM|Threat)/i);
+    assert.match(mischiefRoast, /(NOM|working|swallowed|muram|Aaraattu Annan|KSRTC|KSEB|Threat|mischief|dustpan)/i);
   });
 
   // Test 32: Llama 3.2: 3B few-shot prompt structure
@@ -532,14 +532,12 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
     assert.strictEqual(store.getState(), 'mischief');
 
     // Test interval formula bounds:
-    // Warning: 40s +/- 5s = 35s to 45s (17 to 23 ticks at 2s/tick)
     for (let i = 0; i < 50; i++) {
       const secWarning = 35 + Math.floor(Math.random() * 11);
       const ticksWarning = Math.max(15, Math.round(secWarning / 2));
       assert.ok(secWarning >= 35 && secWarning <= 45, 'Warning seconds must be between 35 and 45');
       assert.ok(ticksWarning >= 17 && ticksWarning <= 23, 'Warning ticks must be between 17 and 23');
 
-      // Mischief: 16s +/- 5s = 11s to 21s (5 to 11 ticks at 2s/tick)
       const secMischief = 11 + Math.floor(Math.random() * 11);
       const ticksMischief = Math.max(5, Math.round(secMischief / 2));
       assert.ok(secMischief >= 11 && secMischief <= 21, 'Mischief seconds must be between 11 and 21');
@@ -547,6 +545,3 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
     }
   });
 });
-
-
-
