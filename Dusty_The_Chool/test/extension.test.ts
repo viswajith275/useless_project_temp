@@ -8,8 +8,9 @@ import {
   createDiagnosticFingerprint
 } from '../src/diagnosticTarget';
 import { StateStore } from '../src/stateStore';
-import { RoastService } from '../src/roastService';
+import { RoastService, STATIC_FALLBACK_BANK } from '../src/roastService';
 import { DecorationManager } from '../src/decorationManager';
+import { classifyDiagnostic, harvestTypeErrors } from '../src/typeHarvester';
 
 describe('Dusty the Malicious Vacuum - Test Suite', () => {
 
@@ -543,5 +544,149 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
       assert.ok(secMischief >= 11 && secMischief <= 21, 'Mischief seconds must be between 11 and 21');
       assert.ok(ticksMischief >= 5 && ticksMischief <= 11, 'Mischief ticks must be between 5 and 11');
     }
+  });
+
+  // Test 34: Multi-type error harvester extraction & classification
+  it('34. should classify type mismatches, missing props, implicit any, argument count, and compounding clusters', () => {
+    // 1. Type Mismatch (TS2322 & TS2345)
+    const diag1 = new mock.Diagnostic(
+      new mock.Range(5, 0, 5, 20),
+      "Type 'string' is not assignable to type 'number'.",
+      mock.DiagnosticSeverity.Error
+    );
+    const res1 = classifyDiagnostic(diag1 as any);
+    assert.ok(res1);
+    assert.strictEqual(res1?.category, 'type_mismatch');
+    assert.strictEqual(res1?.received, 'string');
+    assert.strictEqual(res1?.target, 'number');
+
+    // 2. Missing Property (TS2339)
+    const diag2 = new mock.Diagnostic(
+      new mock.Range(8, 0, 8, 20),
+      "Property 'fly' does not exist on type 'Vazha'.",
+      mock.DiagnosticSeverity.Error
+    );
+    const res2 = classifyDiagnostic(diag2 as any);
+    assert.ok(res2);
+    assert.strictEqual(res2?.category, 'missing_property');
+    assert.strictEqual(res2?.received, 'fly');
+    assert.strictEqual(res2?.target, 'Vazha');
+
+    // 3. Implicit Any (TS7006)
+    const diag3 = new mock.Diagnostic(
+      new mock.Range(12, 0, 12, 10),
+      "Parameter 'userData' implicitly has an 'any' type.",
+      mock.DiagnosticSeverity.Error
+    );
+    const res3 = classifyDiagnostic(diag3 as any);
+    assert.ok(res3);
+    assert.strictEqual(res3?.category, 'implicit_any');
+    assert.strictEqual(res3?.paramName, 'userData');
+
+    // 4. Argument Count Mismatch (TS2554)
+    const diag4 = new mock.Diagnostic(
+      new mock.Range(15, 0, 15, 15),
+      "Expected 3 arguments, but got 1.",
+      mock.DiagnosticSeverity.Error
+    );
+    const res4 = classifyDiagnostic(diag4 as any);
+    assert.ok(res4);
+    assert.strictEqual(res4?.category, 'arg_count_mismatch');
+    assert.strictEqual(res4?.expectedCount, 3);
+    assert.strictEqual(res4?.actualCount, 1);
+
+    // 5. Compounding grouping on consecutive lines
+    const diagA = new mock.Diagnostic(
+      new mock.Range(20, 0, 20, 10),
+      "Type 'boolean' is not assignable to type 'string'.",
+      mock.DiagnosticSeverity.Error
+    );
+    const diagB = new mock.Diagnostic(
+      new mock.Range(21, 0, 21, 10),
+      "Property 'drive' does not exist on type 'KSRTC'.",
+      mock.DiagnosticSeverity.Error
+    );
+    const harvested = harvestTypeErrors([diagA as any, diagB as any]);
+    assert.ok(harvested.length >= 3, 'Should produce compounding cluster plus individual items');
+    assert.strictEqual(harvested[0].category, 'compounding');
+    assert.strictEqual(harvested[0].compoundingCount, 2);
+    assert.ok(harvested[0].lineRangeStr?.includes('lines 21–22'));
+  });
+
+  // Test 35: 3-Tier Roasting System (Tier 1 instant AST/regex, Tier 2 LLM resilience, Tier 3 static bank)
+  it('35. should generate Tier 1 instant contextual roasts and verify Tier 3 bank size >= 40', async () => {
+    const roastService = new RoastService();
+
+    // Verify Tier 3 bank size
+    assert.ok(STATIC_FALLBACK_BANK.length >= 40, `Static fallback bank must have at least 40 roasts (found ${STATIC_FALLBACK_BANK.length})`);
+    const tier3Roast = roastService.getTier3Roast();
+    assert.ok(tier3Roast.length > 10);
+
+    // Verify Tier 1 Instant regex/AST slot populating
+    const mismatchRoast = roastService.getTier1Roast({
+      category: 'type_mismatch',
+      message: "Type 'Apple' is not assignable to type 'Banana'.",
+      line: 4,
+      endLine: 4,
+      received: 'Apple',
+      target: 'Banana',
+      diagnostics: []
+    });
+    assert.ok(mismatchRoast.includes('Apple') && mismatchRoast.includes('Banana'), 'Tier 1 must slot extracted types into roast');
+
+    const missingPropRoast = roastService.getTier1Roast({
+      category: 'missing_property',
+      message: "Property 'turbo' does not exist on type 'Swift'.",
+      line: 10,
+      endLine: 10,
+      received: 'turbo',
+      target: 'Swift',
+      diagnostics: []
+    });
+    assert.ok(missingPropRoast.includes('.turbo') && missingPropRoast.includes('Swift'), 'Tier 1 must slot property and object');
+
+    const implicitAnyRoast = roastService.getTier1Roast({
+      category: 'implicit_any',
+      message: "Parameter 'config' implicitly has an 'any' type.",
+      line: 14,
+      endLine: 14,
+      paramName: 'config',
+      diagnostics: []
+    });
+    assert.ok(implicitAnyRoast.includes('config'), 'Tier 1 must slot implicit any param name');
+
+    const argRoast = roastService.getTier1Roast({
+      category: 'arg_count_mismatch',
+      message: 'Expected 4 arguments, but got 2.',
+      line: 20,
+      endLine: 20,
+      expectedCount: 4,
+      actualCount: 2,
+      diagnostics: []
+    });
+    assert.ok(argRoast.includes('4') && argRoast.includes('2'), 'Tier 1 must slot argument counts');
+
+    const compoundingRoast = roastService.getTier1Roast({
+      category: 'compounding',
+      message: '3 cascading type errors across lines 10–12',
+      line: 9,
+      endLine: 11,
+      compoundingCount: 3,
+      lineRangeStr: 'lines 10–12',
+      diagnostics: []
+    });
+    assert.ok(compoundingRoast.includes('3') && compoundingRoast.includes('lines 10–12'), 'Tier 1 must slot compounding count and range');
+
+    // Tier 2 Ollama Bridge Resilience: when endpoint is offline, timeout triggers and falls back cleanly
+    const finalRoast = await roastService.roastTypeError({
+      category: 'type_mismatch',
+      message: "Type 'int' is not assignable to type 'str'.",
+      line: 1,
+      endLine: 1,
+      received: 'int',
+      target: 'str',
+      diagnostics: []
+    });
+    assert.ok(finalRoast && finalRoast.length > 5, 'roastTypeError must return a valid roast via fallback');
   });
 });

@@ -28,6 +28,7 @@ If you dare to type while he is sweeping, he aggressively deletes what you just 
 - **Animated Kerala Bamboo Dustpan (Murram)**: A traditional woven bamboo dustpan beside the broom with authentic reed texture, dynamic dust crumb accumulation, and animated forward-tilting to catch fallen syntax crumbs.
 - **Local LLM Integration**: Built-in few-shot prompt structure engineered specifically for Ollama running `llama3.2:3b` (could use any other non thinking model) at temperature 0.7 to generate personalized Kerala meme roasts in English.
 - **LRU Dialogue De-Duplication**: Integrated history ring buffer ensures roasts, rage baits, and threats never repeat consecutively.
+- **3-Tier Type Error Harvester**: Hooks into diagnostics to extract type mismatches (TS2322/TS2345), missing properties (TS2339), implicit any (TS7006), argument count mismatches, and cascading line clusters. Roasts them dynamically across three tiers: 0ms instant AST/regex slot-fillers, an async Ollama bridge (`qwen2.5:1.5b` or `llama3.2:3b` with 450ms resilient abort timeout), and a 40+ static fallback bank.
 - **Viral Kerala Meme Bank**: 60+ curated savage trolls referencing *Aaraattu Annan, Vazha, KSRTC Swift, KSEB power cuts, Moral policing uncles, Food vloggers, WhatsApp family groups, PSC coaching*, and *Santhosh Pandit*.
 
 ## Technical Details

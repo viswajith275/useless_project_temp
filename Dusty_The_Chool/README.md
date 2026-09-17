@@ -32,6 +32,7 @@ A chaotic, delightfully useless Kerala pairing broom living in your sidebar that
 ## ⚡ Key Features
 
 - 🧹 **Error Sweeper & Safe Ingestion**: Safely targets and sweeps small, disposable syntax errors (stray duplicate semicolons, trailing brackets) into his dustpan with animated pixel-art gutter bristles.
+- 🎯 **Multi-Tier Type Error Harvester**: Detects type mismatches (TS2322/TS2345), missing properties (TS2339), implicit any (TS7006), argument count errors, and compounding line clusters—roasting them via a 3-tier hybrid engine (0ms instant regex slot-filler, 450ms resilient Ollama bridge, and 40+ static roasts).
 - 🧺 **Animated Bamboo Dustpan (Murram)**: Authentic woven bamboo dustpan beside the broom that catches fallen syntax crumbs and chokes when reaching capacity (5 crumbs).
 - 🍖 **Hunger & Mischief Engine**: If you write clean code without syntax errors for too long (35–45s), Dusty grows restless and hungry, threatening to eat your working code if not fed!
 - 💥 **100% Rage & Crashout Apocalypse**: Overwhelming Dusty or typing while he is sweeping fills his Rage Meter. At 100% rage, Dusty triggers full emergency apocalypse strobes and deletes code out of pure spite!

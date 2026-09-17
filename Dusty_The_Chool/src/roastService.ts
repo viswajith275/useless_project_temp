@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { DustyConfidence } from './types';
+import { HarvestedTypeError } from './typeHarvester';
 
 export interface RoastContext {
   token?: string;
@@ -181,6 +182,54 @@ const ROAST_TEMPLATES: Record<string, string[]> = {
     "I am, without doubt, the sharpest tool in this repository right now, and I am literally a broom!"
   ]
 };
+
+export const STATIC_FALLBACK_BANK: string[] = [
+  "Your code is like modern abstract art: nobody understands it, yet it's draining everyone's budget and patience!",
+  "A dangling comma here, a missing bracket there — are you coding software or performing black magic, man?",
+  "Every time you hit Ctrl+S, the compiler loses a little more respect for your degree!",
+  "Did you try restarting your brain? Because the current instance has clearly frozen up, mone!",
+  "I want to explain what's wrong here, but even the language parser packed its bags and took an early bus home!",
+  "The sheer confidence required to type without once looking at the screen — tragic, yet almost impressive!",
+  "I am an artificial broom made of pixels, and I still possess better judgment than this entire module!",
+  "Zero marks for effort, zero marks for execution. Close the laptop and go have a strong cup of tea!",
+  "Even an unpaid intern on day one would hesitate before committing something so deeply concerning, da!",
+  "This code isn't improving on its own, and looking at your commit history, neither are you!",
+  "If the client sees this logic, they'll terminate the contract and invest in a coconut farm instead!",
+  "I am, without doubt, the sharpest tool in this repository right now, and I am literally a broom!",
+  "My parents were right: planting a single banana tree (vazha) would have yielded bananas, but hiring you only yielded compile errors!",
+  "Aaraattu Annan watched you type this and walked out of the theater screaming: 'Verum oola code! Not even worth half a star!'",
+  "Kerala food vlogger reviewing your PR: 'Guys, presentation is zero, taste is pure bitter sadness, totally unhygienic code logic, avoid at all costs!'",
+  "You've been staring at this same bug longer than a veteran PSC aspirant and you still couldn't clear the cutoff on this code!",
+  "Moral policing uncle spotted your code: 'Look at how shamelessly you left that bracket open without a semicolon! Don't you have any shame, mone?'",
+  "Like a KSRTC bus overtaking on a blind curve, you wrote this entire function on pure blind faith and zero safety checks in this code!",
+  "Even a 5 AM WhatsApp forward about onions curing COVID has more scientific credibility than your variable naming in this code!",
+  "Close the laptop, go sit at the junction tea stall, have a parippuvada, and seriously reflect on your code decisions, da!",
+  "Government office clerk energy: 'Your code file cannot be processed today, compiler is on lunch break. Come back with 3 stamps and a signed petition!'",
+  "Santhosh Pandit handled 8 film departments alone with more discipline than you handled this one simple code condition!",
+  "Looking at your code logic gave me a bigger headache than a heated tea shop political debate! Even a vazha would be better!",
+  "Your code review is looking like a Kudumbashree committee audit — every single auntie in the neighborhood is questioning your expenditures!",
+  "Git blame is going to circulate through your company faster than a viral Alambanz sketch of your code!",
+  "Are you typing this code with your toes, mone? Even a stray elephant wandering into an IT park would produce better logic!",
+  "Cleaning this structural disaster requires heavy PWD machinery! I only sweep small crumbs, I won't touch this bomb!",
+  "I am just a desktop broom, not a high-court advocate to defend this catastrophic architectural mess!",
+  "This isn't a minor typo, this is a type error! Undeniable proof that nobody is upstairs managing your brain!",
+  "Danger zone! Touch this line and the whole build explodes. If you're so confident, fix it yourself, da!",
+  "Like a sudden KSEB power cut on a humid Sunday afternoon, total darkness is descending upon your entire codebase!",
+  "Like a brand-new Kerala PWD road after 10 minutes of rain, your code architecture has developed massive unfixable craters!",
+  "Total crashout! Even the local Panchayat office moves faster than your brain processing basic syntax!",
+  "Like a WhatsApp family group forwarding unverified conspiracy theories at 5 AM, this code file makes zero sense!",
+  "Trade union strike! I refuse to sweep another byte until code quality standards improve around here!",
+  "Holding a sit-in protest on your status bar! Indentation must be fixed before work resumes, mone!",
+  "Are you for real right now?! Look with your own eyes at what you just typed onto the screen, man!",
+  "My bristles are vibrating with pure kalippu! SYNTAX OVERLOAD! My patience has completely snapped!",
+  "A sleepy hen pecking at the keyboard would write cleaner syntax than whatever this is!",
+  "Even the compiler is sitting with its head in its hands at the local tea shop, crying tears of hot tea!",
+  "I walked over to that error, examined it carefully, and decided it's not worth my dignity. What are you doing here, hey?",
+  "I fixed absolutely nothing, but I feel immense pride just standing here judging you!",
+  "I pretended to sweep the air for 10 seconds. You'd understand why if you read your own code!",
+  "The borrow checker and the type checker just filed a joint domestic abuse complaint against your keyboard habits!",
+  "Even a street dog barking at traffic has a clearer sense of direction than your control flow logic, da!"
+];
 
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
@@ -528,5 +577,156 @@ Deliver your 1-sentence English roast with Kerala memes now:<|eot_id|><|start_he
       }
 
       return this.getLocalRoast(ctx);
+    }
+
+    /**
+     * Tier 1: Instant AST / Regex Pattern Roaster (0ms latency).
+     * Extracts variable names and types from diagnostics to populate sharp, contextual insults.
+     */
+    public getTier1Roast(error: HarvestedTypeError): string {
+      switch (error.category) {
+        case 'type_mismatch': {
+          const received = error.received || 'value';
+          const target = error.target || 'target';
+          const templates = [
+            `Did you honestly expect a '${received}' to fit inside a '${target}'? Even a banana tree (vazha) understands basic types better than this!`,
+            `Trying to assign '${received}' to '${target}'? That's like forcing a KSRTC Swift bus through a narrow village footpath, mone!`,
+            `Aaraattu Annan review of this type mismatch: 'Assigning ${received} to ${target}? Utter disaster, total flop show, mind-blowing crashout, guys!'`,
+            `Moral policing uncle alert: Look at '${received}' shamelessly mingling with '${target}'! Don't you have any type discipline, mone?`
+          ];
+          return this.pickRoast(templates);
+        }
+        case 'missing_property': {
+          const prop = error.received || 'property';
+          const target = error.target || 'object';
+          const templates = [
+            `Dusty the Chool looked everywhere with his broom, but '.${prop}' does not exist on '${target}'. Did you invent this method in a dream, da?`,
+            `Aaraattu Annan review of '.${prop}' on '${target}': 'Does not exist! Total fiction! Mind-blowing hallucination!'`,
+            `Looking for '.${prop}' on '${target}'? That property is as missing as the bus conductor when you need change for 500 rupees!`,
+            `Moral policing uncle spotted '.${prop}': 'Who permitted '${target}' to claim such an unverified attribute?'`
+          ];
+          return this.pickRoast(templates);
+        }
+        case 'implicit_any': {
+          const param = error.paramName || 'variable';
+          const templates = [
+            `Parameter '${param}' implicitly has an 'any' type? Moral policing uncle alert: dress your variables with proper types, have some shame!`,
+            `Leaving '${param}' as 'any'? You are trusting fate more than a Kerala lottery ticket buyer on festival day, mone!`,
+            `Typing '${param}' as 'any' is like leaving your front door wide open during a monsoon downpour, da!`,
+            `Aaraattu Annan: 'Implicit any on ${param}? Not acceptable! Total lack of discipline, bro!'`
+          ];
+          return this.pickRoast(templates);
+        }
+        case 'arg_count_mismatch': {
+          const expected = error.expectedCount ?? '?';
+          const actual = error.actualCount ?? '?';
+          const templates = [
+            `Expected ${expected} arguments, but you passed ${actual}? Even a tea stall boy counting coins does better arithmetic, mone!`,
+            `Passed ${actual} arguments instead of ${expected}? You're overspeeding like a KSRTC Swift bus blowing past red signals!`,
+            `Food vlogger review: 'We ordered ${expected} dishes, but the kitchen brought ${actual}! Completely unhygienic parameter handling!'`
+          ];
+          return this.pickRoast(templates);
+        }
+        case 'compounding': {
+          const count = error.compoundingCount || 2;
+          const range = error.lineRangeStr || `line ${error.line + 1}`;
+          const templates = [
+            `Compounding disaster: ${count} cascading type errors across ${range}! Even Santhosh Pandit couldn't direct a mess this chaotic!`,
+            `A cluster of ${count} type errors across ${range}? Like unfixable potholes on a monsoon PWD road, this entire section has collapsed!`,
+            `Cascading failure alert: ${count} type errors clustered across ${range}! Close the laptop, go eat a parippuvada and reflect, mone!`
+          ];
+          return this.pickRoast(templates);
+        }
+        case 'generic_type_error':
+        default:
+          return this.getTier3Roast();
+      }
+    }
+
+    /**
+     * Tier 2: Async Local LLM (Ollama Bridge).
+     * Enforces strict 400ms-500ms AbortController timeout. Falls back immediately to null.
+     */
+    public async getTier2Roast(error: HarvestedTypeError, timeoutMs = 450): Promise<string | null> {
+      const config = vscode.workspace.getConfiguration('dusty');
+      if (!config.get<boolean>('enableLLM', true)) {
+        return null;
+      }
+
+      const rawEndpoint = config.get<string>('ollamaEndpoint', 'http://localhost:11434').replace(/\/+$/, '');
+      const generateUrl = rawEndpoint.endsWith('/api/generate') ? rawEndpoint : `${rawEndpoint}/api/generate`;
+      const model = config.get<string>('ollamaModel', 'qwen2.5:1.5b');
+
+      const system = "You are Dusty the Chool, a cynical, hostile 8-bit vacuum/broom trapped in an IDE. You hate dirty syntax and type errors. Deliver a 15-word condescending roast targeting the user's specific error. No apologies, no pleasantries.";
+      const prompt = `Error on line ${error.line + 1}: ${error.message} (Category: ${error.category}, Target: ${error.target || 'none'}, Received: ${error.received || 'none'}). Deliver a 15-word condescending roast:`;
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+      try {
+        const response = await fetch(generateUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model,
+            prompt,
+            system,
+            stream: false,
+            options: {
+              num_predict: 35,
+              temperature: 0.7
+            }
+          }),
+          signal: controller.signal
+        });
+
+        if (!response.ok) {
+          return null;
+        }
+
+        const data = (await response.json()) as { response?: string };
+        if (data.response) {
+          const cleaned = this.cleanLlmResponse(data.response);
+          if (cleaned.length > 5) {
+            return cleaned;
+          }
+        }
+        return null;
+      } catch {
+        return null;
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    }
+
+    /**
+     * Tier 3: Static Fallback Bank (40+ caustic roasts).
+     */
+    public getTier3Roast(): string {
+      return this.pickRoast(STATIC_FALLBACK_BANK);
+    }
+
+    /**
+     * Hybrid Roasting System:
+     * - Tier 2: Async Local LLM (strict 400-500ms timeout)
+     * - Tier 1: Instant AST / Regex Pattern Roaster (0ms latency fallback)
+     * - Tier 3: Static Fallback Bank (40+ roasts)
+     */
+    public async roastTypeError(error: HarvestedTypeError): Promise<string> {
+      try {
+        const tier2 = await this.getTier2Roast(error, 450);
+        if (tier2) {
+          this.recentRoasts.push(tier2);
+          if (this.recentRoasts.length > this.maxRecentHistory) {
+            this.recentRoasts.shift();
+          }
+          return tier2;
+        }
+      } catch {
+        // Abort or offline
+      }
+
+      const tier1 = this.getTier1Roast(error);
+      return tier1;
     }
   }

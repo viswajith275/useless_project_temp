@@ -10,11 +10,14 @@ import { DecorationManager } from './decorationManager';
 import { RoastService } from './roastService';
 import { VacuumViewProvider } from './vacuumViewProvider';
 import { analyzeDiagnosticSpan } from './diagnosticParser';
+import { harvestTypeErrors, HarvestedTypeError } from './typeHarvester';
 
 export class ChaosEngine implements vscode.Disposable {
   private targetSelector: DiagnosticTargetSelector;
   private debounceTimer?: NodeJS.Timeout;
   private randomClogTimer?: NodeJS.Timeout;
+  private typeErrorTimer?: NodeJS.Timeout;
+  private lastHarvestedFingerprint?: string;
   private lastChaosTime = 0;
   private disposables: vscode.Disposable[] = [];
   private isProcessing = false;
@@ -65,11 +68,11 @@ export class ChaosEngine implements vscode.Disposable {
       // Listen to diagnostics changes: wait for typing delay so user can finish typing
       vscode.languages.onDidChangeDiagnostics(() => {
         const config = vscode.workspace.getConfiguration('dusty');
-        if (config.get<boolean>('checkOnSaveOnly', false)) {
-          return;
+        if (!config.get<boolean>('checkOnSaveOnly', false)) {
+          const delay = config.get<number>('diagnosticDelayMs', 2500);
+          this.scheduleDiagnosticCheck(delay);
         }
-        const delay = config.get<number>('diagnosticDelayMs', 2500);
-        this.scheduleDiagnosticCheck(delay);
+        this.scheduleTypeErrorHarvest();
       }),
 
       vscode.window.onDidChangeActiveTextEditor(editor => {
@@ -78,6 +81,7 @@ export class ChaosEngine implements vscode.Disposable {
           const config = vscode.workspace.getConfiguration('dusty');
           const delay = config.get<number>('diagnosticDelayMs', 2500);
           this.scheduleDiagnosticCheck(delay);
+          this.scheduleTypeErrorHarvest();
         }
       }),
 
@@ -855,12 +859,58 @@ export class ChaosEngine implements vscode.Disposable {
     void vscode.window.showInformationMessage(`Dusty on Line ${(line ?? 0) + 1}: "${roast}"`);
   }
 
+  public scheduleTypeErrorHarvest(delayMs = 400): void {
+    if (this.typeErrorTimer) {
+      clearTimeout(this.typeErrorTimer);
+    }
+    this.typeErrorTimer = setTimeout(() => {
+      void this.harvestAndRoastTypeErrors();
+    }, delayMs);
+  }
+
+  public async harvestAndRoastTypeErrors(): Promise<void> {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor || !this.stateStore.isEnabled()) {
+      return;
+    }
+    const document = editor.document;
+    if (document.uri.scheme !== 'file' && document.uri.scheme !== 'untitled') {
+      return;
+    }
+
+    const diags = vscode.languages.getDiagnostics(document.uri);
+    const harvested = harvestTypeErrors(diags);
+    if (harvested.length === 0) {
+      return;
+    }
+
+    // Top harvested error (compounding cluster comes first if present)
+    const topError = harvested[0];
+    const fingerprint = `${topError.category}:${topError.line}:${topError.message}`;
+    if (fingerprint === this.lastHarvestedFingerprint) {
+      return;
+    }
+    this.lastHarvestedFingerprint = fingerprint;
+
+    const roast = await this.roastService.roastTypeError(topError);
+    this.stateStore.setRoast(roast);
+    this.viewProvider.shake(2);
+
+    const config = vscode.workspace.getConfiguration('dusty');
+    if (config.get<string>('chaosIntensity') === 'feral') {
+      void vscode.window.showWarningMessage(`🧹 DUSTY (Type Error): "${roast}"`);
+    }
+  }
+
   public dispose(): void {
     if (this.debounceTimer) {
       clearTimeout(this.debounceTimer);
     }
     if (this.randomClogTimer) {
       clearTimeout(this.randomClogTimer);
+    }
+    if (this.typeErrorTimer) {
+      clearTimeout(this.typeErrorTimer);
     }
     for (const d of this.disposables) {
       d.dispose();
