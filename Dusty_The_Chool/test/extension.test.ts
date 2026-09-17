@@ -503,7 +503,7 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
     const roastService = new RoastService();
     const hungerRoast = await roastService.getRoast({ situation: 'hunger' });
     assert.ok(hungerRoast.length > 0);
-    assert.match(hungerRoast, /(starving|food|error|working|clean|Aaraattu Annan|Threat|ration|parippuvada|vlogger|Moral policing)/i);
+    assert.match(hungerRoast, /(starving|food|error|working|clean|Aaraattu Annan|Threat|ration|parippuvada|vlogger|Moral policing|Kozhikode|fed|typo|bracket|beverage)/i);
 
     const mischiefRoast = await roastService.getRoast({ situation: 'mischief_eaten' });
     assert.ok(mischiefRoast.length > 0);

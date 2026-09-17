@@ -37,9 +37,12 @@ A chaotic, delightfully useless Kerala pairing broom living in your sidebar that
 - 🍖 **Hunger & Mischief Engine**: If you write clean code without syntax errors for too long (35–45s), Dusty grows restless and hungry, threatening to eat your working code if not fed!
 - 💥 **100% Rage & Crashout Apocalypse**: Overwhelming Dusty or typing while he is sweeping fills his Rage Meter. At 100% rage, Dusty triggers full emergency apocalypse strobes and deletes code out of pure spite!
 - 🌶️ **English Kerala Meme Roasts**: 60+ curated savage trolls referencing *Aaraattu Annan, Vazha (banana tree), KSRTC Swift, KSEB load shedding, Moral policing uncles, Food vloggers, WhatsApp family groups, PSC coaching*, and *Santhosh Pandit*.
-- 🦙 **Local Ollama 3B Integration**: Optionally connect a local Ollama instance (`llama3.2:3b`) to generate real-time AI roasts tailored to your specific file and error. Offline fallback is 100% self-contained.
+- 🦙 **Local LLM Integration**: Connect a local Ollama instance for a personalized roasting experience that will make you rethink your life choices! We recommend `llama3.2:3b` as the recommended model for maximum emotional damage, but any model is fine. Offline fallback is 100% self-contained.
 - 🔊 **Zero-Dependency Procedural Audio**: Built-in 8-bit procedural sound synthesizer powered by the Web Audio API (with support for custom `.mp3`/`.wav` drops in `media/sounds/`).
 - 📊 **Actionable Status Bar & CodeLens**: Real-time status bar indicator showing current state and rage percentage, plus native `🧹 Feed Dusty` and `🔥 Roast Me` editor CodeLens actions.
+
+> [!WARNING]
+> ⚠️ **HAZARDOUS PAIRING ADVISORY**: Connect a local LLM for a personalized roasting experience that will make you rethink your life choices! We recommend `llama3.2:3b` as the recommended model, but any model is fine. Proceed only if your emotional stability has git backups!
 
 ---
 
