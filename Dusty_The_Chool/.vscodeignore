@@ -12,3 +12,6 @@ node_modules/@vscode/test-electron/**
 node_modules/typescript/**
 node_modules/mocha/**
 node_modules/@vscode/vsce/**
+AGENTS.md
+*.vsix
+.DS_Store

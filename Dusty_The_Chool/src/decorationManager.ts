@@ -50,7 +50,7 @@ export class DecorationManager implements vscode.Disposable {
     // Harmless visual graffiti decoration (virtual overlay, zero file modification)
     this.graffitiDecoration = vscode.window.createTextEditorDecorationType({
       after: {
-        contentText: ' 🧹 [CHOOL VANNOO POYI - ONNUM SHARIYAAYILLA]',
+        contentText: ' 🧹 [DUSTY CAME AND SWEPT - BANANA TREE (VAZHA) CODE DETECTED]',
         color: 'rgba(241, 196, 15, 0.7)',
         fontStyle: 'italic',
         fontWeight: 'bold'
@@ -63,7 +63,7 @@ export class DecorationManager implements vscode.Disposable {
         backgroundColor: 'rgba(255, 0, 0, 0.45)',
         isWholeLine: true,
         after: {
-          contentText: ' 🚨🚨 SARVANAASHAM! SYNTAX PRALAYAM! THE END IS NIGH! 🚨🚨',
+          contentText: ' 🚨🚨 TOTAL DISASTER! AARAATTU ANNAN WAS RIGHT! THE END IS NIGH! 🚨🚨',
           color: '#ff2222',
           fontWeight: '900'
         }
@@ -72,7 +72,7 @@ export class DecorationManager implements vscode.Disposable {
         backgroundColor: 'rgba(255, 140, 0, 0.5)',
         isWholeLine: true,
         after: {
-          contentText: ' ⚡⚡ KALIPPU MOOTHU! ENTHINA MANUSHYA EE CODE EZHUTHI VECHE?! ⚡⚡',
+          contentText: ' ⚡⚡ MAXIMUM RAGE! WHY ON EARTH DID YOU WRITE THIS DISASTER?! ⚡⚡',
           color: '#ffbb00',
           fontWeight: '900'
         }
@@ -81,7 +81,7 @@ export class DecorationManager implements vscode.Disposable {
         backgroundColor: 'rgba(255, 0, 128, 0.45)',
         isWholeLine: true,
         after: {
-          contentText: ' 💥💥 PAVANAYI SHAVAMAAYI! CHOOLU KATHIPPOYI! DUSTY UNSTABLE! 💥💥',
+          contentText: ' 💥💥 KSRTC SWIFT COLLISION! DUSTY UNSTABLE! TOTAL FLOP SHOW! 💥💥',
           color: '#ff00ee',
           fontWeight: '900'
         }

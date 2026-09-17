@@ -145,6 +145,16 @@
         "key": "ctrl+alt+u c",
         "mac": "cmd+alt+u c",
         "when": "dusty.clogged"
+      },
+      {
+        "command": "dusty.insultMe",
+        "key": "ctrl+alt+d r",
+        "mac": "cmd+alt+d r"
+      },
+      {
+        "command": "dusty.toggleEngine",
+        "key": "ctrl+alt+d t",
+        "mac": "cmd+alt+d t"
       }
     ],
     "configuration": {
@@ -153,7 +163,7 @@
         "dusty.enabled": {
           "type": "boolean",
           "default": true,
-          "description": "Enable or disable Dusty the Vacuum."
+          "description": "Enable or disable Dusty the Chool."
         },
         "dusty.chaosIntensity": {
           "type": "string",
@@ -246,7 +256,7 @@
       {
         "id": "dustyWalkthrough",
         "title": "Meet Dusty the Malicious Chool",
-        "description": "Learn how to survive pairing with a bad-tempered Malayalam desktop broom in your editor.",
+        "description": "Learn how to survive pairing with a bad-tempered Kerala desktop broom in your editor.",
         "steps": [
           {
             "id": "step1",

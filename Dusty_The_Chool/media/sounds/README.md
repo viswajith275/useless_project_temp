@@ -12,4 +12,4 @@ Place any `.mp3` or `.wav` sound files here to replace Dusty's audio effects!
 - `suction.mp3` or `suction.wav` - Approach whoosh
 - `error.mp3` or `error.wav` - Syntax error alert
 
-Simply place your Malayalam meme audio files here with these names!
+Simply place your Kerala meme audio files here with these names!

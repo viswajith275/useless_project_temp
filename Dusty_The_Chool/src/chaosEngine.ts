@@ -642,7 +642,7 @@ export class ChaosEngine implements vscode.Disposable {
     if (parseResult.confidence !== 'high') {
       const roast = await this.roastService.getRoast({ situation: 'unsafe', message: targetDiag.message });
       this.stateStore.setRoast(roast);
-      void vscode.window.showWarningMessage(`Dusty: Ithu choolukond thodaan pattilla! ${parseResult.reason}`);
+      void vscode.window.showWarningMessage(`Dusty: I cannot touch this with the broom! ${parseResult.reason}`);
       return;
     }
 
@@ -657,7 +657,7 @@ export class ChaosEngine implements vscode.Disposable {
       this.stateStore.incrementBag();
       const roast = await this.roastService.getRoast({ situation: 'eat_success', token: parseResult.safeDisposableToken });
       this.stateStore.setRoast(roast);
-      void vscode.window.showInformationMessage(`Dusty: Choolukond adichuvaari "${parseResult.safeDisposableToken || 'error'}".`);
+      void vscode.window.showInformationMessage(`Dusty: Swept up "${parseResult.safeDisposableToken || 'error'}" into the dustpan.`);
     }
   }
 
@@ -686,7 +686,7 @@ export class ChaosEngine implements vscode.Disposable {
     });
 
     void vscode.window.showWarningMessage(
-      `Dusty: Kalippu moothu ninte code-inte ${percent}% (${linesToDelete} varikal) choolukond adichuvaari dustbin-il ittu!`
+      `Dusty: Maximum rage! I swept ${percent}% (${linesToDelete} lines) of your code with the broom straight into the dustpan!`
     );
   }
 
@@ -801,7 +801,7 @@ export class ChaosEngine implements vscode.Disposable {
     this.stateStore.unclog();
     this.decorationManager.clear();
     this.viewProvider.playSound('victory');
-    void vscode.window.showInformationMessage('Dusty: Muram kaaliyaakki! Choolu veendum thoothuvaaraan ready.');
+    void vscode.window.showInformationMessage('Dusty: Dustpan emptied! Ready to sweep your syntax garbage once again.');
 
     if (this.churnCount >= 3) {
       const editor = vscode.window.activeTextEditor;
