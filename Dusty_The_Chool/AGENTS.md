@@ -1,6 +1,6 @@
 # AGENTS.md — Engineering Guidelines for Dusty
 
-This document governs autonomous coding agents working on the `dusty-vacuum` VS Code extension.
+This document governs autonomous coding agents working on the `dusty-the-chool` VS Code extension.
 
 ---
 
@@ -11,6 +11,7 @@ The extension is structured into decoupled, single-responsibility modules under 
 - `src/types.ts`: Core interfaces, state snapshot, diagnostic targets, and message schemas.
 - `src/diagnosticParser.ts`: Pure classification logic evaluating diagnostic ranges, severity, and token safety.
 - `src/diagnosticTarget.ts`: Centralized targeting selector, viewport ranking, suppression tracking, and pre-edit validation.
+- `src/typeHarvester.ts`: Multi-tier type error harvesting, classification, and AST/regex pattern matching.
 - `src/stateStore.ts`: Single source of truth for runtime state, bag capacity, context key syncing (`dusty.state`, `dusty.clogged`, etc.).
 - `src/decorationManager.ts`: Editor gutter animation types, SVG data URIs, dissolve overlays, and virtual graffiti.
 - `src/dustyCodeLensProvider.ts`: Native `🧹 Feed Dusty` and `Dusty: Explain` lenses.

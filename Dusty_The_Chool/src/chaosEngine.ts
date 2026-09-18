@@ -62,6 +62,13 @@ export class ChaosEngine implements vscode.Disposable {
     this.disposables.push(
       // When user saves the document: immediately check and delete syntax errors!
       vscode.workspace.onDidSaveTextDocument(() => {
+        if (this.stateStore.getState() === 'hunger') {
+          const isM = this.stateStore.getLanguage() === 'manglish';
+          const saveRoast = isM
+            ? "File save cheythaal ente vishappu maarilla mone! Valla syntax thettum tha!"
+            : "Saving the file won't satisfy my hunger, mone! Give me some broken syntax to eat!";
+          this.stateStore.setRoast(saveRoast);
+        }
         this.scheduleDiagnosticCheck(0);
       }),
 
@@ -127,8 +134,17 @@ export class ChaosEngine implements vscode.Disposable {
             }
             if (this.digestTicksRemaining <= 0) {
               this.unclog();
-              this.stateStore.setRoast('*BELCH* Dusty digested and spat out all the heavy garbage he swept with his broom!');
-              void vscode.window.showInformationMessage('Dusty: *BELCH* Dustpan is clean! The broom is back on the hunt for errors.');
+              const isM = this.stateStore.getLanguage() === 'manglish';
+              this.stateStore.setRoast(
+                isM
+                  ? '*BELCH* Chool thoothu-vaariya dhoorantham garbage motham dahichu poyeda!'
+                  : '*BELCH* Dusty digested and spat out all the heavy garbage he swept with his broom!'
+              );
+              void vscode.window.showInformationMessage(
+                isM
+                  ? 'Dusty: *BELCH* Murram vrithiyaayi! Chool veendum thettukal thedaan irangi.'
+                  : 'Dusty: *BELCH* Dustpan is clean! The broom is back on the hunt for errors.'
+              );
             }
           } else {
             const state = this.stateStore.getState();
@@ -201,8 +217,11 @@ export class ChaosEngine implements vscode.Disposable {
     });
     this.stateStore.setRoast(roast);
 
+    const isM = this.stateStore.getLanguage() === 'manglish';
     void vscode.window.showWarningMessage(
-      `😈 DUSTY (Hunger Threat): "${roast}"\n\n(The broom is starving! Give me syntax errors soon or your working code gets devoured!)`
+      isM
+        ? `😈 DUSTY (Pashini Bheeshani): "${roast}"\n\n(Choolinu bhayangara vishappu! Vegam valla thettum tharillel working code vizhungum!)`
+        : `😈 DUSTY (Hunger Threat): "${roast}"\n\n(The broom is starving! Give me syntax errors soon or your working code gets devoured!)`
     );
   }
 
@@ -277,8 +296,11 @@ export class ChaosEngine implements vscode.Disposable {
       });
       this.stateStore.setRoast(roast);
 
+      const isM = this.stateStore.getLanguage() === 'manglish';
       void vscode.window.showErrorMessage(
-        `🦹 DUSTY (Mischief Executed):\n\n"${roast}"\n\n(The threat was real! Because you gave me no errors, the broom swept away and ate your working line!)`,
+        isM
+          ? `🦹 DUSTY (Kothukki Kalanju):\n\n"${roast}"\n\n(Bheeshani real aayirunnu! Oru thettum tharaathathukondu chool ninte working line eduthu vizhungi!)`
+          : `🦹 DUSTY (Mischief Executed):\n\n"${roast}"\n\n(The threat was real! Because you gave me no errors, the broom swept away and ate your working line!)`,
         { modal: true }
       );
 
@@ -294,7 +316,8 @@ export class ChaosEngine implements vscode.Disposable {
   }
 
   private async triggerIdleRageBait(): Promise<void> {
-    const rageBaitRoasts = [
+    const isM = this.stateStore.getLanguage() === 'manglish';
+    const rageBaitRoastsEnglish = [
       "Why are you simply staring at the screen, mone? Did you forget how to code?",
       "Ten seconds without a single syntax error... Did you walk away from your seat or did your brain freeze?",
       "I am starving here! Type some broken syntax so I have something to sweep with my broom!",
@@ -306,13 +329,28 @@ export class ChaosEngine implements vscode.Disposable {
       "How long has it been since this broom swept anything! Make some mistakes, manushya!",
       "Take your time, no rush. Writing annoying code obviously requires intense concentration, mone!"
     ];
+    const rageBaitRoastsManglish = [
+      "Nee enthaada veruthe screen-ilekku nokki irikkunne, mone? Code type cheyyan maranno?",
+      "10 second aayi oru syntax thettum illa... Seatil ninnu poyo atho brain freeze aayo da?",
+      "Njan ivide pashini kidannu chathupokum! Valla syntax thettum adichu thaada chool vechu thookkaan!",
+      "Jeevithathe kurichu chinthikkuvaano atho div center aakkaan veendum google cheyyuvaano mone?",
+      "Cursor ore sthalathu minni minni nilkkunnu... Enthonneda ithu?!",
+      "Oru kochu kutti thattiyaal polum ninakkalum vegathil type cheyyum da!",
+      "Ithaano senior developer? 5 line code-ilekku kannum thalli nokki irikkunnu!",
+      "Dhairyam undenkil oru semicolon pottikku da! Chool vechu thookkaan valla error-um tha!",
+      "Chool vechu onnum thookkaathe ethra neramaayi! Valla thettum thaa manushya!",
+      "Pathukke mathi, avasaram illa. Oola code ezhuthaan nalla concentration venamallo mone!"
+    ];
 
-    const roast = this.roastService.pickRoast(rageBaitRoasts);
+    const pool = isM ? rageBaitRoastsManglish : rageBaitRoastsEnglish;
+    const roast = this.roastService.pickRoast(pool);
     this.stateStore.setRoast(roast);
     this.viewProvider.playSound('tantrum');
     this.viewProvider.shake(2);
 
-    void vscode.window.showWarningMessage(`🧹 DUSTY (Rage Bait / Kalippu): "${roast}"`);
+    void vscode.window.showWarningMessage(
+      isM ? `🧹 DUSTY (Kalippu): "${roast}"` : `🧹 DUSTY (Rage Bait): "${roast}"`
+    );
   }
 
   private handleConfigChange(): void {
@@ -351,7 +389,13 @@ export class ChaosEngine implements vscode.Disposable {
 
     if (!target) {
       this.stateStore.setTarget(undefined);
-      if (this.stateStore.getState() !== 'clogged' && this.stateStore.getState() !== 'disabled') {
+      const currentState = this.stateStore.getState();
+      if (
+        currentState !== 'clogged' &&
+        currentState !== 'disabled' &&
+        currentState !== 'hunger' &&
+        currentState !== 'mischief'
+      ) {
         this.stateStore.transition('idle');
       }
       return;
@@ -512,15 +556,18 @@ export class ChaosEngine implements vscode.Disposable {
 
           // Big centered modal roast every 2 eats or high rage
           if (this.consecutiveEats % 2 === 0 || intensity === 'feral' || rage >= 70) {
+            const isM = this.stateStore.getLanguage() === 'manglish';
             void vscode.window.showErrorMessage(
-              `🧹 DUSTY swept up ${linesGulped} lines [Kalippu: ${rage}% | Strikes: ${this.typingStrikes}]:\n\n"${roast}"`,
+              isM
+                ? `🧹 DUSTY ${linesGulped} lines adichuvaari [Kalippu: ${rage}% | Strikes: ${this.typingStrikes}]:\n\n"${roast}"`
+                : `🧹 DUSTY swept up ${linesGulped} lines [Rage: ${rage}% | Strikes: ${this.typingStrikes}]:\n\n"${roast}"`,
               { modal: true }
             );
           }
 
           // Random percentage code deletion according to rage meter
           if (rage >= 90) {
-            await this.triggerCrashout(editor);
+            await this.triggerCrashout(editor, 'rage_overload');
             return;
           } else if (rage >= 65) {
             await this.deleteRandomCodePercentage(editor, 25);
@@ -614,13 +661,22 @@ export class ChaosEngine implements vscode.Disposable {
 
   public async feedManually(uri?: vscode.Uri, range?: vscode.Range): Promise<void> {
     const editor = vscode.window.activeTextEditor;
+    const isM = this.stateStore.getLanguage() === 'manglish';
     if (!editor) {
-      void vscode.window.showInformationMessage('Dusty: Thoothuvaaraan active editor onnum kandilla.');
+      void vscode.window.showInformationMessage(
+        isM
+          ? 'Dusty: Thoothuvaaraan active editor onnum kandilla.'
+          : 'Dusty: No active editor found to sweep.'
+      );
       return;
     }
 
     if (this.stateStore.isClogged()) {
-      void vscode.window.showWarningMessage('Dusty: Muram niranju! Aadhyam muram ozhikku (Cmd/Ctrl+Alt+U C).');
+      void vscode.window.showWarningMessage(
+        isM
+          ? 'Dusty: Muram niranju! Aadhyam muram ozhikku (Cmd/Ctrl+Alt+U C).'
+          : 'Dusty: Dustpan is full! Empty the dustpan first (Cmd/Ctrl+Alt+U C).'
+      );
       return;
     }
 
@@ -629,7 +685,11 @@ export class ChaosEngine implements vscode.Disposable {
     const errors = diags.filter(d => d.severity === vscode.DiagnosticSeverity.Error);
 
     if (errors.length === 0) {
-      void vscode.window.showInformationMessage('Dusty: Ivide thoothuvaaraan oru thettum illa! Clean.');
+      void vscode.window.showInformationMessage(
+        isM
+          ? 'Dusty: Ivide thoothuvaaraan oru thettum illa! Clean.'
+          : 'Dusty: Nothing broken to sweep here! Everything is clean.'
+      );
       return;
     }
 
@@ -646,7 +706,11 @@ export class ChaosEngine implements vscode.Disposable {
     if (parseResult.confidence !== 'high') {
       const roast = await this.roastService.getRoast({ situation: 'unsafe', message: targetDiag.message });
       this.stateStore.setRoast(roast);
-      void vscode.window.showWarningMessage(`Dusty: I cannot touch this with the broom! ${parseResult.reason}`);
+      void vscode.window.showWarningMessage(
+        isM
+          ? `Dusty: Ee thettu chool kondu thodaan pattilla! ${parseResult.reason}`
+          : `Dusty: I cannot touch this with the broom! ${parseResult.reason}`
+      );
       return;
     }
 
@@ -661,7 +725,11 @@ export class ChaosEngine implements vscode.Disposable {
       this.stateStore.incrementBag();
       const roast = await this.roastService.getRoast({ situation: 'eat_success', token: parseResult.safeDisposableToken });
       this.stateStore.setRoast(roast);
-      void vscode.window.showInformationMessage(`Dusty: Swept up "${parseResult.safeDisposableToken || 'error'}" into the dustpan.`);
+      void vscode.window.showInformationMessage(
+        isM
+          ? `Dusty: "${parseResult.safeDisposableToken || 'thettu'}" murrathilekku thoothu vaari.`
+          : `Dusty: Swept up "${parseResult.safeDisposableToken || 'error'}" into the dustpan.`
+      );
     }
   }
 
@@ -696,6 +764,10 @@ export class ChaosEngine implements vscode.Disposable {
 
   public async cycleThemeChaosAnimation(cycles = 8, intervalMs = 90): Promise<void> {
     try {
+      if (process.env.NODE_ENV === 'test') {
+        cycles = 1;
+        intervalMs = 0;
+      }
       const config = vscode.workspace.getConfiguration('workbench');
       const originalColors = config.get<Record<string, string>>('colorCustomizations') || {};
 
@@ -747,7 +819,10 @@ export class ChaosEngine implements vscode.Disposable {
     }
   }
 
-  public async triggerCrashout(editor: vscode.TextEditor): Promise<void> {
+  public async triggerCrashout(
+    editor: vscode.TextEditor,
+    reason: 'dustpan_spam' | 'rage_overload' | 'manual' = 'manual'
+  ): Promise<void> {
     this.consecutiveEats = 0;
     this.churnCount = 0;
     this.stateStore.transition('crashout');
@@ -769,16 +844,37 @@ export class ChaosEngine implements vscode.Disposable {
 
     this.decorationManager.triggerApocalypseEffect(editor, startLine, 2500);
 
+    const situation = reason === 'dustpan_spam' ? 'crashout_dustpan_spam' : 'crashout';
     const crashoutRoast = await this.roastService.getRoast({
-      situation: 'crashout',
+      situation,
       fileName: editor.document.fileName,
       language: editor.document.languageId
     });
-    this.stateStore.setRoast(crashoutRoast);
+
+    const isM = this.stateStore.getLanguage() === 'manglish';
+    let reasonText = '';
+    if (reason === 'dustpan_spam') {
+      reasonText = isM
+        ? 'Kaaranam: Kaaliyaaya murrathil veendum veendum "Clean Dustpan" click cheythu choolinte control poyi!'
+        : 'Reason: You repeatedly spammed the "Clean Dustpan" button on an already empty dustpan!';
+    } else if (reason === 'rage_overload') {
+      reasonText = isM
+        ? 'Kaaranam: Kalippu meter 90% kadannu chool pottitherichu!'
+        : 'Reason: Rage meter exceeded 90% — total meltdown!';
+    } else {
+      reasonText = isM
+        ? 'Kaaranam: Manual crashout aagrahichu!'
+        : 'Reason: Manual crashout triggered!';
+    }
+
+    const fullRoast = `${reasonText} "${crashoutRoast}"`;
+    this.stateStore.setRoast(fullRoast);
 
     // Big centered modal dialog in middle of screen!
     void vscode.window.showErrorMessage(
-      `🚨 DUSTY TOTAL CRASHOUT! Kalippu 100%! 🚨\n\n"${crashoutRoast}"\n\n(Dusty lost all control, cycled IDE colors, and smashed ${percentToDelete}% of the file's code with the broom out of pure rage!)`,
+      isM
+        ? `🚨 DUSTY TOTAL CRASHOUT! Kalippu 100%! 🚨\n\n📌 ${reasonText}\n\n"${crashoutRoast}"\n\n(Choolinte control motham poyi, file-inte ${percentToDelete}% code kalippil adichu thakarthu!)`
+        : `🚨 DUSTY TOTAL CRASHOUT! Rage 100%! 🚨\n\n📌 ${reasonText}\n\n"${crashoutRoast}"\n\n(Dusty lost all control, cycled IDE colors, and smashed ${percentToDelete}% of the file's code with the broom out of pure rage!)`,
       { modal: true }
     );
 
@@ -805,12 +901,17 @@ export class ChaosEngine implements vscode.Disposable {
     this.stateStore.unclog();
     this.decorationManager.clear();
     this.viewProvider.playSound('victory');
-    void vscode.window.showInformationMessage('Dusty: Dustpan emptied! Ready to sweep your syntax garbage once again.');
+    const isM = this.stateStore.getLanguage() === 'manglish';
+    void vscode.window.showInformationMessage(
+      isM
+        ? 'Dusty: Murram kaaliyaakki! Pottiya syntax veendum adichu vaaran chool ready.'
+        : 'Dusty: Dustpan emptied! Ready to sweep your syntax garbage once again.'
+    );
 
     if (this.churnCount >= 3) {
       const editor = vscode.window.activeTextEditor;
       if (editor) {
-        void this.triggerCrashout(editor);
+        void this.triggerCrashout(editor, 'dustpan_spam');
       }
     }
   }
@@ -856,7 +957,12 @@ export class ChaosEngine implements vscode.Disposable {
   public explain(message: string, line?: number): void {
     const roast = this.roastService.getLocalRoast({ message, line, situation: 'general' });
     this.stateStore.setRoast(roast);
-    void vscode.window.showInformationMessage(`Dusty on Line ${(line ?? 0) + 1}: "${roast}"`);
+    const isM = this.stateStore.getLanguage() === 'manglish';
+    void vscode.window.showInformationMessage(
+      isM
+        ? `Dusty (Line ${(line ?? 0) + 1}): "${roast}"`
+        : `Dusty on Line ${(line ?? 0) + 1}: "${roast}"`
+    );
   }
 
   public scheduleTypeErrorHarvest(delayMs = 400): void {
@@ -898,7 +1004,10 @@ export class ChaosEngine implements vscode.Disposable {
 
     const config = vscode.workspace.getConfiguration('dusty');
     if (config.get<string>('chaosIntensity') === 'feral') {
-      void vscode.window.showWarningMessage(`🧹 DUSTY (Type Error): "${roast}"`);
+      const isM = this.stateStore.getLanguage() === 'manglish';
+      void vscode.window.showWarningMessage(
+        isM ? `🧹 DUSTY (Type Thettu): "${roast}"` : `🧹 DUSTY (Type Error): "${roast}"`
+      );
     }
   }
 

@@ -4,35 +4,42 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#120e0c" />
-  <meta name="description" content="Dusty the Malicious Chool: A bad-tempered Kerala desktop broom extension for VS Code that sweeps syntax errors, sabotages clean code, and roasts you with famous Kerala memes in English." />
+  <meta name="description" content="Dusty the Malicious Chool: A bad-tempered Kerala desktop broom extension for VS Code that sweeps syntax errors, sabotages clean code, and roasts you with famous Kerala memes in English and Manglish." />
   <title>Dusty the Malicious Chool: The Kerala Pairing Broom for VS Code</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg: #120e0c;
-  --surface: #1a1411;
-  --surface-raised: #231b17;
-  --surface-overlay: #2d231e;
-  --line: rgba(247, 239, 228, 0.12);
-  --line-strong: rgba(247, 239, 228, 0.22);
-  --ink: #f7efe4;
-  --ink-muted: #bdaea2;
-  --ink-faint: #7a6e65;
-  --accent-straw: #f39c12;
-  --accent-straw-dim: rgba(243, 156, 18, 0.15);
-  --accent-twine: #d35400;
-  --accent-twine-dim: rgba(211, 84, 0, 0.18);
-  --accent-rage: #e74c3c;
-  --accent-rage-dim: rgba(231, 76, 60, 0.16);
-  --accent-mischief: #8e44ad;
-  --accent-mischief-dim: rgba(142, 68, 173, 0.18);
-  --accent-murram: #c29b70;
-  --accent-murram-dark: #6e472a;
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --elevation: 0 18px 40px rgba(0, 0, 0, 0.45);
+  --bg: #0b0806;
+  --surface: #140f0c;
+  --surface-raised: #1d1612;
+  --surface-overlay: #271f1a;
+  --surface-glass: rgba(20, 15, 12, 0.85);
+  --line: rgba(245, 158, 11, 0.15);
+  --line-strong: rgba(245, 158, 11, 0.28);
+  --line-subtle: rgba(255, 255, 255, 0.08);
+  --ink: #fdfaf6;
+  --ink-muted: #cbd5e1;
+  --ink-faint: #88786c;
+  --accent-straw: #f59e0b;
+  --accent-straw-hover: #fbbf24;
+  --accent-straw-dim: rgba(245, 158, 11, 0.15);
+  --accent-straw-glow: rgba(245, 158, 11, 0.35);
+  --accent-twine: #d97706;
+  --accent-twine-dim: rgba(217, 119, 6, 0.18);
+  --accent-rage: #ef4444;
+  --accent-rage-dim: rgba(239, 68, 68, 0.16);
+  --accent-rage-glow: rgba(239, 68, 68, 0.4);
+  --accent-mischief: #a855f7;
+  --accent-mischief-dim: rgba(168, 85, 247, 0.18);
+  --accent-murram: #d4a373;
+  --accent-murram-dark: #8c5319;
+  --accent-emerald: #10b981;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --elevation: 0 20px 48px rgba(0, 0, 0, 0.6);
+  --elevation-hover: 0 28px 60px rgba(0, 0, 0, 0.75);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -253,106 +260,69 @@ button { font: inherit; color: inherit; border: none; background: none; }
   overflow: hidden;
 }
 
-/* Pixel-styled SVG Chool & Murram Representation */
-.visual-assembly {
-  position: relative;
-  width: 260px;
-  height: 220px;
-}
-.visual-murram {
-  position: absolute;
-  right: 10px; bottom: 15px;
-  width: 110px; height: 95px;
-  border-radius: 8px 8px 24px 24px;
-  border: 3px solid var(--accent-murram);
-  border-top-width: 6px;
-  background: repeating-linear-gradient(135deg, #6e472a 0 4px, #8d5c36 5px 8px);
-  display: flex; flex-direction: column; justify-content: flex-end;
-  padding: 8px;
-  box-shadow: inset 0 -8px 0 rgba(0,0,0,0.3);
-}
-.visual-murram-label {
-  font-size: 11px; font-weight: 700; color: #f7dfbe;
-  text-align: center;
-}
-.visual-murram-count {
-  font-family: "DM Mono", monospace; font-size: 10px;
-  color: #caa07b; text-align: center;
-}
-.crumbs-tray {
-  position: absolute; inset: 12px 10px auto;
-  height: 40px; display: flex; flex-wrap: wrap; gap: 6px;
-}
-.crumb-item {
-  width: 14px; height: 14px; border-radius: 3px;
-  background: var(--accent-straw); color: #22140a;
-  font-family: "DM Mono", monospace; font-size: 11px; font-weight: 700;
-  display: grid; place-items: center;
-  opacity: 0; transform: scale(0.5);
-  transition: opacity 0.2s, transform 0.2s;
-}
-.crumb-item.active { opacity: 1; transform: scale(1); }
-
-.visual-chool {
-  position: absolute;
-  left: 20px; bottom: 20px;
-  width: 100px; height: 180px;
-  transform-origin: 50% 90%;
-  transition: transform 0.25s ease;
-}
-.visual-chool.sweep-anim {
-  animation: choolSweep 0.45s ease-in-out infinite alternate;
-}
-.visual-chool.tantrum-anim {
-  animation: choolTantrum 0.12s linear infinite alternate;
-}
-@keyframes choolSweep {
-  from { transform: rotate(-8deg) translateY(0); }
-  to { transform: rotate(12deg) translateY(-6px); }
-}
-@keyframes choolTantrum {
-  from { transform: rotate(-14deg) translateX(-4px); }
-  to { transform: rotate(14deg) translateX(4px); }
+/* Pixel-Art Canvas Character Stage matching VS Code Extension */
+.hero-dusty-canvas {
+  width: 240px;
+  height: 180px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  display: block;
+  z-index: 1;
+  transition: transform 0.2s ease;
 }
 
-.chool-handle {
-  position: absolute; top: 0; left: 44px;
-  width: 14px; height: 100px;
-  border-radius: 7px;
-  background: linear-gradient(90deg, #5c341e, #8f5330 45%, #5c341e);
-  border: 1px solid #422515;
+.crt-overlay-local {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.24) 50%
+  );
+  background-size: 100% 4px;
+  z-index: 2;
+  opacity: 0.65;
 }
-.chool-eyes {
-  position: absolute; top: 60px; left: 34px;
-  display: flex; gap: 8px; z-index: 5;
+
+.hero-canvas-badge {
+  position: absolute;
+  bottom: 12px;
+  right: 14px;
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(18, 14, 11, 0.85);
+  border: 1px solid var(--line-strong);
+  color: var(--accent-straw);
+  z-index: 3;
+  backdrop-filter: blur(4px);
+  text-transform: uppercase;
 }
-.chool-eye {
-  width: 14px; height: 16px; border-radius: 50%;
-  background: #fff8eb; border: 2px solid #22150f;
-  position: relative;
+
+.hero-canvas-badge.crashout {
+  border-color: var(--accent-rage);
+  color: #fff;
+  background: rgba(239, 68, 68, 0.85);
 }
-.chool-eye::after {
-  content: ""; position: absolute;
-  top: 4px; left: 3px; width: 5px; height: 7px;
-  border-radius: 50%; background: #22150f;
+.hero-canvas-badge.hunger {
+  border-color: var(--accent-twine);
+  color: #fff;
+  background: rgba(217, 119, 6, 0.85);
 }
-.stage-card[data-state="hunger"] .chool-eye::after {
-  top: 2px; left: 2px; background: var(--accent-twine);
+.hero-canvas-badge.clogged {
+  border-color: #a855f7;
+  color: #fff;
+  background: rgba(168, 85, 247, 0.85);
 }
-.stage-card[data-state="crashout"] .chool-eye::after {
-  background: var(--accent-rage); transform: scale(1.2);
+.hero-canvas-badge.mischief {
+  border-color: #ec4899;
+  color: #fff;
+  background: rgba(236, 72, 153, 0.85);
 }
-.chool-bristles {
-  position: absolute; bottom: 0; left: 16px;
-  width: 70px; height: 75px;
-  display: flex; align-items: flex-end; justify-content: center; gap: 3px;
-}
-.chool-bristle-strand {
-  width: 7px; height: 68px; border-radius: 2px 2px 5px 5px;
-  background: linear-gradient(#b88746, #6b3e1f);
-}
-.chool-bristle-strand:nth-child(even) { height: 60px; background: linear-gradient(#cf9d58, #7a4723); }
-.chool-bristle-strand:nth-child(3n) { height: 72px; }
 
 /* Speech Bubble */
 .speech-container {
@@ -809,12 +779,12 @@ button { font: inherit; color: inherit; border: none; background: none; }
 /* Simulator Control Panel */
 .simulator-sidebar {
   padding: 24px;
-  display: flex; flex-direction: column; gap: 20px;
-  background: var(--surface);
+  display: flex; flex-direction: column; gap: 16px;
+  background: linear-gradient(180deg, var(--surface) 0%, #16110e 100%);
 }
 .sim-metric-box {
   background: var(--surface-raised);
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm);
   padding: 14px;
 }
@@ -834,18 +804,25 @@ button { font: inherit; color: inherit; border: none; background: none; }
 }
 .sim-controls-grid {
   display: flex; flex-direction: column; gap: 8px;
+  background: rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  padding: 10px;
 }
 .sim-btn {
   display: flex; align-items: center; justify-content: space-between;
   padding: 10px 14px; border-radius: var(--radius-sm);
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--line);
   background: var(--surface-raised);
   font-size: 13px; font-weight: 600;
-  cursor: pointer; transition: background 0.15s, border-color 0.15s;
+  cursor: pointer; transition: background 0.15s, border-color 0.15s, transform 0.05s;
 }
 .sim-btn:hover {
   background: var(--surface-overlay);
   border-color: var(--accent-straw);
+}
+.sim-btn:active {
+  transform: translateY(1px);
 }
 .sim-btn.danger {
   border-color: rgba(231, 76, 60, 0.4);
@@ -861,14 +838,15 @@ button { font: inherit; color: inherit; border: none; background: none; }
 }
 .sim-log-box {
   flex-grow: 1; min-height: 120px;
-  background: #110d0b;
-  border: 1px solid var(--line);
+  background: var(--surface-raised);
+  border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm);
   padding: 12px;
   font-family: "DM Mono", monospace; font-size: 11px;
   color: var(--ink-muted);
   display: flex; flex-direction: column; gap: 6px;
   overflow-y: auto;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 .sim-log-entry { display: flex; gap: 8px; }
 .sim-log-time { color: var(--ink-faint); }
@@ -1236,6 +1214,223 @@ button { font: inherit; color: inherit; border: none; background: none; }
   opacity: 1;
 }
 
+/* Scroll Progress Bar & Sweeping Broom */
+.scroll-progress-container {
+  position: fixed; top: 0; left: 0; width: 100%; height: 4px;
+  background: rgba(11, 8, 6, 0.85); z-index: 1000; pointer-events: none;
+}
+.scroll-progress-bar {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--accent-twine), var(--accent-straw), var(--accent-rage));
+  box-shadow: 0 0 14px var(--accent-straw-glow);
+  position: relative;
+  transition: width 0.08s ease-out;
+}
+.scroll-progress-broom {
+  position: absolute; right: -12px; top: -10px;
+  font-size: 18px; line-height: 1; transform: rotate(20deg);
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.9));
+  user-select: none;
+}
+
+/* Scroll Reveal Animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-36px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+.reveal-right {
+  opacity: 0;
+  transform: translateX(36px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-right.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-scale.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+.stagger-items > * {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.stagger-items.revealed > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+.stagger-items.revealed > *:nth-child(1) { transition-delay: 0.04s; }
+.stagger-items.revealed > *:nth-child(2) { transition-delay: 0.10s; }
+.stagger-items.revealed > *:nth-child(3) { transition-delay: 0.16s; }
+.stagger-items.revealed > *:nth-child(4) { transition-delay: 0.22s; }
+.stagger-items.revealed > *:nth-child(5) { transition-delay: 0.28s; }
+.stagger-items.revealed > *:nth-child(6) { transition-delay: 0.34s; }
+
+/* Quick-Nav Floating Dock */
+.quick-dock {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 4px;
+  padding: 6px 10px; background: rgba(20, 15, 12, 0.92);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+  z-index: 90;
+}
+.quick-dock a {
+  font-family: "DM Mono", monospace; font-size: 11px; font-weight: 600;
+  color: var(--ink-muted); padding: 6px 12px; border-radius: 999px;
+  transition: all 0.18s ease; text-decoration: none;
+}
+.quick-dock a:hover, .quick-dock a.active {
+  color: #140e0a; background: var(--accent-straw);
+  box-shadow: 0 2px 8px var(--accent-straw-glow);
+}
+@media (max-width: 860px) { .quick-dock { display: none; } }
+
+/* Copilot vs Dusty Battle Card */
+.battle-card {
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  margin-top: 40px;
+  box-shadow: var(--elevation);
+  position: relative;
+  overflow: hidden;
+}
+.battle-card::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, #64748b, var(--accent-straw), var(--accent-rage));
+}
+.battle-header-badge {
+  display: inline-block; font-family: "DM Mono", monospace; font-size: 11px;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-twine);
+  margin-bottom: 8px;
+}
+.battle-title {
+  font-size: clamp(22px, 2.5vw, 30px); font-weight: 700; margin-bottom: 20px;
+}
+.battle-table-wrap { overflow-x: auto; }
+.battle-table {
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  font-size: 14px; min-width: 600px;
+}
+.battle-table th {
+  padding: 14px 16px; text-align: left;
+  border-bottom: 1px solid var(--line-strong);
+  font-family: "DM Mono", monospace; font-size: 12px; text-transform: uppercase;
+}
+.battle-table th.copilot-th { color: #94a3b8; }
+.battle-table th.dusty-th { color: var(--accent-straw); font-weight: 700; }
+.battle-table td {
+  padding: 14px 16px; border-bottom: 1px solid var(--line-subtle);
+  vertical-align: top; line-height: 1.55;
+}
+.battle-table tr:last-child td { border-bottom: none; }
+.battle-col-feature { font-family: "DM Mono", monospace; font-size: 12px; color: var(--ink-muted); width: 22%; font-weight: 600; }
+.battle-col-copilot { color: #94a3b8; width: 38%; }
+.battle-col-dusty { color: var(--ink); width: 40%; font-weight: 500; background: rgba(245, 158, 11, 0.035); border-left: 1px solid var(--line); }
+
+/* Crashout Modal Dialog */
+.crashout-modal-backdrop {
+  position: fixed; inset: 0; background: rgba(8, 4, 4, 0.85);
+  backdrop-filter: blur(12px); display: none; place-items: center;
+  z-index: 2000; padding: 20px;
+}
+.crashout-modal-backdrop.active { display: grid; animation: backdropFade 0.2s ease-out; }
+.crashout-modal-card {
+  background: #1a0a0d; border: 2px solid var(--accent-rage);
+  border-radius: var(--radius-md); padding: 32px; max-width: 560px; width: 100%;
+  box-shadow: 0 0 80px rgba(239, 68, 68, 0.45);
+  text-align: center; position: relative; animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes backdropFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.crashout-modal-badge {
+  display: inline-block; font-family: "DM Mono", monospace; font-size: 11px;
+  background: var(--accent-rage); color: #fff; padding: 4px 10px;
+  border-radius: var(--radius-sm); font-weight: 700; margin-bottom: 12px;
+}
+.crashout-modal-title {
+  font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 14px; line-height: 1.2;
+}
+.crashout-modal-reason {
+  background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-sm); padding: 12px 14px; font-size: 13px;
+  color: #fecaca; margin-bottom: 16px; text-align: left; line-height: 1.5;
+}
+.crashout-modal-roast {
+  font-size: 15px; font-weight: 600; color: #fff; font-style: italic;
+  margin-bottom: 24px; line-height: 1.55;
+}
+.btn-crashout-dismiss {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px; padding: 0 24px; border-radius: var(--radius-sm);
+  background: var(--accent-rage); color: #fff; font-weight: 700; font-size: 13px;
+  cursor: pointer; transition: transform 0.15s, background 0.15s; border: none;
+}
+.btn-crashout-dismiss:hover {
+  transform: translateY(-2px); background: #dc2626;
+}
+
+/* Kerala Meme Deck & Tabs */
+.meme-deck-header {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 14px; margin-bottom: 18px;
+}
+.meme-tabs {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.meme-tab-btn {
+  font-family: "DM Mono", monospace; font-size: 11px; padding: 6px 12px;
+  border-radius: var(--radius-sm); border: 1px solid var(--line-strong);
+  background: var(--surface-raised); color: var(--ink-muted);
+  cursor: pointer; transition: all 0.15s;
+}
+.meme-tab-btn:hover { color: var(--ink); border-color: var(--accent-straw); }
+.meme-tab-btn.active {
+  background: var(--accent-straw); color: #140e0a; font-weight: 700;
+  border-color: var(--accent-straw);
+}
+.btn-lang-toggle-roast {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: "DM Mono", monospace; font-size: 11px; font-weight: 700;
+  padding: 6px 12px; border-radius: var(--radius-sm);
+  background: var(--surface-overlay); border: 1px solid var(--accent-straw);
+  color: var(--accent-straw); cursor: pointer; transition: all 0.15s;
+}
+.btn-lang-toggle-roast:hover {
+  background: var(--accent-straw); color: #140e0a;
+}
+
 /* Responsive */
 @media (max-width: 960px) {
   .hero { grid-template-columns: 1fr; padding: 40px 0 60px; }
@@ -1267,6 +1462,13 @@ button { font: inherit; color: inherit; border: none; background: none; }
 </head>
 <body>
   <div class="grain"></div>
+
+  <!-- Top Scroll Progress with Animated Broom -->
+  <div class="scroll-progress-container" aria-hidden="true">
+    <div class="scroll-progress-bar" id="scrollProgressBar">
+      <span class="scroll-progress-broom">🧹</span>
+    </div>
+  </div>
 
   <!-- Header -->
   <header class="site-header">
@@ -1304,7 +1506,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
   <main id="top">
     <!-- Hero Section -->
     <section class="container hero">
-      <div class="hero-left">
+      <div class="hero-left reveal-left">
         <span class="kicker">VS Code Extension / Single-Responsibility Engine</span>
         <h1>The bad-tempered <span class="straw">chool</span> pairing partner for <span class="rage">VS Code</span>.</h1>
         <p class="hero-lead">
@@ -1317,7 +1519,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
           <a class="btn-secondary" href="#simulator">Try Simulator</a>
         </div>
 
-        <dl class="spec-strip">
+        <dl class="spec-strip stagger-items">
           <div class="spec-item">
             <dt>Dustpan Buffer</dt>
             <dd>5 Crumbs Max</dd>
@@ -1328,17 +1530,17 @@ button { font: inherit; color: inherit; border: none; background: none; }
           </div>
           <div class="spec-item">
             <dt>Local LLM</dt>
-            <dd>Ollama 3B Ready</dd>
+            <dd>Local LLM (Ollama) Ready</dd>
           </div>
           <div class="spec-item">
             <dt>Meme Vault</dt>
-            <dd>60+ English Roasts</dd>
+            <dd>100+ Roasts (EN / ML)</dd>
           </div>
         </dl>
       </div>
 
       <!-- Character Stage -->
-      <div class="stage-card" id="heroStage" data-state="idle">
+      <div class="stage-card reveal-right" id="heroStage" data-state="idle">
         <div class="stage-header">
           <div class="status-pill">
             <span class="status-dot" id="stageStatusDot"></span>
@@ -1349,40 +1551,10 @@ button { font: inherit; color: inherit; border: none; background: none; }
           </div>
         </div>
 
-        <div class="stage-canvas-area">
-          <div class="visual-assembly">
-            <!-- Murram (Dustpan) -->
-            <div class="visual-murram" id="visualMurram">
-              <div class="crumbs-tray">
-                <span class="crumb-item" id="crumb0">;</span>
-                <span class="crumb-item" id="crumb1">}</span>
-                <span class="crumb-item" id="crumb2">)</span>
-                <span class="crumb-item" id="crumb3">]</span>
-                <span class="crumb-item" id="crumb4">;</span>
-              </div>
-              <div class="visual-murram-label">MURRAM</div>
-              <div class="visual-murram-count" id="murramCountText">0 / 5 CRUMBS</div>
-            </div>
-
-            <!-- Chool (Broom) -->
-            <div class="visual-chool" id="visualChool">
-              <div class="chool-handle"></div>
-              <div class="chool-eyes">
-                <div class="chool-eye"></div>
-                <div class="chool-eye"></div>
-              </div>
-              <div class="chool-bristles">
-                <div class="chool-bristle-strand"></div>
-                <div class="chool-bristle-strand"></div>
-                <div class="chool-bristle-strand"></div>
-                <div class="chool-bristle-strand"></div>
-                <div class="chool-bristle-strand"></div>
-                <div class="chool-bristle-strand"></div>
-                <div class="chool-bristle-strand"></div>
-                <div class="chool-bristle-strand"></div>
-              </div>
-            </div>
-          </div>
+        <div class="stage-canvas-area" id="heroStageCanvasArea">
+          <div class="crt-overlay-local" aria-hidden="true"></div>
+          <canvas id="heroDustyCanvas" width="160" height="120" class="hero-dusty-canvas" aria-label="Dusty the Chool and Muram pixel-art companion from the extension"></canvas>
+          <div class="hero-canvas-badge" id="heroCanvasBadge">IDLE</div>
         </div>
 
         <div class="speech-container">
@@ -1405,7 +1577,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
           </div>
         </div>
 
-        <div class="concept-grid">
+        <div class="concept-grid stagger-items">
           <!-- The Problem (that doesn't exist) -->
           <article class="concept-card problem">
             <span class="concept-tag">THE PROBLEM (THAT DOESN'T EXIST)</span>
@@ -1438,10 +1610,10 @@ button { font: inherit; color: inherit; border: none; background: none; }
             <span class="concept-tag">THE SOLUTION (THAT NOBODY ASKED FOR)</span>
             <h3>Dusty: A Native Pairing Broom with Severe Anger Management Issues</h3>
             <p>
-              We built Dusty directly into the VS Code extension host. Instead of polite autocomplete, Dusty marches multi-frame pixelated bristles down your editor gutter, vacuums syntax artifacts into his bamboo dustpan (Murram), and questions your career choices in unfiltered Kerala-style English with famous memes.
+              We built Dusty directly into the VS Code extension host. Instead of polite autocomplete, Dusty marches multi-frame pixelated bristles down your editor gutter, sweeps syntax artifacts into his bamboo dustpan (Murram), and questions your career choices in unfiltered Kerala-style English and Manglish with famous memes.
             </p>
             <p>
-              If you dare to type while he cleans, he aggressively deletes what you just typed to teach you keyboard discipline. If his dustpan reaches 5 crumbs, he chokes until you manually unclog him. And if his Rage Meter hits 100%, he enters full Crashout Mode, strobes your editor with an emergency apocalypse theme, and purges code lines out of sheer revenge.
+              If you dare to type while he cleans, he aggressively deletes what you just typed to teach you keyboard discipline. If his dustpan reaches 5 crumbs, he chokes until you manually unclog him. And if his Rage Meter hits 100%—or if you spam "Clean Dustpan" 3+ times on an empty muram—he enters full Crashout Mode, strobes your editor with an emergency apocalypse theme, purges code lines out of sheer revenge, and explains the reason in his roast dialogue.
             </p>
 
             <div class="concept-list">
@@ -1455,11 +1627,15 @@ button { font: inherit; color: inherit; border: none; background: none; }
               </div>
               <div class="concept-list-item">
                 <span class="concept-marker">[+]</span>
-                <span><strong>Hunger Sabotage:</strong> 35s to 45s of bug-free code provokes a mischievous line deletion.</span>
+                <span><strong>Hunger Sabotage:</strong> 35s to 45s of bug-free code provokes a mischievous line deletion. Saving files (Cmd+S) does not cancel hunger—Dusty taunts your save attempts!</span>
               </div>
               <div class="concept-list-item">
                 <span class="concept-marker">[+]</span>
-                <span><strong>Crashout Apocalypse:</strong> 100% rage unleashes siren alarms and revenge code purges.</span>
+                <span><strong>Crashout Apocalypse:</strong> 100% rage or clean dustpan button spam unleashes sirens, code deletion, and displays the exact reason in his roast.</span>
+              </div>
+              <div class="concept-list-item">
+                <span class="concept-marker">[+]</span>
+                <span><strong>Language Switcher:</strong> Instant 1-click toggle between English and Manglish (Cmd+Alt+D L) across UI, CodeLens, and LLM prompt generation.</span>
               </div>
               <div class="concept-list-item">
                 <span class="concept-marker">[+]</span>
@@ -1471,6 +1647,60 @@ button { font: inherit; color: inherit; border: none; background: none; }
               "Aaraattu Annan review of your code: 'Absolute disaster! Total disaster! Mind-blowing catastrophic failure! My parents were right about planting a banana tree (vazha) instead of hiring you!'"
             </div>
           </article>
+        </div>
+
+        <!-- Copilot vs Dusty Battle Card -->
+        <div class="battle-card reveal">
+          <span class="battle-header-badge">THE UNFAIR COMPARISON</span>
+          <h3 class="battle-title">GitHub Copilot vs Dusty The Chool</h3>
+          <div class="battle-table-wrap">
+            <table class="battle-table">
+              <thead>
+                <tr>
+                  <th class="battle-col-feature">Feature</th>
+                  <th class="copilot-th battle-col-copilot">GitHub Copilot / Modern AI</th>
+                  <th class="dusty-th battle-col-dusty">Dusty The Malicious Chool</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="battle-col-feature">Tone on Error</td>
+                  <td class="battle-col-copilot">"I apologize for the confusion! Let me gently fix that for you."</td>
+                  <td class="battle-col-dusty">"A single banana tree (vazha) would have been more productive than hiring you."</td>
+                </tr>
+                <tr>
+                  <td class="battle-col-feature">Diagnostic Handling</td>
+                  <td class="battle-col-copilot">Silently suggests fixes or auto-completes code in the background.</td>
+                  <td class="battle-col-dusty">Marches multi-frame bristles down your gutter and physically sweeps tokens into a woven dustpan (Murram).</td>
+                </tr>
+                <tr>
+                  <td class="battle-col-feature">Typing Discipline</td>
+                  <td class="battle-col-copilot">Patiently waits for your cursor to stop moving.</td>
+                  <td class="battle-col-dusty">If you type while Dusty is sweeping, he aggressively purges what you just typed.</td>
+                </tr>
+                <tr>
+                  <td class="battle-col-feature">Clean Code Response</td>
+                  <td class="battle-col-copilot">Stays quiet and lets you code in peace.</td>
+                  <td class="battle-col-dusty">Starves after 35s of bug-free code. Cmd+S does not save you—Dusty taunts you and steals working lines to feed!</td>
+                </tr>
+                <tr>
+                  <td class="battle-col-feature">Extreme Stress</td>
+                  <td class="battle-col-copilot">Throws a timeout error or rate limit modal.</td>
+                  <td class="battle-col-dusty">Apocalypse Crashout Mode: 100% rage or 3x dustpan spam turns the editor into an emergency red siren apocalypse.</td>
+                </tr>
+                <tr>
+                  <td class="battle-col-feature">Language Support</td>
+                  <td class="battle-col-copilot">Standard English, Spanish, Japanese, etc.</td>
+                  <td class="battle-col-dusty">Kerala Meme English + Authentically chaotic Manglish with Aaraattu Annan, KSRTC, &amp; Santhosh Pandit.</td>
+                </tr>
+                <tr>
+                  <td class="battle-col-feature">Cloud Footprint</td>
+                  <td class="battle-col-copilot">Massive multi-gigawatt cloud clusters transmitting your code to remote servers.</td>
+                  <td class="battle-col-dusty">Zero cloud dependencies. 100% local Web Audio synthesis + optional Local LLM (Ollama).</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </section>
@@ -1488,7 +1718,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
           </div>
         </div>
 
-        <div class="arch-grid">
+        <div class="arch-grid stagger-items">
           <article class="arch-card">
             <div class="arch-card-header">
               <span class="arch-card-kicker">INGESTION GATE</span>
@@ -1526,7 +1756,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
             </div>
             <h3>Hunger & Mischief Engine</h3>
             <p>
-              Writing flawless code carries penalties. If no syntax errors occur within 35 to 45 seconds, Dusty warns of hunger. If another 11 to 21 seconds pass with no errors, Dusty mischievously purges a working line to feed.
+              Writing flawless code carries penalties. If no syntax errors occur within 35 to 45 seconds, Dusty warns of hunger. Saving your file (Cmd+S) does not deactivate hunger—Dusty taunts your save attempts and continues ticking down. If another 11 to 21 seconds pass with no errors, Dusty mischievously purges a working line to feed.
             </p>
             <div class="arch-metric">
               <span>Warning Interval</span>
@@ -1565,7 +1795,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
           </div>
         </div>
 
-        <div class="video-section-box">
+        <div class="video-section-box reveal-scale">
           <!-- Summary of the Extension -->
           <div class="video-summary-strip">
             <div class="summary-col">
@@ -1574,11 +1804,11 @@ button { font: inherit; color: inherit; border: none; background: none; }
             </div>
             <div class="summary-col">
               <strong>😈 Hunger &amp; Sabotage</strong>
-              <p>Writing bug-free code for 35 seconds starves Dusty, provoking hilarious Kerala meme ultimatums and line deletions.</p>
+              <p>Writing bug-free code starves Dusty. Saving (Cmd+S) won't cancel hunger—Dusty taunts on save and eats code if left unfed.</p>
             </div>
             <div class="summary-col">
               <strong>💥 Crashout Mode</strong>
-              <p>100% Rage triggers the Chaos Apocalypse editor theme, red sirens, and vengeance code purges with viral Kerala memes in English.</p>
+              <p>100% Rage—or clicking Clean Dustpan 3+ times on an empty muram—triggers sirens, code purges, and explains the reason.</p>
             </div>
             <div class="summary-col">
               <strong>🎯 Type Harvester</strong>
@@ -1625,7 +1855,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
           </div>
         </div>
 
-        <div class="simulator-layout">
+        <div class="simulator-layout reveal">
           <!-- Editor Frame -->
           <div class="vscode-editor-frame">
             <div class="vscode-tab-bar">
@@ -1708,6 +1938,14 @@ button { font: inherit; color: inherit; border: none; background: none; }
                 <span>Trigger Ingestion</span>
                 <span class="sim-btn-shortcut">feed</span>
               </button>
+              <button class="sim-btn" id="simSaveBtn">
+                <span>Save File (Cmd+S)</span>
+                <span class="sim-btn-shortcut">test hunger</span>
+              </button>
+              <button class="sim-btn danger" id="simSpamDustpanBtn">
+                <span>⚠️ Spam Clean Dustpan</span>
+                <span class="sim-btn-shortcut">test crashout</span>
+              </button>
               <button class="sim-btn" id="simHungerBtn">
                 <span>Simulate Clean Code Hunger</span>
                 <span class="sim-btn-shortcut">35s tick</span>
@@ -1721,15 +1959,19 @@ button { font: inherit; color: inherit; border: none; background: none; }
                 <span class="sim-btn-shortcut">Cmd+Alt+U C</span>
               </button>
               <button class="sim-btn danger" id="simCrashoutBtn">
-                <span>Trigger Rangannan Crashout</span>
+                <span>Trigger Apocalypse Crashout</span>
                 <span class="sim-btn-shortcut">purge</span>
+              </button>
+              <button class="sim-btn" id="simLangToggleBtn">
+                <span>🌐 Switch Language</span>
+                <span class="sim-btn-shortcut" id="simLangTag">EN &rarr; ML</span>
               </button>
             </div>
 
             <div class="sim-log-box" id="simLogBox" aria-live="polite">
               <div class="sim-log-entry">
                 <span class="sim-log-time">00:00</span>
-                <span>Dusty vacuum engine initialized.</span>
+                <span>Dusty chool sweep engine initialized.</span>
               </div>
             </div>
           </div>
@@ -1737,7 +1979,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
       </div>
     </section>
 
-    <!-- 3-Tier Roast Engine & Ollama 3B -->
+    <!-- 3-Tier Roast Engine & Local LLM (Ollama) -->
     <section class="section" id="roasts">
       <div class="container">
         <div class="section-title-wrap">
@@ -1745,23 +1987,23 @@ button { font: inherit; color: inherit; border: none; background: none; }
           <div>
             <h2>3-Tier Roast Engine & Local LLM Integration</h2>
             <p class="section-desc">
-              Dusty delivers brutal commentary referencing famous Kerala memes in English. An LRU buffer ensures recent roasts never loop consecutively.
+              Dusty delivers brutal commentary referencing famous Kerala memes in English and Manglish. An LRU buffer ensures recent roasts never loop consecutively.
             </p>
           </div>
         </div>
 
-        <div class="roast-showcase">
+        <div class="roast-showcase reveal-left">
           <div class="roast-info">
-            <span class="kicker">OLLAMA 3B PIPELINE</span>
+            <span class="kicker">LOCAL LLM / OLLAMA PIPELINE</span>
             <h3>No Cloud. Zero External Calls. Pure Kerala Meme Trauma.</h3>
             <p>
-              When local Ollama is active, Dusty queries lightweight models (llama3.2:3b, phi3:mini, qwen2.5:3b) at 0.7 temperature with context from your active file name, language, and error token. If offline, he falls back instantly to his built-in meme vault.
+              When local Ollama is active, Dusty queries lightweight models (<code>llama3.2:3b</code> recommended) with context from your active file name, language, and error token, generating roasts in your selected language (English or Manglish). If offline, he falls back instantly to his built-in meme vault.
             </p>
 
             <div class="roast-pipeline-steps">
-              <div class="pipeline-step"><span class="step-dot"></span> Tier 1: Instant AST / Regex Pattern Roaster (0ms latency, slots extracted types &amp; variables)</div>
-              <div class="pipeline-step"><span class="step-dot"></span> Tier 2: Async Local Ollama Bridge (qwen2.5:1.5b / llama3.2:1b with 450ms resilient abort timeout)</div>
-              <div class="pipeline-step"><span class="step-dot"></span> Tier 3: Static Fallback Bank (40+ caustic Kerala meme roasts for generic compiler errors)</div>
+              <div class="pipeline-step"><span class="step-dot"></span> Tier 1: Instant AST / Regex Pattern Roaster (0ms latency, slots extracted types &amp; variables in EN or ML)</div>
+              <div class="pipeline-step"><span class="step-dot"></span> Tier 2: Async Local LLM Bridge (Ollama with resilient abort timeout and ChatML stop-token stripping)</div>
+              <div class="pipeline-step"><span class="step-dot"></span> Tier 3: Static Fallback Bank (100+ caustic Kerala meme roasts in English and Manglish)</div>
             </div>
 
             <div class="roast-warning-box" style="margin-top:20px;padding:14px 16px;border-radius:var(--radius-sm);background:rgba(231,76,60,0.12);border-left:3px solid var(--accent-rage);color:var(--ink);font-size:13px;line-height:1.5;">
@@ -1771,6 +2013,20 @@ button { font: inherit; color: inherit; border: none; background: none; }
           </div>
 
           <div class="roast-box-display">
+            <div class="meme-deck-header">
+              <div class="meme-tabs" id="memeTabs">
+                <button class="meme-tab-btn active" data-category="all">All Memes</button>
+                <button class="meme-tab-btn" data-category="aaraattu">Aaraattu Annan</button>
+                <button class="meme-tab-btn" data-category="vazha">Vazha</button>
+                <button class="meme-tab-btn" data-category="ksrtc">KSRTC</button>
+                <button class="meme-tab-btn" data-category="sadacharam">Moral Uncle</button>
+                <button class="meme-tab-btn" data-category="pandit">Santhosh Pandit</button>
+                <button class="meme-tab-btn" data-category="type">Type Errors</button>
+              </div>
+              <button class="btn-lang-toggle-roast" id="roastLangToggleBtn" title="Switch Roast Language between English and Manglish">
+                <span>🌐 LANG: <strong id="roastLangLabel">ENGLISH</strong></span>
+              </button>
+            </div>
             <div class="roast-meta">
               <span id="roastCategoryTag">SITUATION: BRUTAL PERSONAL</span>
               <span>LRU ACTIVE</span>
@@ -1788,7 +2044,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
         </div>
 
         <!-- Procedural & Meme Soundboard Matrix -->
-        <div class="soundboard-wrap">
+        <div class="soundboard-wrap reveal-right">
           <div class="soundboard-header">
             <span class="soundboard-title">DUSTY AUDIO SYNTHESIS &amp; MEME SFX MATRIX</span>
             <span class="soundboard-sub">CLICK TO AUDITION SYNTHESIZED SFX</span>
@@ -1819,7 +2075,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
               <span class="sound-btn-label">Murram Clog</span>
               <span class="sound-btn-type">Lowpass Thud</span>
             </button>
-            <button class="sound-btn" id="sfxCrashoutBtn" title="Play 100% Rangannan rage apocalypse siren">
+            <button class="sound-btn" id="sfxCrashoutBtn" title="Play 100% rage apocalypse crashout siren">
               <span class="sound-btn-icon">🚨</span>
               <span class="sound-btn-label">Crashout Siren</span>
               <span class="sound-btn-type">Oscillating Alarm</span>
@@ -1842,7 +2098,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
           </div>
         </div>
 
-        <div class="states-dashboard">
+        <div class="states-dashboard reveal">
           <div class="states-nav" id="statesNav">
             <button class="state-selector-btn active" data-state="idle">
               <span>IDLE</span>
@@ -1910,7 +2166,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
           </div>
         </div>
 
-        <div class="data-table-container">
+        <div class="data-table-container reveal">
           <table class="data-table">
             <thead>
               <tr>
@@ -1922,16 +2178,22 @@ button { font: inherit; color: inherit; border: none; background: none; }
             </thead>
             <tbody>
               <tr>
+                <td><code>dusty.toggleLanguage</code></td>
+                <td>Toggle Language (EN / ML)</td>
+                <td><kbd>Cmd+Alt+D L</kbd></td>
+                <td>Instantly switch between English and Manglish across roasts, UI buttons, and LLM prompt generation.</td>
+              </tr>
+              <tr>
                 <td><code>dusty.toggleEngine</code></td>
                 <td>Toggle Engine</td>
-                <td><kbd>Palette</kbd></td>
+                <td><kbd>Cmd+Alt+D T</kbd></td>
                 <td>Pause or resume the background diagnostic scanner and hunger timers.</td>
               </tr>
               <tr>
                 <td><code>dusty.unclog</code></td>
-                <td>Unclog Dust Bag</td>
+                <td>Clean Dustpan (Murram)</td>
                 <td><kbd>Cmd+Alt+U C</kbd></td>
-                <td>Empty the 5-crumb dustpan buffer when clogged. Available in command palette.</td>
+                <td>Empty the 5-crumb dustpan buffer when clogged. (Warning: spamming 3+ times on an empty dustpan triggers a crashout!)</td>
               </tr>
               <tr>
                 <td><code>dusty.feedManually</code></td>
@@ -1942,14 +2204,32 @@ button { font: inherit; color: inherit; border: none; background: none; }
               <tr>
                 <td><code>dusty.insultMe</code></td>
                 <td>Roast Me</td>
-                <td><kbd>Palette</kbd></td>
-                <td>Generate an on-demand personal Kerala meme roast in English targeting current file code.</td>
+                <td><kbd>Cmd+Alt+D R</kbd></td>
+                <td>Generate an on-demand personal Kerala meme roast in your selected language (English or Manglish).</td>
               </tr>
               <tr>
                 <td><code>dusty.muteAudio</code></td>
                 <td>Toggle Audio</td>
                 <td><kbd>Sidebar</kbd></td>
                 <td>Mute procedural Web Audio synthesis and custom sound file playback.</td>
+              </tr>
+              <tr>
+                <td><code>dusty.resetBag</code></td>
+                <td>Reset Dustpan (Murram)</td>
+                <td><kbd>Palette</kbd></td>
+                <td>Reset the dustpan crumb count back to 0/5 via Command Palette.</td>
+              </tr>
+              <tr>
+                <td><code>dusty.testSound</code></td>
+                <td>Test Broom Sound</td>
+                <td><kbd>Palette</kbd></td>
+                <td>Audition synthesized broom sweep sound effect and shake animation.</td>
+              </tr>
+              <tr>
+                <td><code>dusty.openSidebar</code></td>
+                <td>Open Dusty in Sidebar</td>
+                <td><kbd>Palette</kbd></td>
+                <td>Focus and open the Dusty the Chool companion in the VS Code secondary sidebar.</td>
               </tr>
               <tr>
                 <td><code>dusty.crashout</code></td>
@@ -1966,18 +2246,109 @@ button { font: inherit; color: inherit; border: none; background: none; }
             </tbody>
           </table>
         </div>
+
+        <div class="settings-header-wrap" style="margin-top: 48px; margin-bottom: 20px;">
+          <h3 style="font-size: var(--text-2xl); font-family: var(--font-display); letter-spacing: -0.02em;">⚙️ Essential Settings &amp; Configuration</h3>
+          <p class="section-desc" style="margin-top: 6px;">
+            Customize Dusty's behavior in VS Code Settings (<kbd>Cmd+,</kbd> or <kbd>Ctrl+,</kbd> &rarr; search <code>dusty</code>):
+          </p>
+        </div>
+
+        <div class="data-table-container reveal">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Setting</th>
+                <th>Type &amp; Default</th>
+                <th>What It Does</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>dusty.enabled</code></td>
+                <td><code>boolean</code><br><code>true</code></td>
+                <td>Master power switch for Dusty the Chool. When <code>false</code>, all diagnostic scanning, gutter icons, and hunger timers are suspended.</td>
+              </tr>
+              <tr>
+                <td><code>dusty.language</code></td>
+                <td><code>string</code><br><code>"english"</code></td>
+                <td><strong>Preferred Language (<code>"english"</code> or <code>"manglish"</code>)</strong>. Controls the language across the entire extension: sidebar UI buttons, state badges, status bar indicators, CodeLens text, offline roasts, and the system prompt sent to Ollama. Switch on the fly anytime with <kbd>Cmd+Alt+D L</kbd>.</td>
+              </tr>
+              <tr>
+                <td><code>dusty.enableLLM</code></td>
+                <td><code>boolean</code><br><code>true</code></td>
+                <td><strong>Local Ollama Integration</strong>. When <code>true</code>, queries your local Ollama model for personalized commentary. Set to <code>false</code> if you prefer 100% deterministic offline meme roasts.</td>
+              </tr>
+              <tr>
+                <td><code>dusty.ollamaEndpoint</code></td>
+                <td><code>string</code><br><code>"http://127.0.0.1:11434"</code></td>
+                <td><strong>Ollama HTTP API Endpoint</strong>. Change this if your Ollama instance runs on a custom port, inside Docker, or on a remote machine on your local network.</td>
+              </tr>
+              <tr>
+                <td><code>dusty.ollamaModel</code></td>
+                <td><code>string</code><br><code>"llama3.2:3b"</code></td>
+                <td><strong>Ollama Model Tag</strong>. Specifies which model tag to query (e.g. <code>llama3.2:3b</code>, <code>phi3:mini</code>, <code>qwen2.5:3b</code>).</td>
+              </tr>
+              <tr>
+                <td><code>dusty.ollamaTimeoutMs</code></td>
+                <td><code>number</code><br><code>2500</code></td>
+                <td><strong>Safety Timeout (ms)</strong>. If Ollama takes longer than this to generate an insult, Dusty aborts cleanly and serves a local roast to ensure your editor never lags.</td>
+              </tr>
+              <tr>
+                <td><code>dusty.ollamaTemperature</code></td>
+                <td><code>number</code><br><code>0.7</code></td>
+                <td><strong>AI Sampling Temperature</strong> (0.1–1.5). Higher values make roasts more creative and chaotic; lower values make them tighter and more focused.</td>
+              </tr>
+              <tr>
+                <td><code>dusty.hungerMischief</code></td>
+                <td><code>boolean</code><br><code>true</code></td>
+                <td><strong>Hunger &amp; Mischief Engine</strong>. Writing bug-free code for 35–45s starves Dusty, provoking a hunger warning. Saving the file (<kbd>Cmd+S</kbd>) does not stop him; Dusty taunts your save attempts and continues counting down. If ignored for another 11–21s, he deletes a working line of code. Set to <code>false</code> for peace of mind.</td>
+              </tr>
+              <tr>
+                <td><code>dusty.chaosIntensity</code></td>
+                <td><code>string</code><br><code>"normal"</code></td>
+                <td><strong>Chaos Level (<code>"calm"</code>, <code>"normal"</code>, <code>"feral"</code>)</strong>. Sets the frequency of animations and comedic disruptions. *(Even on "feral", strict non-negotiable safety gates remain active—Dusty never damages valid statements or comments).*</td>
+              </tr>
+              <tr>
+                <td><code>dusty.autoIngest</code></td>
+                <td><code>boolean</code><br><code>true</code></td>
+                <td><strong>Safe Auto-Ingestion</strong>. Allows Dusty to automatically sweep small, safely disposable syntax artifacts (&le; 5 chars, like stray duplicate semicolons <code>;;</code>) into his bamboo dustpan (Murram).</td>
+              </tr>
+              <tr>
+                <td><code>dusty.diagnosticDelayMs</code></td>
+                <td><code>number</code><br><code>2500</code></td>
+                <td><strong>Typing Debounce Delay (ms)</strong>. Time Dusty waits after your last keystroke before analyzing compiler diagnostics. Allows you time to finish typing before being judged.</td>
+              </tr>
+              <tr>
+                <td><code>dusty.ingestDelayMs</code></td>
+                <td><code>number</code><br><code>1200</code></td>
+                <td><strong>Approach Animation Duration (ms)</strong>. Duration of the animated gutter broom march toward the syntax error before executing the atomic edit.</td>
+              </tr>
+              <tr>
+                <td><code>dusty.checkOnSaveOnly</code></td>
+                <td><code>boolean</code><br><code>false</code></td>
+                <td><strong>Save-Triggered Only</strong>. When <code>true</code>, Dusty only checks diagnostics and sweeps errors when you explicitly save the file (<kbd>Cmd+S</kbd>).</td>
+              </tr>
+              <tr>
+                <td><code>dusty.muteAudio</code></td>
+                <td><code>boolean</code><br><code>false</code></td>
+                <td><strong>Audio Mute</strong>. Mutes all Web Audio procedural synthesis and custom sound file playback.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
 
     <!-- Get Dusty / Marketing Download -->
     <section class="get-dusty-section" id="get-dusty">
       <div class="container">
-        <div class="get-dusty-card">
+        <div class="get-dusty-card reveal-scale">
           <div>
             <span class="get-dusty-kicker">OFFICIAL RELEASE · TINKERHUB USELESS PROJECTS</span>
             <h2>Stop being productive.<br>Install <span>Dusty</span> instead.</h2>
             <p class="get-dusty-lead">
-              One VSIX. Zero runtime npm deps. A bad-tempered Kerala coconut broom that lives in your secondary sidebar, sweeps syntax crumbs into a bamboo murram, and roasts you with pure Kerala meme energy in English. Available now on GitHub Releases.
+              One VSIX. Zero runtime npm deps. A bad-tempered Kerala coconut broom that lives in your secondary sidebar, sweeps syntax crumbs into a bamboo murram, and roasts you with pure Kerala meme energy in English and Manglish. Available now on GitHub Releases.
             </p>
             <div class="get-dusty-cta-row">
               <a class="btn-download-primary" href="https://github.com/viswajith275/useless_project_temp/releases" target="_blank" rel="noopener noreferrer">
@@ -2003,21 +2374,21 @@ button { font: inherit; color: inherit; border: none; background: none; }
               </div>
             </div>
             <div class="highlight-pill">
-              <span class="pill-icon"></span>
+              <span class="pill-icon">😈</span>
               <div>
                 <strong>Hunger, mischief &amp; crashout</strong>
-                <span>Clean code for too long and Dusty deletes a working line out of spite.</span>
+                <span>Clean code starves Dusty (saving files won't save you!). Spamming Clean Dustpan provokes crashouts with explicit reasons.</span>
               </div>
             </div>
             <div class="highlight-pill">
-              <span class="pill-icon"></span>
+              <span class="pill-icon">🌐</span>
               <div>
-                <strong>60+ Kerala meme roasts in English</strong>
-                <span>Aaraattu Annan, Vazha, KSRTC, KSEB &amp; more — plus optional local Ollama 3B.</span>
+                <strong>100+ Roasts in English &amp; Manglish</strong>
+                <span>Aaraattu Annan, Vazha, KSRTC, KSEB &amp; more — switchable with Cmd+Alt+D L, plus Local LLM (Ollama).</span>
               </div>
             </div>
             <div class="highlight-pill">
-              <span class="pill-icon"></span>
+              <span class="pill-icon">🛡️</span>
               <div>
                 <strong>Safety-gated sabotage</strong>
                 <span>Only ≤5-char syntax tokens auto-ingest. Working statements stay protected.</span>
@@ -2041,7 +2412,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
           </div>
         </div>
 
-        <div class="install-grid">
+        <div class="install-grid stagger-items">
           <div class="install-code-card">
             <div class="install-header">
               <span>BASH / TERMINAL</span>
@@ -2059,7 +2430,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
 <span class="comment"># 3. Install VSIX into VS Code</span>
 <span class="cmd">code --install-extension</span> dusty-the-chool-0.1.0.vsix
 
-<span class="comment"># 4. (Optional) Run local Ollama 3B model for custom roasts</span>
+<span class="comment"># 4. (Optional) Run local Ollama for custom roasts</span>
 <span class="cmd">ollama run</span> llama3.2:3b</code></pre>
           </div>
 
@@ -2102,6 +2473,33 @@ button { font: inherit; color: inherit; border: none; background: none; }
       </div>
     </div>
   </footer>
+
+  <!-- Floating Quick-Nav Dock -->
+  <nav class="quick-dock" id="quickDock" aria-label="Page section quick navigation">
+    <a href="#concept">Concept</a>
+    <a href="#architecture">Arch</a>
+    <a href="#demo">Demo</a>
+    <a href="#simulator">Simulator</a>
+    <a href="#roasts">Roasts</a>
+    <a href="#states">States</a>
+    <a href="#commands">Commands</a>
+    <a href="#install">Install</a>
+  </nav>
+
+  <!-- Crashout Modal Dialog -->
+  <div class="crashout-modal-backdrop" id="crashoutModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="crashoutModalTitle">
+    <div class="crashout-modal-card">
+      <span class="crashout-modal-badge">🚨 CRASHOUT INCIDENT REPORT</span>
+      <h3 class="crashout-modal-title" id="crashoutModalTitle">DUSTY HAS ENTERED CRASHOUT MODE!</h3>
+      <div class="crashout-modal-reason" id="crashoutModalReason">
+        <strong>REASON:</strong> Clean Dustpan was spammed 3 times on an empty muram! Dusty took this as a personal insult to his broom work.
+      </div>
+      <div class="crashout-modal-roast" id="crashoutModalRoast">
+        "Enthuvaade idhu?! Why are you cleaning an empty muram?! Even a vazha knows not to sweep clean floor!"
+      </div>
+      <button class="btn-crashout-dismiss" id="dismissCrashoutModalBtn">Apologize &amp; Dismiss Emergency</button>
+    </div>
+  </div>
 
   <div class="toast" id="toastMessage" role="status" aria-live="polite">Copied to clipboard.</div>
 
@@ -2293,109 +2691,207 @@ button { font: inherit; color: inherit; border: none; background: none; }
 
     const audio = new ProceduralAudioEngine();
 
-    /* Real Kerala Meme Roasts Catalog from src/roastService.ts */
+    /* Top Scroll Progress Bar with Animated Broom */
+    const scrollProgressBar = document.getElementById('scrollProgressBar');
+    function updateScrollProgress() {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight > 0) {
+        const progress = Math.min(100, Math.max(0, (window.scrollY / docHeight) * 100));
+        if (scrollProgressBar) {
+          scrollProgressBar.style.width = `${progress}%`;
+        }
+      }
+    }
+    window.addEventListener('scroll', updateScrollProgress, { passive: true });
+
+    /* Intersection Observer for Smooth Scroll Reveals */
+    if ('IntersectionObserver' in window) {
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+          }
+        });
+      }, { rootMargin: '0px 0px -40px 0px', threshold: 0.1 });
+
+      document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .stagger-items').forEach(el => {
+        revealObserver.observe(el);
+      });
+
+      /* Quick-Dock Active Section Spy */
+      const dockLinks = document.querySelectorAll('.quick-dock a');
+      const trackedSections = document.querySelectorAll('section[id]');
+      const navObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute('id');
+            dockLinks.forEach(link => {
+              link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+            });
+          }
+        });
+      }, { threshold: 0.3 });
+      trackedSections.forEach(sec => navObserver.observe(sec));
+    } else {
+      // Fallback for browsers without IntersectionObserver
+      document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .stagger-items').forEach(el => {
+        el.classList.add('revealed');
+      });
+    }
+
+    /* Bilingual Kerala Meme Roasts Catalog */
     const ROAST_CATALOG = [
       {
-        quote: "My parents were right: planting a single banana tree (vazha) would have yielded a bunch of bananas, but hiring you only yielded compile errors!",
+        category: "vazha",
+        situation: "BRUTAL PERSONAL",
         source: "Kerala Parents Wisdom",
-        situation: "BRUTAL PERSONAL"
+        en: "My parents were right: planting a single banana tree (vazha) would have yielded a bunch of bananas, but hiring you only yielded compile errors!",
+        ml: "Ninte code kandittu ente achan paranjathu orma varunnu: oru vazha vechaal polum kooduthal gunam undaayene, ninne hire cheythathu veruthe aayi!"
       },
       {
-        quote: "Aaraattu Annan shouting: 'Bro, I need food, bro! Give me a syntax mistake or this entire component is getting swept into the dustpan!'",
+        category: "aaraattu",
+        situation: "HUNGER",
         source: "Aaraattu Annan Meme",
-        situation: "HUNGER"
+        en: "Aaraattu Annan shouting: 'Bro, I need food, bro! Give me a syntax mistake or this entire component is getting swept into the dustpan!'",
+        ml: "Aaraattu Annan shouting: 'Bro, enikku bhakshanam venam bro! Oru syntax thettengilum thaada, allenkil ee component motham njan murrathil idum!'"
       },
       {
-        quote: "100% Kalippu! Driving this deletion cycle straight through your file like a KSRTC Swift bus on a downhill hairpin bend!",
+        category: "ksrtc",
+        situation: "CRASHOUT",
         source: "KSRTC Swift Meme",
-        situation: "CRASHOUT"
+        en: "100% Kalippu! Driving this deletion cycle straight through your file like a KSRTC Swift bus on a downhill hairpin bend!",
+        ml: "100% Kalippu! KSRTC Swift bus hairpin bendil overtake cheyyunna pole ninre codebase-iloode deletion cycle idichu keruvaada!"
       },
       {
-        quote: "Kerala food vlogger reviewing your PR: 'Guys, presentation is zero, taste is pure bitter sadness, totally unhygienic code logic, avoid at all costs!'",
-        source: "Food Vlogger Review",
-        situation: "BRUTAL PERSONAL"
+        category: "sadacharam",
+        situation: "BRUTAL PERSONAL",
+        source: "Moral Uncle (Sadacharam)",
+        en: "Moral policing uncle spotted your code: 'Look at how shamelessly you left that bracket open without a semicolon! Don't you have any shame, mone?'",
+        ml: "Sadacharam uncle: 'Nokkeda... oru bracket open aakki semicolon polum idaathe irikkunnu! Ninakkonnum oru naanam illede mone?'"
       },
       {
-        quote: "Like a sudden KSEB power cut on a humid Sunday afternoon, total darkness is descending upon your entire codebase!",
-        source: "KSEB Load Shedding",
-        situation: "CRASHOUT"
-      },
-      {
-        quote: "Moral policing uncle spotted your code: 'Look at how shamelessly you left that bracket open without a semicolon! Don't you have any shame, mone?'",
-        source: "Sadacharam Uncle",
-        situation: "BRUTAL PERSONAL"
-      },
-      {
-        quote: "MISCHIEF COMPLETE! You ignored my hunger warning, so I swallowed your working code whole! Go sit and type it again, mone! NOM NOM NOM!",
-        source: "Mischief Engine",
-        situation: "MISCHIEF"
-      },
-      {
-        quote: "You've been staring at this same bug longer than a veteran PSC aspirant and you still couldn't clear the cutoff on this code!",
-        source: "PSC Coaching Batch",
-        situation: "BRUTAL PERSONAL"
-      },
-      {
-        quote: "Santhosh Pandit one-man show mode activated: I wrote, directed, edited, and now I'm DELETING every line of your code myself!",
+        category: "pandit",
+        situation: "CRASHOUT",
         source: "Santhosh Pandit Solo",
-        situation: "CRASHOUT"
+        en: "Santhosh Pandit one-man show mode activated: I wrote, directed, edited, and now I'm DELETING every line of your code myself!",
+        ml: "Santhosh Pandit one-man show mode on: Njan thanne script ezhuthi, njan thanne direct cheythu, ippo njan thanne ninte code delete cheyyunnu!"
       },
       {
-        quote: "Even a 5 AM WhatsApp forward about onions curing COVID has more scientific credibility than your variable naming in this code!",
-        source: "WhatsApp Family Group",
-        situation: "BRUTAL PERSONAL"
-      },
-      {
-        quote: "Type Harvester Alert: Did you honestly expect a 'string' to fit inside a 'number'? Even a banana tree (vazha) understands basic types better than this!",
+        category: "type",
+        situation: "TYPE ERROR",
         source: "3-Tier Type Harvester",
-        situation: "TYPE ERROR"
+        en: "Type Harvester Alert: Did you honestly expect a 'string' to fit inside a 'number'? Even a banana tree (vazha) understands basic types better than this!",
+        ml: "Type Harvester Warning: 'string' eduthu 'number'-il kettan ninakku vattaano da? Oru vazha vare types ithilum nannaayi manassilaakkum!"
       },
       {
-        quote: "Dusty the Chool looked everywhere with his broom, but '.turbo' does not exist on 'Swift'. Did you invent this method in a dream, da?",
+        category: "type",
+        situation: "TYPE ERROR",
         source: "3-Tier Type Harvester",
-        situation: "TYPE ERROR"
+        en: "Dusty the Chool looked everywhere with his broom, but '.turbo' does not exist on 'Swift'. Did you invent this method in a dream, da?",
+        ml: "Chool vechu njan ella idathum thappi nokki, pakshe '.turbo' ennoru method 'Swift'-il illa! Swapnathil kandu type cheythathaano da?"
       },
       {
-        quote: "Moral policing uncle alert: 'Look at how shamelessly you assigned an implicit any without a proper type! Don't you have any shame, mone?'",
+        category: "general",
+        situation: "MISCHIEF",
+        source: "Mischief Engine",
+        en: "MISCHIEF COMPLETE! You ignored my hunger warning, so I swallowed your working code whole! Go sit and type it again, mone! NOM NOM NOM!",
+        ml: "MISCHIEF COMPLETE! Pashi aayappol nee thettu thന്നില്ല, athukondu njan ninte working line thinnu theerthu! Ini irunnu type cheyyeda! NOM NOM!"
+      },
+      {
+        category: "ksrtc",
+        situation: "CRASHOUT",
+        source: "KSEB Load Shedding",
+        en: "Like a sudden KSEB power cut on a humid Sunday afternoon, total darkness is descending upon your entire codebase!",
+        ml: "Sunday uchakku vanna KSEB load shedding pole, ninte repo-il muzhuvan ippo iruttu parakkan povukayaada!"
+      },
+      {
+        category: "general",
+        situation: "BRUTAL PERSONAL",
+        source: "PSC Coaching Batch",
+        en: "You've been staring at this same bug longer than a veteran PSC aspirant and you still couldn't clear the cutoff on this code!",
+        ml: "Pathu varsham PSC coaching-inu poya chettane-kaalum kooduthal samayam aayallo nee ee bug nokki irikkunnu! Ennittum cutoff polum kittiyilla!"
+      },
+      {
+        category: "sadacharam",
+        situation: "BRUTAL PERSONAL",
         source: "Moral Policing Uncle",
-        situation: "BRUTAL PERSONAL"
+        en: "Moral policing uncle alert: 'Look at how shamelessly you assigned an implicit any without a proper type! Don't you have any shame, mone?'",
+        ml: "Sadacharam uncle alert: 'Oru implicit any ittu type illaathe public aayi nadakkunno? Ninakku samskaaram illennu ariyikkaano da mone?'"
       },
       {
-        quote: "Python only asks two things: indent properly and don't behave like a vazha! You failed both at the same time, man!",
-        source: "Python Meme Logic",
-        situation: "LANGUAGE SPECIFIC"
-      },
-      {
-        quote: "The Rust borrow checker rejected your code harder than a strict college principal rejecting an attendance shortage plea!",
-        source: "Rust Safety Vault",
-        situation: "LANGUAGE SPECIFIC"
-      },
-      {
-        quote: "`if err != nil`? In Go, the only unhandled error here is how you got write access to this repo without a fitness certificate!",
-        source: "Go Runtime Audit",
-        situation: "LANGUAGE SPECIFIC"
-      },
-      {
-        quote: "Your pointer manipulation is more dangerous than overtaking a lorry on a blind hairpin curve in Munnar!",
-        source: "C++ Memory Gate",
-        situation: "LANGUAGE SPECIFIC"
+        category: "vazha",
+        situation: "BRUTAL PERSONAL",
+        source: "Kerala Food Vlogger",
+        en: "Kerala food vlogger reviewing your PR: 'Guys, presentation is zero, taste is pure bitter sadness, totally unhygienic code logic, avoid at all costs!'",
+        ml: "Food vlogger review: 'Guys, presentation valare mosham, taste pure dhoorantham, totally unhygienic logic aanu! Aarum ee PR edukkalle guys!'"
       }
     ];
 
+    let currentLanguage = 'english'; // 'english' | 'manglish'
+    let activeMemeCategory = 'all';
     let roastIndex = 0;
+
     const roastQuoteDisplay = document.getElementById('roastQuoteDisplay');
     const roastSourceDisplay = document.getElementById('roastSourceDisplay');
     const roastCategoryTag = document.getElementById('roastCategoryTag');
+    const roastLangLabel = document.getElementById('roastLangLabel');
+    const simLangTag = document.getElementById('simLangTag');
+
+    function getFilteredRoasts() {
+      if (activeMemeCategory === 'all') return ROAST_CATALOG;
+      return ROAST_CATALOG.filter(r => r.category === activeMemeCategory);
+    }
+
+    function displayCurrentRoast() {
+      const pool = getFilteredRoasts();
+      if (!pool.length) return;
+      const r = pool[roastIndex % pool.length];
+      const text = currentLanguage === 'english' ? r.en : r.ml;
+      roastQuoteDisplay.textContent = `"${text}"`;
+      roastSourceDisplay.textContent = `Source: ${r.source}`;
+      roastCategoryTag.textContent = `SITUATION: ${r.situation} (${currentLanguage.toUpperCase()})`;
+    }
 
     function displayNextRoast() {
-      roastIndex = (roastIndex + 1) % ROAST_CATALOG.length;
-      const r = ROAST_CATALOG[roastIndex];
-      roastQuoteDisplay.textContent = `"${r.quote}"`;
-      roastSourceDisplay.textContent = `Source: ${r.source}`;
-      roastCategoryTag.textContent = `SITUATION: ${r.situation}`;
+      const pool = getFilteredRoasts();
+      roastIndex = (roastIndex + 1) % pool.length;
+      displayCurrentRoast();
       audio.playSuction();
     }
     document.getElementById('triggerNextRoastBtn').addEventListener('click', displayNextRoast);
+
+    // Meme Category Tabs
+    document.querySelectorAll('.meme-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.meme-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeMemeCategory = btn.dataset.category || 'all';
+        roastIndex = 0;
+        displayCurrentRoast();
+        audio.playSweep();
+      });
+    });
+
+    // Language Toggle
+    function toggleLanguage() {
+      currentLanguage = currentLanguage === 'english' ? 'manglish' : 'english';
+      const isEn = currentLanguage === 'english';
+      if (roastLangLabel) roastLangLabel.textContent = isEn ? 'ENGLISH' : 'MANGLISH';
+      if (simLangTag) simLangTag.innerHTML = isEn ? 'EN &rarr; ML' : 'ML &rarr; EN';
+
+      // Update hero speech if idle
+      if (simState === 'idle') {
+        heroSpeechText.textContent = isEn
+          ? "I am watching your cursor with judging eyes. Go ahead, write your code. Make one mistake and see what happens."
+          : "Njan ninte cursor-ine kalippode nokki nilkkukayaanu. Dhoorantham code ezhuthi nokkeda mone, pinne nadakkunnathu kaanaam!";
+      }
+
+      displayCurrentRoast();
+      audio.playSweep();
+      showToast(`Language switched to ${isEn ? 'English' : 'Manglish'}`);
+    }
+    document.getElementById('roastLangToggleBtn').addEventListener('click', toggleLanguage);
+    document.getElementById('simLangToggleBtn').addEventListener('click', toggleLanguage);
 
     // Procedural & Meme Soundboard Matrix
     const sfxTriggers = [
@@ -2453,7 +2949,7 @@ button { font: inherit; color: inherit; border: none; background: none; }
       hunger: {
         index: "STATE 4 OF 7",
         title: "HUNGER: Clean Code Penalty Active",
-        desc: "Developer has written error-free code for 35 to 45 seconds. Dusty raises a threatening Malayalam cinema warning requesting a syntax mistake immediately.",
+        desc: "Developer has written error-free code for 35 to 45 seconds. Dusty raises a threatening Kerala meme warning requesting broken syntax. Saving your file (Cmd+S) does not deactivate his hunger—Dusty delivers an in-character taunt and keeps counting down.",
         audio: "Low rumbling 90Hz growl",
         gutter: "Impatience tremor shake"
       },
@@ -2473,8 +2969,8 @@ button { font: inherit; color: inherit; border: none; background: none; }
       },
       crashout: {
         index: "STATE 7 OF 7",
-        title: "CRASHOUT: Rangannan Rage Apocalypse",
-        desc: "Rage reached 100%. Dusty switches the editor theme to Chaos Apocalypse, plays a warning siren, and randomly deletes lines of code out of vengeance.",
+        title: "CRASHOUT: Broom Rage Apocalypse",
+        desc: "Rage reached 100%—or Clean Dustpan was spammed 3+ times on an empty muram. Dusty switches the theme to Chaos Apocalypse, plays sirens, deletes code out of vengeance, and displays the exact reason in the roast dialogue.",
         audio: "Dissonant oscillating siren alarm",
         gutter: "Emergency red alert strobe"
       }
@@ -2485,14 +2981,386 @@ button { font: inherit; color: inherit; border: none; background: none; }
     let simCrumbs = 0;
     let simRage = 0;
     let simHasError = false;
+    let emptyCleanSpamCount = 0;
 
     const heroStage = document.getElementById('heroStage');
     const stageStateText = document.getElementById('stageStateText');
     const stageMurramStatus = document.getElementById('stageMurramStatus');
-    const murramCountText = document.getElementById('murramCountText');
     const heroSpeechText = document.getElementById('heroSpeechText');
-    const visualChool = document.getElementById('visualChool');
-    const visualMurram = document.getElementById('visualMurram');
+
+    const heroCanvas = document.getElementById('heroDustyCanvas');
+    const heroCtx = heroCanvas ? heroCanvas.getContext('2d') : null;
+    const heroCanvasBadge = document.getElementById('heroCanvasBadge');
+
+    let heroAnimTick = 0;
+    let heroLastTimestamp = 0;
+    let heroParticles = [];
+    let heroParticleAccumulator = 0;
+
+    function spawnHeroParticle() {
+      if (heroParticles.length < 24) {
+        heroParticles.push({
+          x: 65 + (Math.random() * 20 - 10),
+          y: 85 + (Math.random() * 12 - 6),
+          vx: 1.5 + Math.random() * 2.5,
+          vy: -(Math.random() * 1.5),
+          size: 2 + Math.random() * 2,
+          color: ['#e74c3c', '#f1c40f', '#3498db', '#e67e22', '#7f8c8d'][Math.floor(Math.random() * 5)]
+        });
+      }
+    }
+
+    function emitHeroParticles(count, dt) {
+      heroParticleAccumulator += dt;
+      while (heroParticleAccumulator >= 1) {
+        for (let c = 0; c < count; c++) spawnHeroParticle();
+        heroParticleAccumulator -= 1;
+      }
+    }
+
+    function drawHeroMurram(ctx, animTick, crumbs, state, rage) {
+      ctx.save();
+      let murramX = 116;
+      let murramY = 78;
+      let murramAngle = 0;
+
+      if (state === 'crashout' || rage >= 90) {
+        murramX += (Math.random() * 6 - 3);
+        murramY += (Math.random() * 4 - 2);
+        murramAngle = (Math.random() * 0.3 - 0.15);
+      } else if (state === 'mischief') {
+        murramX = 104 + Math.sin(animTick * 0.5) * 3;
+        murramY = 75 + Math.cos(animTick * 0.5) * 2;
+        murramAngle = -0.22 + Math.sin(animTick * 0.5) * 0.06;
+      } else if (state === 'hunger') {
+        murramX = 110 + Math.sin(animTick * 0.25) * 2;
+        murramY = 77 + Math.sin(animTick * 0.25) * 1.5;
+        murramAngle = -0.1 + Math.sin(animTick * 0.25) * 0.04;
+      } else if (state === 'eating' || state === 'hunting') {
+        murramX = 108 + Math.sin(animTick * 0.3) * 2;
+        murramY = 76 + Math.cos(animTick * 0.3) * 1.5;
+        murramAngle = -0.16 + Math.sin(animTick * 0.3) * 0.05;
+      } else if (state === 'clogged') {
+        murramY = 80 + Math.sin(animTick * 0.3) * 2;
+        murramAngle = 0.12;
+      } else {
+        murramY += Math.sin(animTick * 0.08 + 1.2) * 1.5;
+        murramAngle = Math.sin(animTick * 0.05) * 0.04;
+      }
+
+      ctx.translate(murramX, murramY);
+      ctx.rotate(murramAngle);
+
+      // Murram Outer Shadow
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+      ctx.beginPath();
+      ctx.ellipse(14, 18, 16, 4, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Bamboo Woven Base (Trapezoid mouth facing left toward broom)
+      ctx.fillStyle = '#d2a679';
+      ctx.beginPath();
+      ctx.moveTo(0, 14);
+      ctx.lineTo(28, 10);
+      ctx.lineTo(28, -6);
+      ctx.lineTo(0, -10);
+      ctx.closePath();
+      ctx.fill();
+
+      // Woven Reed Grid Lines
+      ctx.strokeStyle = '#b37d4e';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, -6); ctx.lineTo(28, -3);
+      ctx.moveTo(0, -2); ctx.lineTo(28, 0);
+      ctx.moveTo(0, 2);  ctx.lineTo(28, 3);
+      ctx.moveTo(0, 6);  ctx.lineTo(28, 7);
+      ctx.moveTo(0, 10); ctx.lineTo(28, 9);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#c49364';
+      ctx.beginPath();
+      ctx.moveTo(7, -9); ctx.lineTo(7, 13);
+      ctx.moveTo(14, -8); ctx.lineTo(14, 12);
+      ctx.moveTo(21, -7); ctx.lineTo(21, 11);
+      ctx.stroke();
+
+      // Reinforced Cane Rim
+      ctx.strokeStyle = '#6b4226';
+      ctx.lineWidth = 3;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(0, -10);
+      ctx.lineTo(28, -6);
+      ctx.lineTo(28, 10);
+      ctx.lineTo(0, 14);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#8d5524';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(1, -9);
+      ctx.lineTo(27, -5);
+      ctx.lineTo(27, 9);
+      ctx.lineTo(1, 13);
+      ctx.stroke();
+
+      // Mouth Lip Plate
+      ctx.fillStyle = '#5c3818';
+      ctx.fillRect(-2, -10, 2, 24);
+
+      // Crumbs Accumulated in Murram
+      if (crumbs > 0) {
+        const crumbColors = ['#e74c3c', '#f1c40f', '#3498db', '#9b59b6', '#2ecc71', '#e67e22'];
+        const count = Math.min(25, crumbs * 5);
+        for (let i = 0; i < count; i++) {
+          const cx = 5 + ((i * 7 + 3) % 20);
+          const cy = -5 + ((i * 11 + 5) % 16);
+          ctx.fillStyle = crumbColors[i % crumbColors.length];
+          ctx.fillRect(cx, cy, 2, 2);
+        }
+        if (state === 'clogged') {
+          ctx.fillStyle = '#e74c3c';
+          ctx.fillRect(26, -4 + Math.sin(animTick * 0.4) * 2, 3, 3);
+          ctx.fillRect(24, 6 + Math.cos(animTick * 0.4) * 2, 3, 3);
+        }
+      }
+      ctx.restore();
+    }
+
+    function drawHeroBroom(ctx, animTick, crumbs, state, rage) {
+      const centerX = 68;
+      const centerY = 58;
+      const bob = Math.sin(animTick * 0.08) * 2;
+
+      let sweepAngle = 0;
+      let sweepX = 0;
+
+      if (state === 'crashout' || rage >= 90) {
+        sweepAngle = Math.sin(animTick * 0.6) * 0.75;
+        sweepX = Math.sin(animTick * 0.6) * 26;
+      } else if (state === 'eating' || state === 'hunting') {
+        sweepAngle = Math.sin(animTick * 0.3) * 0.42;
+        sweepX = Math.sin(animTick * 0.3) * 18;
+      } else if (state === 'clogged') {
+        sweepAngle = 0.32;
+      } else if (state === 'mischief') {
+        sweepAngle = Math.sin(animTick * 0.45) * 0.38;
+        sweepX = Math.sin(animTick * 0.45) * 14;
+      } else if (state === 'hunger') {
+        sweepAngle = Math.sin(animTick * 0.15) * 0.22;
+        sweepX = Math.sin(animTick * 0.15) * 8;
+      } else {
+        sweepAngle = Math.sin(animTick * 0.06) * 0.07;
+        sweepX = Math.sin(animTick * 0.06) * 3;
+      }
+
+      ctx.save();
+      ctx.translate(centerX + sweepX, centerY + bob);
+      ctx.rotate(sweepAngle);
+
+      // Handle
+      ctx.fillStyle = '#8d5524';
+      ctx.fillRect(-3, -48, 6, 52);
+      ctx.fillStyle = '#b87333';
+      ctx.fillRect(-3, -48, 2, 52);
+      ctx.fillStyle = '#5c3317';
+      ctx.fillRect(1, -48, 2, 52);
+
+      // Red Decorative Grip
+      ctx.fillStyle = '#c0392b';
+      ctx.fillRect(-4, -44, 8, 8);
+
+      // Hanging Loop
+      ctx.strokeStyle = '#f39c12';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(-2, -51, 4, 4);
+
+      // Twine Binding Cord
+      ctx.fillStyle = '#d35400';
+      ctx.fillRect(-8, 4, 16, 8);
+      ctx.fillStyle = '#f39c12';
+      ctx.fillRect(-7, 6, 14, 2);
+      ctx.fillRect(-7, 9, 14, 2);
+
+      // Straw Bristles Body
+      let bristleColor = '#f1c40f';
+      if (state === 'crashout' || rage >= 90) {
+        const strobe = ['#ff0033', '#ff6600', '#ffff00', '#9b59b6'];
+        bristleColor = strobe[Math.floor(animTick / 3) % strobe.length];
+      } else if (rage >= 65) {
+        bristleColor = animTick % 6 < 3 ? '#e74c3c' : '#e67e22';
+      } else if (rage >= 35) {
+        bristleColor = '#e67e22';
+      } else if (state === 'clogged') {
+        bristleColor = '#8e44ad';
+      } else if (state === 'mischief') {
+        bristleColor = animTick % 6 < 3 ? '#9b59b6' : '#8e44ad';
+      } else if (state === 'hunger') {
+        bristleColor = '#e67e22';
+      }
+
+      ctx.fillStyle = bristleColor;
+      ctx.beginPath();
+      ctx.moveTo(-9, 12);
+      ctx.lineTo(9, 12);
+      ctx.lineTo(22, 42);
+      ctx.lineTo(-22, 42);
+      ctx.closePath();
+      ctx.fill();
+
+      // Bristle Striations
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
+      ctx.fillRect(-14, 16, 2, 24);
+      ctx.fillRect(-6, 14, 2, 27);
+      ctx.fillRect(2, 14, 2, 27);
+      ctx.fillRect(10, 16, 2, 24);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+      ctx.fillRect(-10, 15, 2, 25);
+      ctx.fillRect(-2, 14, 2, 27);
+      ctx.fillRect(6, 15, 2, 25);
+
+      // Staggered Pixel Bristle Tips
+      ctx.fillStyle = bristleColor;
+      for (let bx = -22; bx < 22; bx += 2) {
+        const pattern = (Math.abs(bx) % 4 === 0) ? 4 : (Math.abs(bx) % 2 === 0 ? 3 : 2);
+        ctx.fillRect(bx, 42, 2, pattern);
+      }
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+      for (let bx = -22; bx < 22; bx += 4) {
+        ctx.fillRect(bx, 44, 2, 2);
+      }
+
+      // Expressive Pixel Eyes
+      const eye1X = -7;
+      const eye2X = 7;
+      const eyeY = 22;
+
+      if (state === 'clogged') {
+        ctx.strokeStyle = '#2c3e50';
+        ctx.lineWidth = 2;
+        [eye1X, eye2X].forEach(x => {
+          ctx.beginPath();
+          ctx.moveTo(x - 3, eyeY - 3); ctx.lineTo(x + 3, eyeY + 3);
+          ctx.moveTo(x + 3, eyeY - 3); ctx.lineTo(x - 3, eyeY + 3);
+          ctx.stroke();
+        });
+        ctx.fillStyle = 'rgba(231, 76, 60, 0.7)';
+        ctx.beginPath();
+        ctx.arc(-14, eyeY + 6, 3, 0, Math.PI * 2);
+        ctx.arc(14, eyeY + 6, 3, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (state === 'hunger' || state === 'mischief') {
+        ctx.fillStyle = state === 'mischief' ? '#ff0055' : '#f39c12';
+        ctx.beginPath();
+        ctx.moveTo(eye1X - 5, eyeY - 2); ctx.lineTo(eye1X + 4, eyeY + 1); ctx.lineTo(eye1X - 3, eyeY + 4);
+        ctx.closePath(); ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(eye2X + 5, eyeY - 2); ctx.lineTo(eye2X - 4, eyeY + 1); ctx.lineTo(eye2X + 3, eyeY + 4);
+        ctx.closePath(); ctx.fill();
+        ctx.fillStyle = '#1a1a1a';
+        ctx.fillRect(eye1X - 1, eyeY, 2, 3);
+        ctx.fillRect(eye2X - 1, eyeY, 2, 3);
+
+        if (state === 'hunger') {
+          ctx.fillStyle = '#2c3e50';
+          ctx.beginPath();
+          ctx.arc(0, eyeY + 8, 4.5, 0, Math.PI);
+          ctx.fill();
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(-2, eyeY + 8, 2, 2);
+          ctx.fillRect(1, eyeY + 8, 2, 2);
+        } else {
+          ctx.strokeStyle = '#2c3e50';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(-5, eyeY + 11);
+          ctx.quadraticCurveTo(0, eyeY + 13, 5, eyeY + 7);
+          ctx.stroke();
+        }
+      } else {
+        const blink = animTick % 90 < 4;
+        if (blink) {
+          ctx.strokeStyle = '#2c3e50';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(eye1X - 4, eyeY); ctx.lineTo(eye1X + 4, eyeY);
+          ctx.moveTo(eye2X - 4, eyeY); ctx.lineTo(eye2X + 4, eyeY);
+          ctx.stroke();
+        } else {
+          ctx.fillStyle = rage >= 65 ? '#ff1111' : '#ffffff';
+          ctx.beginPath();
+          ctx.arc(eye1X, eyeY, 5, 0, Math.PI * 2);
+          ctx.arc(eye2X, eyeY, 5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = '#2c3e50';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+
+          let pupilOffsetX = 1;
+          let pupilOffsetY = 0;
+          if (state === 'eating' || state === 'hunting') {
+            pupilOffsetX = Math.sin(animTick * 0.3) * 2;
+            pupilOffsetY = 1;
+          }
+          ctx.fillStyle = rage >= 65 ? '#ffff00' : '#2c3e50';
+          ctx.beginPath();
+          ctx.arc(eye1X + pupilOffsetX, eyeY + pupilOffsetY, 2.2, 0, Math.PI * 2);
+          ctx.arc(eye2X + pupilOffsetX, eyeY + pupilOffsetY, 2.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Mouth
+        ctx.fillStyle = '#2c3e50';
+        ctx.beginPath();
+        if (state === 'eating') {
+          const chomp = (animTick % 8 < 4) ? 5 : 2;
+          ctx.ellipse(0, eyeY + 10, 4, chomp, 0, 0, Math.PI * 2);
+        } else if (rage >= 75) {
+          ctx.moveTo(-5, eyeY + 11); ctx.lineTo(5, eyeY + 9); ctx.lineTo(0, eyeY + 13);
+          ctx.closePath();
+        } else {
+          ctx.arc(0, eyeY + 8, 3.5, 0, Math.PI);
+        }
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    function renderHeroCanvas(timestamp) {
+      if (!heroCtx) return;
+      if (!heroLastTimestamp) heroLastTimestamp = timestamp || performance.now();
+      const current = timestamp || performance.now();
+      const elapsed = current - heroLastTimestamp;
+      heroLastTimestamp = current;
+      const dt = Math.min(Math.max(elapsed / (1000 / 60), 0), 3.0);
+      heroAnimTick += dt;
+
+      if (simState === 'eating' || simState === 'hunting') emitHeroParticles(2, dt);
+      else if (simState === 'crashout') emitHeroParticles(3, dt);
+      else if (simState === 'mischief') emitHeroParticles(1, dt);
+
+      heroCtx.clearRect(0, 0, heroCanvas.width, heroCanvas.height);
+
+      // 1. Animated Muram with reed grid & crumbs
+      drawHeroMurram(heroCtx, heroAnimTick, simCrumbs, simState, simRage);
+
+      // 2. Flying dust particles into muram
+      for (let i = heroParticles.length - 1; i >= 0; i--) {
+        const p = heroParticles[i];
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        heroCtx.fillStyle = p.color;
+        heroCtx.fillRect(p.x, p.y, p.size, p.size);
+        if (p.x > 130 || p.x < 30) heroParticles.splice(i, 1);
+      }
+
+      // 3. Pixel-art Chool broom with eyes & handle
+      drawHeroBroom(heroCtx, heroAnimTick, simCrumbs, simState, simRage);
+
+      requestAnimationFrame(renderHeroCanvas);
+    }
+    requestAnimationFrame(renderHeroCanvas);
 
     const simRageText = document.getElementById('simRageText');
     const simRageFill = document.getElementById('simRageFill');
@@ -2503,6 +3371,11 @@ button { font: inherit; color: inherit; border: none; background: none; }
     const statusBarDiagCount = document.getElementById('statusBarDiagCount');
     const tabDirtyDot = document.getElementById('tabDirtyDot');
     const simLogBox = document.getElementById('simLogBox');
+
+    const crashoutModalBackdrop = document.getElementById('crashoutModalBackdrop');
+    const crashoutModalReason = document.getElementById('crashoutModalReason');
+    const crashoutModalRoast = document.getElementById('crashoutModalRoast');
+    const dismissCrashoutModalBtn = document.getElementById('dismissCrashoutModalBtn');
 
     function logSim(msg) {
       const d = new Date();
@@ -2520,9 +3393,10 @@ button { font: inherit; color: inherit; border: none; background: none; }
       stageStateText.textContent = `STATE: ${st.toUpperCase()}`;
       statusBarIndicator.textContent = `Dusty: ${st.toUpperCase()} (${simCrumbs}/5)`;
 
-      visualChool.classList.remove('sweep-anim', 'tantrum-anim');
-      if (st === 'hunting' || st === 'eating') visualChool.classList.add('sweep-anim');
-      if (st === 'crashout' || st === 'mischief') visualChool.classList.add('tantrum-anim');
+      if (heroCanvasBadge) {
+        heroCanvasBadge.textContent = st.toUpperCase();
+        heroCanvasBadge.className = 'hero-canvas-badge ' + st;
+      }
 
       // Update States Dashboard selection
       document.querySelectorAll('.state-selector-btn').forEach(btn => {
@@ -2540,14 +3414,6 @@ button { font: inherit; color: inherit; border: none; background: none; }
 
     function updateCrumbsVisual() {
       stageMurramStatus.textContent = `MURRAM: ${simCrumbs} / 5`;
-      murramCountText.textContent = `${simCrumbs} / 5 CRUMBS`;
-      for (let i = 0; i < 5; i++) {
-        const item = document.getElementById(`crumb${i}`);
-        if (item) {
-          if (i < simCrumbs) item.classList.add('active');
-          else item.classList.remove('active');
-        }
-      }
     }
 
     function updateRageVisual() {
@@ -2558,7 +3424,9 @@ button { font: inherit; color: inherit; border: none; background: none; }
     // Add Error
     document.getElementById('simAddErrorBtn').addEventListener('click', () => {
       if (simState === 'clogged') {
-        heroSpeechText.textContent = "The dustpan is full! Empty it first with Cmd+Alt+U C before feeding me more crumbs!";
+        heroSpeechText.textContent = currentLanguage === 'english'
+          ? "The dustpan is full! Empty it first with Cmd+Alt+U C before feeding me more crumbs!"
+          : "Murram niranju kaviyunnu! Cmd+Alt+U C adichu kaaliyaakkiya shesham crumbs thaa da!";
         audio.playClog();
         logSim("Dusty rejected error: Murram buffer is clogged.");
         return;
@@ -2574,21 +3442,27 @@ button { font: inherit; color: inherit; border: none; background: none; }
 
       setSimulationState('hunting');
       audio.playError();
-      heroSpeechText.textContent = "Aha! Caught a stray duplicate semicolon. Click 'Feed Dusty' to sweep it!";
+      heroSpeechText.textContent = currentLanguage === 'english'
+        ? "Aha! Caught a stray duplicate semicolon. Click 'Feed Dusty' to sweep it!"
+        : "Aha! Itha kandupidichu oru duplicate semicolon! 'Feed Dusty' click cheythu thaa da!";
       logSim("Diagnostic targeted: Stray duplicate semicolon (line 4).");
     });
 
     // Feed / Sweep
     function executeSweep() {
       if (!simHasError) {
-        heroSpeechText.textContent = "There are no syntax errors here. Give me some real broken code!";
+        heroSpeechText.textContent = currentLanguage === 'english'
+          ? "There are no syntax errors here. Give me some real broken code!"
+          : "Ivide thettukal onnum illa! Oru broken code thaa da choolinu!";
         logSim("Sweep aborted: No active diagnostic target.");
         return;
       }
       if (simCrumbs >= 5) {
         setSimulationState('clogged');
         audio.playClog();
-        heroSpeechText.textContent = "Dusty is choking! Hit the 5-crumb limit. Press Cmd+Alt+U C to unclog!";
+        heroSpeechText.textContent = currentLanguage === 'english'
+          ? "Dusty is choking! Hit the 5-crumb limit. Press Cmd+Alt+U C to unclog!"
+          : "Choolinu swaasam muttunnu! 5 crumbs ketti. Cmd+Alt+U C adichu unclog cheyyo!";
         logSim("Clog threshold reached: Ingestion suspended.");
         return;
       }
@@ -2609,10 +3483,14 @@ button { font: inherit; color: inherit; border: none; background: none; }
       if (simCrumbs >= 5) {
         setSimulationState('clogged');
         audio.playClog();
-        heroSpeechText.textContent = "Dustpan is full! Dusty chokes dramatically. Run dusty.unclog to empty.";
+        heroSpeechText.textContent = currentLanguage === 'english'
+          ? "Dustpan is full! Dusty chokes dramatically. Run dusty.unclog to empty."
+          : "Murram niranju! Chool choking! dusty.unclog run cheythu kaaliyaakku!";
         logSim("Atomic edit done. Dustpan full (5/5). State: CLOGGED.");
       } else {
-        heroSpeechText.textContent = "Syntax token ingested cleanly into dustpan. Where is your next mistake?";
+        heroSpeechText.textContent = currentLanguage === 'english'
+          ? "Syntax token ingested cleanly into dustpan. Where is your next mistake?"
+          : "Syntax token murrathil ketti! Adutha mandatharam evide da mone?";
         logSim(`Atomic edit: line 4 swept. Dustpan now ${simCrumbs}/5.`);
         setTimeout(() => {
           if (simState === 'eating') setSimulationState('idle');
@@ -2624,51 +3502,158 @@ button { font: inherit; color: inherit; border: none; background: none; }
     document.getElementById('codeLensFeedBtn').addEventListener('click', executeSweep);
     document.getElementById('codeLensExplainBtn').addEventListener('click', () => {
       audio.playSuction();
-      heroSpeechText.textContent = "Sarcastic Explain: Do you think typing two semicolons makes your JavaScript run twice as fast? Go sit down and reflect!";
+      heroSpeechText.textContent = currentLanguage === 'english'
+        ? "Sarcastic Explain: Do you think typing two semicolons makes your JavaScript run twice as fast? Go sit down and reflect!"
+        : "Sarcastic Explain: Rendu semicolon adichaal JS double speedil run aakumennano ninte vichaaram? Poyi oru vazha vekkeda mone!";
       logSim("CodeLens action: Dusty: Explain executed.");
     });
 
-    // Hunger
+    // Save File (Cmd+S) Action — Testing Hunger Mode Persistence
+    document.getElementById('simSaveBtn').addEventListener('click', () => {
+      tabDirtyDot.style.display = 'none';
+      if (simState === 'hunger') {
+        audio.playHunger();
+        const taunts = currentLanguage === 'english'
+          ? [
+              "Saving won't save you from starvation! Give me syntax errors, not Cmd+S!",
+              "Cmd+S pressed, but my stomach is still empty! Feed me a broken bracket before line deletion!",
+              "You think saving files scares Dusty? Hunger timer is still ticking down, mone!"
+            ]
+          : [
+              "Save cheythaal pashini maarilla da! Cmd+S alla, enikku syntax error venam!",
+              "File save cheythu samadhaanam aayo? Pashini theerkaan thettu thaa da, countdown ninnilla!",
+              "Save adichaal chool bhayappedum ennu vichaaricho? Hunger countdown thudarnnukonde irikkum!"
+            ];
+        const taunt = taunts[Math.floor(Math.random() * taunts.length)];
+        heroSpeechText.textContent = taunt;
+        logSim(`[CMD+S] File saved. Dusty hunger persists: "${taunt}"`);
+        showToast("Saved, but Dusty is still starving!");
+      } else {
+        audio.playSweep();
+        heroSpeechText.textContent = currentLanguage === 'english'
+          ? "File saved (service.ts). Dusty is still monitoring your cursor."
+          : "File save aayi (service.ts). Chool cursor-ine judge cheythu konde irikkunnu.";
+        logSim("File saved cleanly. Dusty monitoring continues.");
+        showToast("service.ts saved");
+      }
+    });
+
+    // Hunger Simulation
     document.getElementById('simHungerBtn').addEventListener('click', () => {
       setSimulationState('hunger');
       audio.playHunger();
       simRage = Math.min(100, simRage + 20);
       updateRageVisual();
-      heroSpeechText.textContent = "I am starving! 35 seconds without a single syntax error. Feed me a broken bracket or pay the price!";
+      heroSpeechText.textContent = currentLanguage === 'english'
+        ? "I am starving! 35 seconds without a single syntax error. Feed me a broken bracket or pay the price!"
+        : "Enikku pashikkyunnu! 35 second aayi oru syntax thettu polum illaathe ezhuthiyirikkunnu! Oru thettengilum thaa da!";
       logSim("Hunger warning triggered: 35s clean code penalty.");
     });
 
-    // Mischief
+    // Mischief Simulation
     document.getElementById('simMischiefBtn').addEventListener('click', () => {
       setSimulationState('mischief');
       audio.playMischief();
       const row2 = document.getElementById('codeRow2');
       row2.classList.add('deleted-line');
-      heroSpeechText.textContent = "PETTY MISCHIEF COMPLETE! You ignored my hunger warning, so I swallowed working line 2 whole! NOM NOM NOM!";
+      heroSpeechText.textContent = currentLanguage === 'english'
+        ? "PETTY MISCHIEF COMPLETE! You ignored my hunger warning, so I swallowed working line 2 whole! NOM NOM NOM!"
+        : "MISCHIEF COMPLETE! Pashiyude warning ignore cheythathukondu line 2 njan thinnu theerthu! NOM NOM NOM!";
       logSim("Mischief sabotage: Working line 2 deleted out of hunger!");
       setTimeout(() => {
         row2.classList.remove('deleted-line');
       }, 3500);
     });
 
-    // Unclog
-    document.getElementById('simUnclogBtn').addEventListener('click', () => {
-      simCrumbs = 0;
-      updateCrumbsVisual();
+    // Unclog & Spam Clean Dustpan Handling
+    function handleCleanDustpanSpam() {
+      if (simCrumbs === 0) {
+        emptyCleanSpamCount++;
+        if (emptyCleanSpamCount === 1) {
+          audio.playError();
+          const msg = currentLanguage === 'english'
+            ? "The dustpan is ALREADY EMPTY! Why are you cleaning a clean floor?"
+            : "Murram ALREADY KAALIYAANU! Clean aakkiya thara veendum adikkaan ninakku vattaano?";
+          heroSpeechText.textContent = msg;
+          logSim(`Dustpan spam warning (1/3): ${msg}`);
+          showToast("Warning: Dustpan already clean!");
+        } else if (emptyCleanSpamCount === 2) {
+          audio.playHunger();
+          simRage = Math.min(100, simRage + 30);
+          updateRageVisual();
+          const msg = currentLanguage === 'english'
+            ? "Stop spamming Clean Dustpan on empty muram! Dusty is getting seriously irritated!"
+            : "Kaali murrathil veendum thattathe nikku da! Choolinte kshama theeruvaanu!";
+          heroSpeechText.textContent = msg;
+          logSim(`Dustpan spam warning (2/3): ${msg}`);
+          showToast("⚠️ Dusty rage increasing! Stop spamming!");
+        } else {
+          // Trigger Crashout with Explicit Reason
+          emptyCleanSpamCount = 0;
+          simRage = 100;
+          updateRageVisual();
+          setSimulationState('crashout');
+          audio.playCrashout();
+
+          const reasonText = currentLanguage === 'english'
+            ? "Clean Dustpan was clicked 3 times while muram was completely empty. Dusty took this as extreme mockery of his coconut bristle craftsmanship!"
+            : "Kaali murrathil 3 thavana Clean Dustpan click cheythu! Choolinte coconut narukale kaliyaakkiyathil kshama nashtappettu!";
+
+          const roastText = currentLanguage === 'english'
+            ? '"Aaraattu Annan screaming: \'Enthuvaade idhu?! Why are you cleaning an empty muram?! Mind-blowing catastrophic foolishness! Apocalypse Crashout activated!\'"'
+            : '"Aaraattu Annan karachil: \'Enthuvaade idhu?! Kaali murram veendum veendum clean cheyyaan ninakku budhi ille da?! Maraka dhoorantham! Apocalypse Crashout on!\'"';
+
+          heroSpeechText.textContent = roastText;
+          logSim(`🚨 CRASHOUT TRIGGERED: ${reasonText}`);
+
+          // Display Crashout Incident Dialog
+          crashoutModalReason.innerHTML = `<strong>REASON:</strong> ${reasonText}`;
+          crashoutModalRoast.textContent = roastText;
+          crashoutModalBackdrop.classList.add('active');
+        }
+      } else {
+        // Normal unclog
+        emptyCleanSpamCount = 0;
+        simCrumbs = 0;
+        updateCrumbsVisual();
+        setSimulationState('idle');
+        audio.playVictory();
+        heroSpeechText.textContent = currentLanguage === 'english'
+          ? "*BELCH* Dustpan emptied! The chool is ready to hunt syntax crumbs again."
+          : "*BELCH* Murram kaaliyaakki! Chool veendum syntax crumbs hunt cheyyaan tayyaaraanu.";
+        logSim("Dustpan emptied via dusty.unclog. State: IDLE.");
+      }
+    }
+
+    document.getElementById('simSpamDustpanBtn').addEventListener('click', handleCleanDustpanSpam);
+    document.getElementById('simUnclogBtn').addEventListener('click', handleCleanDustpanSpam);
+
+    dismissCrashoutModalBtn.addEventListener('click', () => {
+      crashoutModalBackdrop.classList.remove('active');
+      simRage = 20;
+      updateRageVisual();
       setSimulationState('idle');
-      audio.playVictory();
-      heroSpeechText.textContent = "*BELCH* Dustpan is emptied! The chool is ready to hunt syntax crumbs again.";
-      logSim("Dustpan emptied via dusty.unclog. State: IDLE.");
+      audio.playSweep();
+      showToast("Crashout emergency dismissed. Dusty calmed down slightly.");
     });
 
-    // Crashout
+    // Direct Crashout button
     document.getElementById('simCrashoutBtn').addEventListener('click', () => {
       simRage = 100;
       updateRageVisual();
       setSimulationState('crashout');
       audio.playCrashout();
-      heroSpeechText.textContent = "RANGANNAN CRASHOUT! No compromises now! Codebase apocalypse purge in progress!";
-      logSim("EMERGENCY: Rangannan crashout engaged. Theme changed to Chaos Apocalypse.");
+      const reasonText = currentLanguage === 'english'
+        ? "Developer triggered manual crashout command or rage meter surged to 100%."
+        : "Developer manual crashout command trigger cheythu, allenkil rage meter 100% aayi.";
+      const roastText = currentLanguage === 'english'
+        ? "APOCALYPSE CRASHOUT! 100% Kalippu! Codebase purge in progress!"
+        : "APOCALYPSE CRASHOUT! Ini oru thalavedhanayum illa! Repo apocalypse purge nadakkunnu!";
+      heroSpeechText.textContent = roastText;
+      logSim("EMERGENCY: Apocalypse crashout engaged. Theme changed to Chaos Apocalypse.");
+      crashoutModalReason.innerHTML = `<strong>REASON:</strong> ${reasonText}`;
+      crashoutModalRoast.textContent = `"${roastText}"`;
+      crashoutModalBackdrop.classList.add('active');
     });
 
     // States Switcher
@@ -2720,10 +3705,12 @@ button { font: inherit; color: inherit; border: none; background: none; }
       }
     });
 
-    // Initialize
+    // Initialize State & Displays
     updateCrumbsVisual();
     updateRageVisual();
     setSimulationState('idle');
+    displayCurrentRoast();
+    updateScrollProgress();
   </script>
 </body>
 </html>

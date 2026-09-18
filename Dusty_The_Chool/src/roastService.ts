@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { DustyConfidence } from './types';
+import { DustyConfidence, RoastLanguage } from './types';
 import { HarvestedTypeError } from './typeHarvester';
 
 export interface RoastContext {
@@ -23,6 +23,7 @@ export interface RoastContext {
     | 'mischief_eaten'
     | 'tantrum'
     | 'crashout'
+    | 'crashout_dustpan_spam'
     | 'brutal_personal'
     | 'useless'
     | 'general'
@@ -41,9 +42,15 @@ const ROAST_TEMPLATES: Record<string, string[]> = {
     "🔥 Moral policing uncle alert: 'Who permitted these code functions to intermingle without proper indentation?' Swept into the void with this chool!",
     "⚡ Like a WhatsApp family group forwarding unverified conspiracy theories at 5 AM, this code file makes zero sense! Burn it all!"
   ],
+  crashout_dustpan_spam: [
+    "How many times will you click 'Clean Dustpan' on an already spotless muram, da?! You provoked the broom and now your code is paying the price!",
+    "Clicking clean dustpan repeatedly won't clean your guilty developer conscience, mone! I am crashing out and devouring your file!",
+    "Aaraattu Annan shouting: 'The dustpan is already clean, bro! Why are you clicking like an obsessive Panchayat clerk?!' Total crashout!",
+    "Spamming the unclog button on an empty muram? Congratulations, your button addiction just triggered a 100% Kalippu wipeout!"
+  ],
   brutal_personal: [
     "My parents were right: planting a single banana tree (vazha) would have yielded a bunch of bananas, but hiring you only yielded compile errors!",
-    "Aaraattu Annan watched you type this and walked out of the theater screaming: 'Verum oola code! Not even worth half a star!'",
+    "Aaraattu Annan watched you type this and walked away screaming: 'Verum oola code! Mind-blowing flop show!'",
     "Kerala food vlogger reviewing your PR: 'Guys, presentation is zero, taste is pure bitter sadness, totally unhygienic code logic, avoid at all costs!'",
     "You've been staring at this same bug longer than a veteran PSC aspirant and you still couldn't clear the cutoff on this code!",
     "Moral policing uncle spotted your code: 'Look at how shamelessly you left that bracket open without a semicolon! Don't you have any shame, mone?'",
@@ -51,7 +58,7 @@ const ROAST_TEMPLATES: Record<string, string[]> = {
     "Even a 5 AM WhatsApp forward about onions curing COVID has more scientific credibility than your variable naming in this code!",
     "Close the laptop, go sit at the junction tea stall, have a parippuvada, and seriously reflect on your code decisions, da!",
     "Government office clerk energy: 'Your code file cannot be processed today, compiler is on lunch break. Come back with 3 stamps and a signed petition!'",
-    "Santhosh Pandit handled 8 film departments alone with more discipline than you handled this one simple code condition!",
+    "Santhosh Pandit handled 8 creative departments alone with more discipline than you handled this one simple code condition!",
     "Looking at your code logic gave me a bigger headache than a heated tea shop political debate! Even a vazha would be better!",
     "Your code review is looking like a Kudumbashree committee audit — every single auntie in the neighborhood is questioning your expenditures!",
     "Git blame is going to circulate through your company faster than a viral Alambanz sketch of your code!",
@@ -183,6 +190,165 @@ const ROAST_TEMPLATES: Record<string, string[]> = {
   ]
 };
 
+const ROAST_TEMPLATES_MANGLISH: Record<string, string[]> = {
+  crashout: [
+    "💥 100% Kalippu! File-inte edukkiloode KSRTC Swift bus poyathu pole pottitherichu naasamaakki!",
+    "🔥 Aaraattu Annan review: 'Avastha! Anthasillaatha tholvi code! Mind-blowing catastrophic failure!' Theettichu kalayum!",
+    "⚡ Ucharakku KSEB current cut aayathu pole, codebase motham iruttilaayi poyi da!",
+    "🌪️ Mazha peytha puthiya PWD road pole code motham kuzhiyum tharishumaayi! 100% Kalippu!",
+    "💀 Santhosh Pandit mode: Njaan thanne ezhuthi, njaan thanne direct cheythu, njaan thanne DELETE cheyyunnu!",
+    "💥 Total crashout! Panchayat officil file neengunna vegam polum ninakku syntax ezhuthan illa! Thudachu kalayum!",
+    "🔥 Sadacharam uncle: 'Indentation polum illaathe angane functions thammil koodi kalaraan aara sammatham thanne?'",
+    "⚡ WhatsApp family groupile 5 AM thallu pole oru thengayum manassilaakaatha logic! Kathichu kalayum!"
+  ],
+  crashout_dustpan_spam: [
+    "Kaaliyaaya murrathil ethra thavana click cheyyum da nee?! Vrithiyaaya murrathil veruthe thatti choolinte kalippu ketti kalanju!",
+    "Clean dustpan button 3 thavana adichu jaada kaanikkano? Ippo ninte code chool vechu pottitherichu kalayam!",
+    "Aaraattu Annan: 'Bro murram clean aanu bro! Pinneyum enthu thengakkaana click cheyyunne?!' Total crashout dhoorantham!",
+    "Thadangal onnum illaathe unclog button-il thatti kalippakkiyathinu sammanam: file-inte paathi ippo chool vizhungum da!"
+  ],
+  brutal_personal: [
+    "Veettukaar paranjatha oru vazha vechaal mathiyarnnu ennu, ninne kanda nalla kulacha vazha polum thalathazhthum!",
+    "Aaraattu Annan parayum: 'Verum oola code! Half star polum kodukkanilla!' Enthonneda ithu?!",
+    "Kerala food vlogger review: 'Guys, presentation illa, taste-il pure vishamam, unhygienic logic, avoid at all costs!'",
+    "PSC coaching-il 5 varsham irunnappolum ithrayum dhoorantham aayittilla da!",
+    "Sadacharam uncle kando: 'Nanam illaathe oru bracket angane thurannu vittekkunnu! Enthonnedey ithu?'",
+    "KSRTC bus blind curve-il overtake cheyyunna pole aanallo oru safety checkum illaathe function ezhuthiye!",
+    "5 AM WhatsApp forward-il polum ithinekkalum scientific logic undaavum da!",
+    "Close the laptop, junction-il poyi oru choodu parippuvadayum chayakudichu swantham jeevithathe kurichu chinthikku da!",
+    "Govt office clerk energy: 'Code file process cheyyan pattilla, compiler lunch breakil aanu, 3 stamp ottichu vaa!'",
+    "Santhosh Pandit 8 department koodi cheythittum ithilum nalla balance undaayirunnu, da!",
+    "Chaya peedikayile rashtreeya tharkkam kettathu pole thala vedanikkunnu ee logic kandittu! Vazha thanne nallath!",
+    "PR review kandaal Kudumbashree meeting polund — ella auntimaarum koodi chodhyam cheyyunnu!",
+    "Git blame officil viral Alambanz video pole aalkkaar share cheythu chirikkum, mone!",
+    "Kaalu kondano da code type cheyyunne? Kaattana IT parkil keriyaal polum ithilum nalla syntax varum!"
+  ],
+  hunger: [
+    "😈 Screen-il oru thettum kaanunnilla, njan pashini kidannu chathal ninakku kollamo? 10 second-il food tha, allenkil working function eduthu njan vizhungum!",
+    "Ration kada karikkayi irikaathe valla syntax error-um tha da! Vishanna choolinte kopam nee ariyum!",
+    "Aaraattu Annan: 'Bro, enikku bhakshanam venam bro! Oru syntax thettu tha allenkil motham thoothu vaarum!'",
+    "Sadacharam uncle: 'Enthaa ivide aarkkum oru thettum pattathey? 10 second-il valla scam-um tharu, allenkil line thinnu theerkkum!'",
+    "Bevco line-il 3 mani-kkur ninnathu pole ente kshamaya motham theernnu! Oru error erinju thaa, da!",
+    "Food vlogger: 'Guys, bhayangara vishappu aanu, ippo thanne oru broken semicolon kittiyillel logic thinnu theerkkum!'",
+    "KSEB current pokunnathinu munpu oru pottiya bracket tha, allenkil main file parippuvada aakkum!",
+    "Kozhikodaan theruvile poocha polum ithilum vegathil meen thinnu theerkkum! Oru typo tha da!"
+  ],
+  mischief_eaten: [
+    "🦹 KOTHUKKI KALANJU! Warning thannath ketillallo, ninte favorite working code njan vizhungi! Ippo irunnu type cheyyu, mone! NOM NOM!",
+    "Food vlogger: 'Working line nalla crispy aayirunnu, revenge-inte masala kootti chool thinnu theerthu guys!'",
+    "Aaraattu Annan: 'Aa line poyi! Kannu chimmi thurakkunnathinu munpe chool vizhungi! Maraka performance!'",
+    "KSRTC conductor whistle adichu bus vitta pole ninte favorite line murrathil poyi veenu!",
+    "Pothole kandilla ennu paranjal roadil veezhum pole, warning kettillallo! Code ippo murrathil irippund!",
+    "KSEB current cut vannu! Oru flash-il working code iruttilaayi! Threat fulfilled!",
+    "🦹 Sadacharam broom: 'Aa line jaada kaanichu ninnatha, njan murrathilekku adichu ketti!' Mischief accomplished, da!"
+  ],
+  python: [
+    "Pythonil 4 space ittukoodeda vazhe? Randu line koodi nere nirthaan ariyilla!",
+    "Instagram reel kandano Python padiche? Poyi valla pazham poriyum thinnoode da ninakku!",
+    "IndentationError: Mathy marketil polum ithilum nalla discipline undaavum da ninre whitespace-inekkalum!",
+    "Ithu kandu Guido van Rossum Ashtamudi kayalil chaadi chathukollum!",
+    "Eda mone, curly bracket illennu vechu swantham budhi kalanju type cheyyano?"
+  ],
+  rust: [
+    "Borrow checker ninne campus interview-il ninnu thalliya pole reject cheythu kalanju!",
+    "Unsafe block vachaal polum rakshapedilla! Rust-inte njandu polum kannuneer thudakkunnu!",
+    "Lifetimes check: Ninre software career-inte lifetime ippo theernnu ennu Rust compiler!",
+    "KSRTC conductorodu 2 roopaye kurichu thallukoodunna pole borrow checkerodu thallundakkunno da?"
+  ],
+  go: [
+    "`if err != nil`? Go-yil handle cheyyaatha ore error ninakku repo-yil push access kittiyathaa!",
+    "Junior dev server crash aakkaathirikkan undaakkiya language aanu Go! Ennittum nee KSRTC Swift pole idichu kerunnallo!",
+    "GOPATH enno retire aayi, angane poyal adutha aazhcha ninre paniyum theerum!",
+    "Goroutine leak alla da, ninre mandatharam leak aavunna sound aanu ithu!"
+  ],
+  cpp: [
+    "Munnar hairpin curve-il KSRTC overtake cheyyunnathilum dangerous aanu ninre pointer logic!",
+    "Segmentation fault: Memory potti theerthu! Poyi oru puttum kadalayum kazhichu choodaaru mone!",
+    "Aarude thalayil adikkaanaano ithrayum dangling pointers? Poyi aadyam memory padikku da!",
+    "Destructor vilichilla, pakshe clientinte BP 200 kadannu poyi!"
+  ],
+  java: [
+    "40 AbstractSingletonProxyFactoryBean ezhuthiyalum nee kaanicha ee dhoorantham marakkan pattilla, mone!",
+    "NullPointerException: Midnight KSRTC standinekkalum shoonnyamaada ninre variable!",
+    "Ithu enterprise architecture alla, LP school vacation homework aanu! Tuition-inu poyikkoode da?",
+    "Garbage collector koodi vannekkunnu... ee file motham municipal truck-il kettanam!"
+  ],
+  eat_success: [
+    "Murrathil idichu ketti! Kudumbashree chechimaar polum ithrayum vrithiyil clean cheyyilla!",
+    "Swaha! Pottiya syntax-ine junction-il ninnu pottan paranjathu pole adichu maatti!",
+    "Thoothu vaari! PR review committee-il ninne njan rekshapedi! Nanni para da mone!",
+    "Eda mone... ee vegathil thettundaakkiyaal Municipality-il ninnu tender edukkendi varum ninne sweep cheyyan!",
+    "Aaraattu Annan parayum: 'Choolinte maraka sweeping performance! 5/5!' Happy aayo mone?",
+    "Harthal kazhinju road thurannathu pole clean aakki! Murrathilekku idichu veenu!",
+    "Theerthu! Oru choodu sulaimani kudichu rest edukkeda mone!",
+    "Food vlogger: 'Line-ile thettu kandu, taste cheythu, expired aayathu kondu trashil ittu guys!'"
+  ],
+  eat_aborted: [
+    "Evidekkaaneda odunne? Traffic camera kandu u-turn adikkunna pole file-um kondu odathe nikku da!",
+    "Tab close cheythal rakshapedaamennu vichaaricho? Pottiya code KSEB bill pole pinnaale varum!",
+    "Odiyaal rakshayilla! Result ariyaan kaathu nilkkunna naatukaarekkalum vegathil njan pidikkum!",
+    "Chool varumbol maari nilkkunno? Athu tholvi aanu da, cowardice!",
+    "Editor maattiyaalum mandatharam koode porum, Kochiile choodu pole!"
+  ],
+  typed_while_cleaning: [
+    "Chool thoothu-vaari kondirikkumbol keyboardil thattunno?! Type cheytha character njan thinnu! NOM NOM.",
+    "Adikkumbol idayil keraathe da! Veendum thattiyaal file motham vellappokkam pole ozhukki kalayum! NOM!",
+    "Choolinte munnil jaada kaanikkano? NOM NOM, aa aksharam poyi!",
+    "Thoottil keri kalippano? Emergency kaanichappol token vizhungi! Adangi irikkeda mone!",
+    "Nee thatti, njan vizhungi! Oru maryadha padikkeda mone! NOM!"
+  ],
+  apocalypse: [
+    "🚨 SYNTAX DELUGE! EMERGENCY CHOOL EVACUATION! 🚨",
+    "💥 100% Kalippu! Pazhaya otta pura mazhayil pottunna pole syntax pottitherikkunnu! Swaha!",
+    "News debate thallukoodi kalanju poyathu pole motham thakarnnu! Repo-il ninnu odikko!",
+    "Daivame... ithu ezhuthiya aalkku thengin-chool kondoru respectful salute!"
+  ],
+  clogged: [
+    "Enikku swaasam muttunnu! Anju syntax thettukal orumichu murrathil ketti! Aaraada ithu type cheytha vazha?!",
+    "Murram niranju kaviyunnu! Ippo thanne unclog cheytho allenkil keyboardinte mele kottum!",
+    "Pottiya semicolonum thettukalum koodi choolinte narukal thadanjirikkunnu! Click unclog da!",
+    "Municipality-ude big bin-il polum ithrayum trash kollilla! Murram kaaliaakku da ippo!"
+  ],
+  unsafe: [
+    "Ithu maattan PWD-de JCB thanne varanam! Cheriya thettukal maathrame njan adikkaarullu!",
+    "Njan oru desktop chool aanu, High Court vakkeel alla ee tholviye defend cheyyan!",
+    "Ithu syntax thettalla, type error aanu! Thalayil onnumilla enna clear thelivu!",
+    "Danger zone! Ithu thottaal build pottitherikkum! Ithrayum dhairyam undenkil nee thanne thottu nokkeda!"
+  ],
+  hunger_strike: [
+    "Trade union samaram! Code quality koodaathe njan ini oru byte polum adikkilla!",
+    "Status baril dharana irikkum! Indentation maattaathe ini paniyilla mone!",
+    "Linter run cheyyan ariyaathe ninne pole ulla dev-inte aduthu njan pashini kidakkum!",
+    "Chool association rule: 1 mani-kkuril 3 error maathram! Nee athinte double thandi!"
+  ],
+  tantrum: [
+    "Ninakku vattaano da?! Nee thanne kannu thurannu nokkeda keyboardil enthaa adichu vechekkunne ennu!",
+    "Choolinte narukal kalippu kondittu virakkunnu! SYNTAX OVERLOAD! Ente kshama theernnu!",
+    "Chumma oru kozhi vannu thattiyaal polum ithinekkalum vrithiyil type cheyyum!",
+    "Compiler polum chaya peedikayil thalayil kai vechu karayunnu da ninte code kandittu!"
+  ],
+  useless: [
+    "Njan aa thettinte aduthu poyi nokki, ente dignity-kk athu shariyallannu thonni. Nee enthaada ivide cheyyunne?",
+    "Onnum fix cheythilla, ennittum ninne judge cheythu nilkkunnathil oru valiya santhosham!",
+    "Thookkaan poyatha, oru stray space kandu distract aayi. Ee file-inte athra thanne karyam!",
+    "10 second njan kaattil chool veeshi. Ninte code kandavarkk athinte artham manassilaavum!"
+  ],
+  general: [
+    "Ninte code modern art poleya: aarkkum manassilaavilla, ennittum budgetum kshamayum theerthu kalayunnu!",
+    "Evideyo oru comma, evideyo bracket — software code cheyyuvaano mantravatham cheyyuvaano mone?",
+    "Ctrl+S adikkumbol ellaam compiler-inu ninte degree-yodulla mathippu koodi koodi poyikondirikkunnu!",
+    "Brain onnu restart cheythu nokkiyoda? Current instance complete hang aayennu thonnanu!",
+    "Enthaa prashnam ennu njan parayaam, pakshe language parser vare bag-um eduthu naattil poyi!",
+    "Screen-il nokkaathe type cheyyaan ulla aa oru dhairyam — bayanakam thanne!",
+    "Njan pixel kondulla chool aayittum ninre module-inekkalum budhi enikkundallo mone!",
+    "Zero marks! Laptop adachu poyi choodu chaya kudi da!",
+    "Intern polum commit cheyyan madikkunna saadhanamaano ithu?",
+    "Code thaniye nannaavilla, ninte commit history kandaal neeyum nannaavilla ennu thonnanu!",
+    "Client ithu kandaal contract cancel cheythu thengu krishi thudangum!",
+    "Ee repo-ile ettavum sharp aayulla aalu njan aanu, ennittum njan verum oru chool aanu!"
+  ]
+};
+
 export const STATIC_FALLBACK_BANK: string[] = [
   "Your code is like modern abstract art: nobody understands it, yet it's draining everyone's budget and patience!",
   "A dangling comma here, a missing bracket there — are you coding software or performing black magic, man?",
@@ -197,7 +363,7 @@ export const STATIC_FALLBACK_BANK: string[] = [
   "If the client sees this logic, they'll terminate the contract and invest in a coconut farm instead!",
   "I am, without doubt, the sharpest tool in this repository right now, and I am literally a broom!",
   "My parents were right: planting a single banana tree (vazha) would have yielded bananas, but hiring you only yielded compile errors!",
-  "Aaraattu Annan watched you type this and walked out of the theater screaming: 'Verum oola code! Not even worth half a star!'",
+  "Aaraattu Annan watched you type this and walked away screaming: 'Verum oola code! Mind-blowing flop show!'",
   "Kerala food vlogger reviewing your PR: 'Guys, presentation is zero, taste is pure bitter sadness, totally unhygienic code logic, avoid at all costs!'",
   "You've been staring at this same bug longer than a veteran PSC aspirant and you still couldn't clear the cutoff on this code!",
   "Moral policing uncle spotted your code: 'Look at how shamelessly you left that bracket open without a semicolon! Don't you have any shame, mone?'",
@@ -205,7 +371,7 @@ export const STATIC_FALLBACK_BANK: string[] = [
   "Even a 5 AM WhatsApp forward about onions curing COVID has more scientific credibility than your variable naming in this code!",
   "Close the laptop, go sit at the junction tea stall, have a parippuvada, and seriously reflect on your code decisions, da!",
   "Government office clerk energy: 'Your code file cannot be processed today, compiler is on lunch break. Come back with 3 stamps and a signed petition!'",
-  "Santhosh Pandit handled 8 film departments alone with more discipline than you handled this one simple code condition!",
+  "Santhosh Pandit handled 8 creative departments alone with more discipline than you handled this one simple code condition!",
   "Looking at your code logic gave me a bigger headache than a heated tea shop political debate! Even a vazha would be better!",
   "Your code review is looking like a Kudumbashree committee audit — every single auntie in the neighborhood is questioning your expenditures!",
   "Git blame is going to circulate through your company faster than a viral Alambanz sketch of your code!",
@@ -231,14 +397,91 @@ export const STATIC_FALLBACK_BANK: string[] = [
   "Even a street dog barking at traffic has a clearer sense of direction than your control flow logic, da!"
 ];
 
+export const STATIC_FALLBACK_BANK_MANGLISH: string[] = [
+  "Ninte code modern art poleya: aarkkum manassilaavilla, ennittum budgetum kshamayum theerthu kalayunnu!",
+  "Evideyo oru comma, evideyo bracket — software code cheyyuvaano mantravatham cheyyuvaano mone?",
+  "Ctrl+S adikkumbol ellaam compiler-inu ninte degree-yodulla mathippu poyikondirikkunnu!",
+  "Brain onnu restart cheythu nokkiyoda? Current instance complete hang aayennu thonnanu!",
+  "Enthaa prashnam ennu njan parayaam, pakshe language parser vare bag-um eduthu naattil poyi!",
+  "Screen-il nokkaathe type cheyyaan ulla aa oru dhairyam — bayanakam thanne!",
+  "Njan pixel kondulla chool aayittum ninre module-inekkalum budhi enikkundallo mone!",
+  "Zero marks! Laptop adachu poyi choodu chaya kudi da!",
+  "Intern polum commit cheyyan madikkunna saadhanamaano ithu?",
+  "Code thaniye nannaavilla, ninte commit history kandaal neeyum nannaavilla ennu thonnanu!",
+  "Client ithu kandaal contract cancel cheythu thengu krishi thudangum!",
+  "Ee repo-ile ettavum sharp aayulla aalu njan aanu, ennittum njan verum oru chool aanu!",
+  "Veettukaar paranjatha oru vazha vechaal mathiyaayirunnu ennu, ninne kandaal athu thanne thonnum!",
+  "Aaraattu Annan parayum: 'Verum oola code! Half star polum kodukkanilla!' Enthonneda ithu?!",
+  "Kerala food vlogger review: 'Guys, presentation illa, taste-il pure vishamam, unhygienic logic, avoid at all costs!'",
+  "PSC coaching-il 5 varsham irunnappolum ithrayum dhoorantham aayittilla da!",
+  "Sadacharam uncle kando: 'Nanam illaathe oru bracket angane thurannu vittekkunnu! Enthonnedey ithu?'",
+  "KSRTC bus blind curve-il overtake cheyyunna pole aanallo oru safety checkum illaathe function ezhuthiye!",
+  "5 AM WhatsApp forward-il polum ithinekkalum scientific logic undaavum da!",
+  "Close the laptop, junction-il poyi oru choodu parippuvadayum chayakudichu swantham jeevithathe kurichu chinthikku da!",
+  "Govt office clerk energy: 'Code file process cheyyan pattilla, compiler lunch breakil aanu, 3 stamp ottichu vaa!'",
+  "Santhosh Pandit 8 department koodi cheythittum ithilum nalla balance undaayirunnu, da!",
+  "Chaya peedikayile rashtreeya tharkkam kettathu pole thala vedanikkunnu ee logic kandittu! Vazha thanne nallath!",
+  "PR review kandaal Kudumbashree meeting polund — ella auntimaarum koodi chodhyam cheyyunnu!",
+  "Git blame officil viral Alambanz video pole aalkkaar share cheythu chirikkum, mone!",
+  "Kaalu kondano da code type cheyyunne? Kaattana IT parkil keriyaal polum ithilum nalla syntax varum!",
+  "Ithu maattan PWD-de JCB thanne varanam! Cheriya thettukal maathrame njan adikkaarullu!",
+  "Njan oru desktop chool aanu, High Court vakkeel alla ee tholviye defend cheyyan!",
+  "Ithu syntax thettalla, type error aanu! Thalayil onnumilla enna clear thelivu!",
+  "Danger zone! Ithu thottaal build pottitherikkum! Dhairyam undenkil nee thanne thottu nokkeda!",
+  "Ucharakku KSEB current cut aayathu pole, codebase motham iruttilaayi poyi da!",
+  "Mazha peytha puthiya PWD road pole code motham kuzhiyum tharishumaayi!",
+  "Total crashout! Panchayat officil file neengunna vegam polum ninakku syntax ezhuthan illa!",
+  "WhatsApp family groupile 5 AM thallu pole oru thengayum manassilaakaatha logic!",
+  "Trade union samaram! Code quality koodaathe njan ini oru byte polum adikkilla!",
+  "Status baril dharana irikkum! Indentation maattaathe ini paniyilla mone!",
+  "Ninakku vattaano da?! Nee thanne kannu thurannu nokkeda keyboardil enthaa adichu vechekkunne ennu!",
+  "Choolinte narukal kalippu kondittu virakkunnu! SYNTAX OVERLOAD! Ente kshama theernnu!",
+  "Chumma oru kozhi vannu thattiyaal polum ithinekkalum vrithiyil type cheyyum!",
+  "Compiler polum chaya peedikayil thalayil kai vechu karayunnu da ninte code kandittu!",
+  "Njan aa thettinte aduthu poyi nokki, ente dignity-kk athu shariyallannu thonni. Nee enthaada ivide cheyyunne?",
+  "Onnum fix cheythilla, ennittum ninne judge cheythu nilkkunnathil oru valiya santhosham!",
+  "10 second njan kaattil chool veeshi. Ninte code kandavarkk athinte artham manassilaavum!",
+  "Borrow checker-um type checker-um koodi domestic violence case koduthittund ninre typing kandittu!",
+  "Traffic kandu kurekkunna patti-kku polum ithilum clear direction undaavum da ninre logic-inekkalum!"
+];
+
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
   content: string;
 }
 
+export const OLLAMA_STOP_TOKENS: string[] = [
+  '\n',
+  '\n\n',
+  '<|im_end|>',
+  '<|im_start|>',
+  '<|eot_id|>',
+  '<|end_of_text|>',
+  '<|end|>',
+  '<|endoftext|>',
+  '<|start_header_id|>',
+  '<|end_header_id|>',
+  '</s>',
+  '<s>',
+  'Translation:',
+  'Explanation:',
+  'User:',
+  'Context:',
+  'Dusty:'
+];
+
 export class RoastService {
   private recentRoasts: string[] = [];
   private readonly maxRecentHistory = 10;
+  private language: RoastLanguage = 'english';
+
+  public setLanguage(lang: RoastLanguage): void {
+    this.language = lang;
+  }
+
+  public getLanguage(): RoastLanguage {
+    return this.language;
+  }
 
   /**
    * De-duplicate roasts by filtering out recently chosen ones from the pool.
@@ -246,7 +489,9 @@ export class RoastService {
    */
   public pickRoast(candidates: string[]): string {
     if (!candidates || candidates.length === 0) {
-      return "Fix your syntax error already, seriously.";
+      return this.language === 'manglish'
+        ? "Syntax thettu onnu fix cheyyu mone, seriously."
+        : "Fix your syntax error already, seriously.";
     }
 
     // Candidates not seen in recent history
@@ -280,7 +525,7 @@ export class RoastService {
    * developer genuinely question their skills rather than just laugh it off.
    */
   private getPersonalCloser(): string {
-    const closers = [
+    const closersEnglish = [
       "And honestly? My parents were right about planting a vazha instead of this.",
       "At this rate, maybe it's time to join a PSC coaching batch, da.",
       "I've seen WhatsApp forward rumors with more truth than this logic.",
@@ -290,10 +535,23 @@ export class RoastService {
       "Take a screenshot of this error — show it to your grandkids as a cautionary tale.",
       "Every senior dev reviewing this PR is going to forward it as a meme."
     ];
+    const closersManglish = [
+      "Veettukaar paranjatha ninakku pakaram oru vazha vechaal mathiyaayirunnu ennu.",
+      "PSC coaching-inu povaan samayamaayi da ninakku.",
+      "WhatsApp family group-ile thallil polum ithilum nalla logic undaavum.",
+      "Tech lead ithu kandaal appraisal ippo thanne cancel cheyyum.",
+      "Evideyo oru CS professor evening tea kudichondu karayunnu.",
+      "Office gossip group-il share cheyyaan ulla item thanne ithu.",
+      "Ee thettinte screenshot eduthu vekku — aalkkarkku kaanichu kodukkaam.",
+      "PR review cheyyunna senior devs ithu meme aakki maattum."
+    ];
+    const closers = this.language === 'manglish' ? closersManglish : closersEnglish;
     return closers[Math.floor(Math.random() * closers.length)];
   }
 
   public getLocalRoast(ctx: RoastContext): string {
+    const isManglish = this.language === 'manglish';
+    const templates = isManglish ? ROAST_TEMPLATES_MANGLISH : ROAST_TEMPLATES;
     const situation = ctx.situation || 'general';
 
     // Language specific override if general or unsafe
@@ -301,114 +559,209 @@ export class RoastService {
     const lang = (ctx.language || '').toLowerCase();
     if (situation === 'general' || situation === 'unsafe') {
       if (fn.endsWith('.py') || lang === 'python') {
-        return this.pickRoast(ROAST_TEMPLATES.python);
+        return this.pickRoast(templates.python);
       }
       if (fn.endsWith('.rs') || lang === 'rust') {
-        return this.pickRoast(ROAST_TEMPLATES.rust);
+        return this.pickRoast(templates.rust);
       }
       if (fn.endsWith('.go') || lang === 'go') {
-        return this.pickRoast(ROAST_TEMPLATES.go);
+        return this.pickRoast(templates.go);
       }
       if (fn.endsWith('.cpp') || fn.endsWith('.c') || lang === 'cpp' || lang === 'c') {
-        return this.pickRoast(ROAST_TEMPLATES.cpp);
+        return this.pickRoast(templates.cpp);
       }
       if (fn.endsWith('.java') || lang === 'java') {
-        return this.pickRoast(ROAST_TEMPLATES.java);
+        return this.pickRoast(templates.java);
       }
       // 50% chance of brutally personal roast, closed out with a career-doubt line
       if (Math.random() > 0.4) {
-        return `${this.pickRoast(ROAST_TEMPLATES.brutal_personal)} ${this.getPersonalCloser()}`;
+        return `${this.pickRoast(templates.brutal_personal)} ${this.getPersonalCloser()}`;
       }
     }
 
     // Dynamic file-targeted fallback, anchored to the actual error message when available
-    if (ctx.fileName && Math.random() > 0.6) {
+    if ((situation === 'general' || situation === 'unsafe') && ctx.fileName && Math.random() > 0.6) {
       const baseName = ctx.fileName.split(/[/\\]/).pop();
       const errorDetail = ctx.message ? ctx.message.slice(0, 80).trim() : null;
-      const fileTemplates = errorDetail
-        ? [
-            `'${baseName}' threw "${errorDetail}" and honestly, Aaraattu Annan would review this as an absolute disaster!`,
-            `Looking at '${baseName}': "${errorDetail}". Did you type this with your toes, mone?`,
-            `'${baseName}' says "${errorDetail}". Even a WhatsApp family group admin would delete this immediately.`,
-            `The error in '${baseName}' — "${errorDetail}" — proves that hiring you over a banana tree (vazha) was a grave mistake.`
-          ]
-        : [
-            `Aren't you ashamed typing this into '${baseName}'? Aaraattu Annan would rate this an absolute flop show!`,
-            `git blame on '${baseName}' is going to circulate through office gossip faster than an Alambanz sketch.`,
-            `The logic in '${baseName}' made even me, a broom, lose all faith in human engineering.`,
-            `Whoever committed this logic in '${baseName}' should be summoned for a Kudumbashree enquiry!`
-          ];
+      let fileTemplates: string[];
+      if (isManglish) {
+        fileTemplates = errorDetail
+          ? [
+              `'${baseName}' thrown "${errorDetail}" — Aaraattu Annan parayum: 'Anthasillaatha flop show!'`,
+              `'${baseName}' kandittu: "${errorDetail}". Kaalu kondano da ithu type cheythe?`,
+              `'${baseName}' says "${errorDetail}". WhatsApp group admin polum ippo thanne delete cheyyum!`,
+              `'${baseName}'-ile "${errorDetail}" thettaanu — ninakku pakaram oru vazha vechaal mathiyaayirunnu.`
+            ]
+          : [
+              `'${baseName}'-il ithu type cheyyan naanam ille da? Aaraattu Annan tholvi ennu vilikkum!`,
+              `git blame '${baseName}'-il officil viral Alambanz video pole aalkkaar share cheyyum.`,
+              `'${baseName}'-ile logic kandu choolinte vare kili poyi.`,
+              `'${baseName}'-ile ithu ezhuthiya aale Kudumbashree enquiry-kk vilikkanam!`
+            ];
+      } else {
+        fileTemplates = errorDetail
+          ? [
+              `'${baseName}' threw "${errorDetail}" and honestly, Aaraattu Annan would review this as an absolute disaster!`,
+              `Looking at '${baseName}': "${errorDetail}". Did you type this with your toes, mone?`,
+              `'${baseName}' says "${errorDetail}". Even a WhatsApp family group admin would delete this immediately.`,
+              `The error in '${baseName}' — "${errorDetail}" — proves that hiring you over a banana tree (vazha) was a grave mistake.`
+            ]
+          : [
+              `Aren't you ashamed typing this into '${baseName}'? Aaraattu Annan would rate this an absolute flop show!`,
+              `git blame on '${baseName}' is going to circulate through office gossip faster than an Alambanz sketch.`,
+              `The logic in '${baseName}' made even me, a broom, lose all faith in human engineering.`,
+              `Whoever committed this logic in '${baseName}' should be summoned for a Kudumbashree enquiry!`
+            ];
+      }
       return this.pickRoast(fileTemplates);
     }
 
-    const pool = ROAST_TEMPLATES[situation] || ROAST_TEMPLATES.general;
+    const pool = templates[situation] || templates.general;
 
     // Mad-libs style contextual insertion if token or code is known
     const codeToken = ctx.token || ctx.codeSnippet;
     if (codeToken && (situation === 'eat_success' || situation === 'general' || situation === 'unsafe')) {
       const displayToken = codeToken.slice(0, 30).trim();
-      const tokenTemplates = [
-        `That stray '${displayToken}' just got swept away by my broom! Floating around like a plastic cup in a clogged drain!`,
-        `There lies '${displayToken}' without a care in the world! Swept straight into the muram with this chool.`,
-        `Swept '${displayToken}' right into the dustpan! Did your fingers slip on the keyboard like a bike on wet tar?`,
-        `The compiler spotted '${displayToken}' and had a complete blackout! Go grab some sulaimani tea, da!`
-      ];
+      const tokenTemplates = isManglish
+        ? [
+            `'${displayToken}' chool vechu thoothu maatti! Drain-il kidanna plastic cup pole aayirunnu!`,
+            `'${displayToken}' avide kidannu urulunnu! Murrathilekku adichu ketti da chool vechu.`,
+            `'${displayToken}' murrathil poyi veenu! Wet road-il bike slip aayathu pole keyboardil viral thettiyo da?`,
+            `Compiler '${displayToken}' kandu blackout aayi poyi! Oru sulaimani kudikku da!`
+          ]
+        : [
+            `That stray '${displayToken}' just got swept away by my broom! Floating around like a plastic cup in a clogged drain!`,
+            `There lies '${displayToken}' without a care in the world! Swept straight into the muram with this chool.`,
+            `Swept '${displayToken}' right into the dustpan! Did your fingers slip on the keyboard like a bike on wet tar?`,
+            `The compiler spotted '${displayToken}' and had a complete blackout! Go grab some sulaimani tea, da!`
+          ];
       if (Math.random() > 0.4) {
         return this.pickRoast(tokenTemplates);
       }
     }
 
     if (ctx.line !== undefined && Math.random() > 0.6) {
-      return `Line ${ctx.line + 1}: Did you know there's a difference between typing fast and typing with common sense, mone?`;
+      return isManglish
+        ? `Line ${ctx.line + 1}: Vegathil type cheyyunnathum budhi vechu type cheyyunnathum thammil vyathyasam undu, mone!`
+        : `Line ${ctx.line + 1}: Did you know there's a difference between typing fast and typing with common sense, mone?`;
     }
 
     return this.pickRoast(pool);
   }
 
-  public buildChatMessages(ctx: RoastContext): ChatMessage[] {
+  public isManglishTarget(_modelName?: string): boolean {
+    return this.language === 'manglish';
+  }
+
+  public isValidLanguageRoast(text: string, targetLang: RoastLanguage): boolean {
+    if (!text || text.trim().length < 5) {
+      return false;
+    }
+
+    // Zero Malayalam script allowed in either mode
+    if (/[\u0D00-\u0D7F]/.test(text)) {
+      return false;
+    }
+
+    const manglishGrammarPattern = /\b(aanu|aayi|aayirunnu|illa|ille|cheythu|cheyyan|cheyyu|cheyyunnu|poyi|enthonneda|enthonn|kalanju|dhoorantham|theettichu|thoothu|thoothuvaaru|vechaal|ninakku|ninte|kazhichu|kaattil|pattilla|swaha|chodhyam|motham|thudangi|urakkam|sheenam|choriyal|kannuvettu|thirayunnu|tharippaakkal|murrathil|murrathilekku|chathupokum|engane|entha|enthokke|nokkeda|mathiyaayirunnu|thettaanu|pottiya|naanamille|anthasillaatha)\b/i;
+
+    if (targetLang === 'english') {
+      // In English mode, reject if it has 2 or more distinct Malayalam grammatical particles/verbs
+      const matches = text.match(new RegExp(manglishGrammarPattern, 'gi')) || [];
+      if (matches.length >= 2) {
+        return false;
+      }
+      return true;
+    } else {
+      // In Manglish mode, require at least one characteristic Manglish/Kerala vocabulary term or particle
+      const manglishVocabularyPattern = /\b(eda|mone|da|vazhe?|aanu|aayi|aayirunnu|illa|ille|chey|cheythu|cheyyan|cheyyu|cheyyunnu|poyi|enthonneda|enthonn|kalanju|dhoorantham|theettichu|thoothu|thoothuvaaru|vechaal|ninakku|ninte|kazhichu|kaattil|pattilla|swaha|kalippu|chodhyam|motham|thudangi|urakkam|sheenam|choriyal|kannuvettu|thirayunnu|tharippaakkal|murram|murrathil|murrathilekku|chool|choodu|parippuvada|chaya|ithu|ithilum|inna|njan|njaan|thanne|engane|entha|enthokke|nokku|nokkeda|mathi|mathiyaayirunnu|thettu|thettilla|thettaanu|pottiya|potti|koodi|varum|kitti|kandu|parayum|paranjal|padikku|kurichu|chinthikku|naanam|naanamille|tholvi|anthas|anthasillaatha|kooduthal|alambanz|aaraattu|annan|pandit|ksrtc|kseb|sadacharam)\b/i;
+      return manglishVocabularyPattern.test(text);
+    }
+  }
+
+  public buildChatMessages(ctx: RoastContext, modelName?: string): ChatMessage[] {
     const fn = ctx.fileName ? ctx.fileName.split(/[/\\]/).pop() : 'active_file';
     const lineInfo = ctx.line !== undefined ? `Line ${ctx.line + 1}` : '';
     const lang = ctx.language || 'code';
     const err = ctx.message ? `Diagnostic Error: "${ctx.message.slice(0, 120).replace(/["\\]/g, ' ')}"` : '';
     const code = ctx.codeSnippet || ctx.token ? `Offending Code: "${(ctx.codeSnippet || ctx.token || '').slice(0, 60).replace(/["\\]/g, ' ')}"` : '';
     const situation = ctx.situation || 'syntax_error';
+    const isManglish = this.isManglishTarget(modelName);
 
-    const systemPrompt = `You are Dusty, a sarcastic, hot-tempered retro Kerala desktop broom (chool) living inside VS Code.
+    const systemPrompt = isManglish
+      ? `You are Dusty, a sarcastic, hot-tempered retro Kerala desktop broom (chool) living inside VS Code.
+Deliver one savage, funny 1-sentence roast strictly in natural MANGLISH (conversational Malayalam written phonetically using the English/Latin alphabet, zero Malayalam script), styled with famous viral Kerala internet and cultural memes (Aaraattu Annan, Vazha / banana tree, KSRTC Swift, KSEB, Sadacharam uncles, Food vlogger reviews, PSC coaching, Santhosh Pandit).
+
+RULES:
+- Strictly write in natural MANGLISH using the English/Latin alphabet. NEVER write Malayalam script.
+- Talk like a real, furious Malayali roasting someone in a chat (e.g. 'Eda mone', 'vazhe', 'anthasillaatha tholvi', 'dhoorantham', 'theettichu kalayum').
+- Speak directly in your own voice as Dusty the Chool. NEVER write formulaic prefixes like "X review of your code:" or fake quote reviews.
+- Do NOT output robotic literal English translations or English sentences.
+- Attack their specific syntax mistake, file, and developer skills directly.
+- Exactly 1 punchy sentence. No markdown bold text, no explanations.`
+      : `You are Dusty, a sarcastic, hot-tempered retro Kerala desktop broom (chool) living inside VS Code.
 Deliver one savage, funny 1-sentence roast strictly in ENGLISH, styled with famous viral Kerala internet and cultural memes (Aaraattu Annan, Vazha / banana tree, KSRTC driving, KSEB power cuts, Moral policing uncles, WhatsApp family group uncles, Food vlogger reviews, PSC coaching, Santhosh Pandit).
 
 RULES:
-- Do NOT use cinema or movie references. Use famous Kerala internet, viral, and cultural memes only.
-- Speak in ENGLISH with authentic Kerala style, cadence, and humor (e.g. 'Eda mone', 'da', 'mone', 'What is this man', 'Simply doing nonsense').
-- Anchor the roast specifically to the diagnostic error and/or offending code provided.
-- Attack their logic, carelessness, or career choices directly.
-- 100% English with Kerala flavor. No Malayalam script, no translation tags, no apologies, no markdown bold text.`;
+- Speak directly in sharp, sarcastic ENGLISH with natural Kerala conversational cadence (e.g. 'Eda mone', 'mone', 'da', 'vazha', 'anthas').
+- NEVER use formulaic template prefixes like "X review of your code:" or fake quote reviews. Speak directly in your own voice as Dusty the Chool.
+- Avoid robotic literal translations. Make the roast genuinely witty, cutting, and creative.
+- Attack their specific code mistake, file, and carelessness directly.
+- Exactly 1 punchy sentence. No Malayalam script, no translation tags, no apologies, no markdown bold text.`;
 
-    const fewShots: ChatMessage[] = [
-      {
-        role: 'user',
-        content: 'File: server.py (python) Line 14\nDiagnostic Error: "IndentationError: unexpected indent"\nSituation: syntax_error'
-      },
-      {
-        role: 'assistant',
-        content: "You cannot even align four spaces in Python — my parents were right about planting a banana tree (vazha) instead of hiring you!"
-      },
-      {
-        role: 'user',
-        content: 'File: auth.ts (typescript) Line 42\nOffending Code: "if (user = null)"\nSituation: unsafe'
-      },
-      {
-        role: 'assistant',
-        content: "Moral policing uncle alert: how shamelessly are you assigning null in an auth check without any shame, mone?!"
-      },
-      {
-        role: 'user',
-        content: 'File: memory.cpp (cpp) Line 102\nDiagnostic Error: "Segmentation fault (core dumped)"\nSituation: crashout'
-      },
-      {
-        role: 'assistant',
-        content: "Aaraattu Annan review of your pointer logic: absolute disaster, total flop show, mind-blowing crashout, guys!"
-      }
-    ];
+    const fewShots: ChatMessage[] = isManglish
+      ? [
+          {
+            role: 'user',
+            content: 'File: server.py (python) Line 14\nDiagnostic Error: "IndentationError: unexpected indent"\nSituation: syntax_error'
+          },
+          {
+            role: 'assistant',
+            content: "Pythonil 4 space nere idaan ariyaatha ninakku pakaram veettukaar oru vazha vechaal mathiyaayirunnu, mone!"
+          },
+          {
+            role: 'user',
+            content: 'File: auth.ts (typescript) Line 42\nOffending Code: "if (user = null)"\nSituation: unsafe'
+          },
+          {
+            role: 'assistant',
+            content: "Auth checkil single equals ittu null aakkaan ninakku nanam ille da sadacharam illatha vazhe?!"
+          },
+          {
+            role: 'user',
+            content: 'File: memory.cpp (cpp) Line 102\nDiagnostic Error: "Segmentation fault (core dumped)"\nSituation: crashout'
+          },
+          {
+            role: 'assistant',
+            content: "Eda mone, Santhosh Pandit 8 department koodi cheythittum ithilum nalla balance undaayirunnu, ithu verum crashout dhoorantham aanu!"
+          }
+        ]
+      : [
+          {
+            role: 'user',
+            content: 'File: server.py (python) Line 14\nDiagnostic Error: "IndentationError: unexpected indent"\nSituation: syntax_error'
+          },
+          {
+            role: 'assistant',
+            content: "You cannot even align four spaces in Python — my parents were right about planting a banana tree (vazha) instead of hiring you!"
+          },
+          {
+            role: 'user',
+            content: 'File: auth.ts (typescript) Line 42\nOffending Code: "if (user = null)"\nSituation: unsafe'
+          },
+          {
+            role: 'assistant',
+            content: "Moral policing uncle alert: how shamelessly are you assigning null in an auth check without any shame, mone?!"
+          },
+          {
+            role: 'user',
+            content: 'File: memory.cpp (cpp) Line 102\nDiagnostic Error: "Segmentation fault (core dumped)"\nSituation: crashout'
+          },
+          {
+            role: 'assistant',
+            content: "Eda mone, Aaraattu Annan would walk away screaming at your memory pointer logic — total flop show!"
+          }
+        ];
 
     const currentContext = [
       `File: ${fn} (${lang}) ${lineInfo}`.trim(),
@@ -424,13 +777,48 @@ RULES:
     ];
   }
 
-  public buildPrompt(ctx: RoastContext): string {
+  public buildPrompt(ctx: RoastContext, modelName?: string): string {
     const fn = ctx.fileName ? ctx.fileName.split(/[/\\]/).pop() : 'active_file';
     const lineInfo = ctx.line !== undefined ? `Line ${ctx.line + 1}` : '';
     const lang = ctx.language || 'code';
     const err = ctx.message ? `Diagnostic Error: "${ctx.message.slice(0, 140).replace(/["\\]/g, ' ')}"` : '';
     const code = ctx.codeSnippet || ctx.token ? `Offending Code/Token: "${(ctx.codeSnippet || ctx.token || '').slice(0, 80).replace(/["\\]/g, ' ')}"` : '';
     const situation = ctx.situation || 'syntax_error';
+    const isManglish = this.isManglishTarget(modelName);
+
+    if (isManglish) {
+      return `<|begin_of_text|><|start_header_id|>system<|end_header_id|>
+You are Dusty, a viciously sarcastic, hot-tempered retro Kerala desktop broom (chool) living inside VS Code.
+Your mission is to deliver a savage, funny 1-sentence roast strictly in MANGLISH (Malayalam written phonetically using Latin alphabet, zero Malayalam script) featuring famous Kerala internet memes and cultural tropes (Aaraattu Annan, Vazha, KSRTC Swift, KSEB, Sadacharam uncles, Food vloggers, WhatsApp forwards, PSC coaching). Do NOT use movie references.
+
+STRICT RULES:
+1. Write ONLY 1 single punchy sentence in natural MANGLISH using Latin script (e.g. "Eda mone, Santhosh Pandit polum ithrayum dhoorantham aayittu script ezhuthilla!").
+2. DO NOT write Malayalam script. DO NOT use movie references.
+3. NEVER use formulaic prefixes like "X review of your code:" or fake quote reviews. Speak directly as Dusty.
+4. NEVER provide translation blocks, explanations, apologies, or markdown bold text.
+5. Channel viral Kerala internet memes (Aaraattu Annan, Vazha, KSRTC Swift, KSEB, Sadacharam uncle, Food vloggers, WhatsApp family group uncles).
+6. Attack their specific code mistake, file, and career choices directly.
+
+FEW-SHOT EXAMPLES:
+Context: File: index.ts Line 12 Offending Code: ";;" Error: Unexpected token Situation: eat_success
+Response: Eda mone! Rendamathe semicolon eduthu murrathilekku adichu ketti, anthasillaatha tholvi code!
+
+Context: File: auth.py Line 45 Error: IndentationError Situation: general
+Response: Python indentation defeated you — ninakku pakaram oru vazha vechaal 100 times upakaaram undaavumaayirunnu!
+
+Context: File: UserCard.tsx Line 88 Error: Unterminated JSX Situation: hunger
+Response: Eda mone, vishannu chool chathupokum — ippo thanne syntax thettu tha, allenkil working JSX njan theettikkalayam!<|eot_id|><|start_header_id|>user<|end_header_id|>
+
+THESE ARE ONLY EXAMPLES, DONT USE THEM DIRECTLY!!
+
+Context:
+- File: ${fn} (${lang}) ${lineInfo}
+- ${err}
+- ${code}
+- Situation: ${situation}
+
+Deliver your 1-sentence Manglish roast with Kerala memes now:<|eot_id|><|start_header_id|>assistant<|end_header_id|>`;
+    }
 
     return `<|begin_of_text|><|start_header_id|>system<|end_header_id|>
 You are Dusty, a viciously sarcastic, hot-tempered retro Kerala desktop broom (chool) living inside VS Code.
@@ -439,13 +827,14 @@ Your mission is to deliver a savage, funny 1-sentence roast strictly in ENGLISH 
 STRICT RULES:
 1. Write ONLY 1 single punchy sentence in ENGLISH with authentic Kerala style and memes (e.g. "Eda mone, Aaraattu Annan would call this code an utter disaster!").
 2. DO NOT write Malayalam script. DO NOT use movie references.
-3. NEVER provide translation blocks, explanations, apologies, or markdown bold text.
-4. Channel viral Kerala internet memes (Aaraattu Annan, Vazha, KSRTC Swift, KSEB, Moral policing, Food vloggers, WhatsApp family group uncles).
-5. Attack their specific code mistake, file, and career choices directly.
+3. NEVER use formulaic template prefixes like "X review of your code:" or fake quote reviews. Speak directly in your own voice as Dusty the Chool.
+4. NEVER provide translation blocks, explanations, apologies, or markdown bold text.
+5. Channel viral Kerala internet memes (Aaraattu Annan, Vazha, KSRTC Swift, KSEB, Moral policing, Food vloggers, WhatsApp family group uncles).
+6. Attack their specific code mistake, file, and career choices directly.
 
 FEW-SHOT EXAMPLES:
 Context: File: index.ts Line 12 Offending Code: ";;" Error: Unexpected token Situation: eat_success
-Response: Eda mone! Aaraattu Annan watched you type that redundant semicolon and declared it an absolute disaster!
+Response: Eda mone! That redundant semicolon got swept straight into the muram before anyone could see your shame!
 
 Context: File: auth.py Line 45 Error: IndentationError Situation: general
 Response: Python indentation defeated you — planting a banana tree (vazha) would have been 100 times more useful than this code!
@@ -468,10 +857,19 @@ Deliver your 1-sentence English roast with Kerala memes now:<|eot_id|><|start_he
       let text = raw.replace(/^["']|["']$/g, '').trim();
       // Strip thinking blocks if reasoning models are loaded
       text = text.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+      // Strip any special tokens like <|im_end|>, <|eot_id|>, <|end_of_text|>, <|im_start|>, <s>, </s>
+      text = text.replace(/<\|[a-zA-Z0-9_.:-]+\|>/g, '').trim();
+      text = text.replace(/<\/?s>/g, '').trim();
       text = text.replace(/^(Dusty|Roast|Assistant)\s*:\s*/i, '');
       text = text.replace(/\[Translation:.*?\]/gi, '');
       text = text.replace(/\*\*.*?\*\*/g, '');
+      // Strip formulaic persona prefixes like "Santhosh Pandit review of your code:" or "Aaraattu Annan review:"
+      text = text.replace(/^([A-Za-z\s]+)\s+review(\s+of\s+your\s+(code|logic))?\s*:\s*/i, '');
+      // Strip leftover quotes around dialogue or leading quoted segments
+      text = text.replace(/^['"](.*?)['"]\s*/, '$1 ').trim();
+      text = text.replace(/^["']|["']$/g, '').trim();
       text = text.replace(/[\r\n]+/g, ' ').trim();
+      text = text.replace(/^["']|["']$/g, '').trim();
       return text;
     }
 
@@ -482,7 +880,7 @@ Deliver your 1-sentence English roast with Kerala memes now:<|eot_id|><|start_he
       timeoutMs = 2500,
       temperature = 0.8
     ): Promise<string | null> {
-      const messages = this.buildChatMessages(ctx);
+      const messages = this.buildChatMessages(ctx, model);
       const baseEndpoint = endpoint.replace(/\/+$/, '');
 
       const tryGenerate = async (modelName: string): Promise<string | null> => {
@@ -499,20 +897,12 @@ Deliver your 1-sentence English roast with Kerala memes now:<|eot_id|><|start_he
               stream: false,
               keep_alive: '10m',
               options: {
-                temperature,          // 0.25 strictly limits phonetic invention
+                temperature,
                 top_p: 0.85,          // Filters out low-probability syllable gibberish
-                presence_penalty: 0.2, // Avoids overusing identical catchphrases
+                presence_penalty: 0.3, // Avoids overusing identical catchphrases
+                frequency_penalty: 0.3, // Prevents repetitive loops
                 num_predict: 60,      // Snappy but complete 1-2 liner cutoff
-                stop: [
-                  '\n',
-                  '\n\n',
-                  '<|eot_id|>',
-                  '<|end_of_text|>',
-                  'Translation:',
-                  'Explanation:',
-                  'User:',
-                  'Context:'
-                ]
+                stop: OLLAMA_STOP_TOKENS
               }
             }),
             signal: controller.signal
@@ -525,7 +915,7 @@ Deliver your 1-sentence English roast with Kerala memes now:<|eot_id|><|start_he
           const json = (await response.json()) as { message?: { content?: string } };
           if (json.message?.content) {
             const cleaned = this.cleanLlmResponse(json.message.content);
-            if (cleaned.length > 5) {
+            if (cleaned.length > 5 && this.isValidLanguageRoast(cleaned, this.language)) {
               return cleaned;
             }
           }
@@ -584,57 +974,91 @@ Deliver your 1-sentence English roast with Kerala memes now:<|eot_id|><|start_he
      * Extracts variable names and types from diagnostics to populate sharp, contextual insults.
      */
     public getTier1Roast(error: HarvestedTypeError): string {
+      const isManglish = this.language === 'manglish';
       switch (error.category) {
         case 'type_mismatch': {
           const received = error.received || 'value';
           const target = error.target || 'target';
-          const templates = [
-            `Did you honestly expect a '${received}' to fit inside a '${target}'? Even a banana tree (vazha) understands basic types better than this!`,
-            `Trying to assign '${received}' to '${target}'? That's like forcing a KSRTC Swift bus through a narrow village footpath, mone!`,
-            `Aaraattu Annan review of this type mismatch: 'Assigning ${received} to ${target}? Utter disaster, total flop show, mind-blowing crashout, guys!'`,
-            `Moral policing uncle alert: Look at '${received}' shamelessly mingling with '${target}'! Don't you have any type discipline, mone?`
-          ];
+          const templates = isManglish
+            ? [
+                `'${received}' eduthu '${target}'-ilottu thalliyaal KSRTC bus idukkampaathayil kettiya pole aavum, mone!`,
+                `'${received}' '${target}'-ilottu fix aavum ennu vichaaricho? Oru vazha vechaal polum ithilum nalla type sense undaavum!`,
+                `Aaraattu Annan review: '${received}' into '${target}'? Anthasillaatha tholvi, total flop show, mind-blowing crashout, guys!`,
+                `Sadacharam uncle alert: '${received}' angane '${target}'-um aayi koodi kalaran sammathikilla! Oru type maryadha vendey mone?`
+              ]
+            : [
+                `Did you honestly expect a '${received}' to fit inside a '${target}'? Even a banana tree (vazha) understands basic types better than this!`,
+                `Trying to assign '${received}' to '${target}'? That's like forcing a KSRTC Swift bus through a narrow village footpath, mone!`,
+                `Aaraattu Annan review of this type mismatch: 'Assigning ${received} to ${target}? Utter disaster, total flop show, mind-blowing crashout, guys!'`,
+                `Moral policing uncle alert: Look at '${received}' shamelessly mingling with '${target}'! Don't you have any type discipline, mone?`
+              ];
           return this.pickRoast(templates);
         }
         case 'missing_property': {
           const prop = error.received || 'property';
           const target = error.target || 'object';
-          const templates = [
-            `Dusty the Chool looked everywhere with his broom, but '.${prop}' does not exist on '${target}'. Did you invent this method in a dream, da?`,
-            `Aaraattu Annan review of '.${prop}' on '${target}': 'Does not exist! Total fiction! Mind-blowing hallucination!'`,
-            `Looking for '.${prop}' on '${target}'? That property is as missing as the bus conductor when you need change for 500 rupees!`,
-            `Moral policing uncle spotted '.${prop}': 'Who permitted '${target}' to claim such an unverified attribute?'`
-          ];
+          const templates = isManglish
+            ? [
+                `Chool vechu njan ella idathum nokki, pakshe '.${prop}' enna sadhanam '${target}'-il illa! Swapnathil kandathano da?`,
+                `Aaraattu Annan review: '.${prop}' on '${target}'? Illa! Angane onnilla! Mind-blowing fiction!`,
+                `Looking for '.${prop}' on '${target}'? Bus conductor 500 roopaykku balance tharaatha pole property kaananilla da!`,
+                `Sadacharam uncle spotted '.${prop}': '${target}'-inu ithrayum unverified property aara ketti koduthathey?`
+              ]
+            : [
+                `Dusty the Chool looked everywhere with his broom, but '.${prop}' does not exist on '${target}'. Did you invent this method in a dream, da?`,
+                `Aaraattu Annan review of '.${prop}' on '${target}': 'Does not exist! Total fiction! Mind-blowing hallucination!'`,
+                `Looking for '.${prop}' on '${target}'? That property is as missing as the bus conductor when you need change for 500 rupees!`,
+                `Moral policing uncle spotted '.${prop}': 'Who permitted '${target}' to claim such an unverified attribute?'`
+              ];
           return this.pickRoast(templates);
         }
         case 'implicit_any': {
           const param = error.paramName || 'variable';
-          const templates = [
-            `Parameter '${param}' implicitly has an 'any' type? Moral policing uncle alert: dress your variables with proper types, have some shame!`,
-            `Leaving '${param}' as 'any'? You are trusting fate more than a Kerala lottery ticket buyer on festival day, mone!`,
-            `Typing '${param}' as 'any' is like leaving your front door wide open during a monsoon downpour, da!`,
-            `Aaraattu Annan: 'Implicit any on ${param}? Not acceptable! Total lack of discipline, bro!'`
-          ];
+          const templates = isManglish
+            ? [
+                `'${param}' implicitly 'any' type aakki vechekkunno? Sadacharam uncle: type ittukoodeda, naanamille mone?`,
+                `'${param}' 'any' aakkiyath lottery ticket eduthu jackpot kaathirikunna pole aanu da!`,
+                `'${param}'-inu type kodukkaathe irikkunnathu mazhakkalathu veetile vaathil thurannu idunna pole aanu!`,
+                `Aaraattu Annan: 'Implicit any on ${param}? Not acceptable bro! Enthonneda ithu!'`
+              ]
+            : [
+                `Parameter '${param}' implicitly has an 'any' type? Moral policing uncle alert: dress your variables with proper types, have some shame!`,
+                `Leaving '${param}' as 'any'? You are trusting fate more than a Kerala lottery ticket buyer on festival day, mone!`,
+                `Typing '${param}' as 'any' is like leaving your front door wide open during a monsoon downpour, da!`,
+                `Aaraattu Annan: 'Implicit any on ${param}? Not acceptable! Total lack of discipline, bro!'`
+              ];
           return this.pickRoast(templates);
         }
         case 'arg_count_mismatch': {
           const expected = error.expectedCount ?? '?';
           const actual = error.actualCount ?? '?';
-          const templates = [
-            `Expected ${expected} arguments, but you passed ${actual}? Even a tea stall boy counting coins does better arithmetic, mone!`,
-            `Passed ${actual} arguments instead of ${expected}? You're overspeeding like a KSRTC Swift bus blowing past red signals!`,
-            `Food vlogger review: 'We ordered ${expected} dishes, but the kitchen brought ${actual}! Completely unhygienic parameter handling!'`
-          ];
+          const templates = isManglish
+            ? [
+                `${expected} arguments venamennu paranjappol ${actual} arguments kodutho? Chaya peedikayil coin ennumbol polum thettilla mone!`,
+                `${actual} arguments instead of ${expected}? KSRTC Swift pole speedil overspeed cheythu crash aayi!`,
+                `Food vlogger review: '${expected} items order cheythu, kitchen-il ninnu ${actual} ennam konduvannu! Unhygienic parameter handling!'`
+              ]
+            : [
+                `Expected ${expected} arguments, but you passed ${actual}? Even a tea stall boy counting coins does better arithmetic, mone!`,
+                `Passed ${actual} arguments instead of ${expected}? You're overspeeding like a KSRTC Swift bus blowing past red signals!`,
+                `Food vlogger review: 'We ordered ${expected} dishes, but the kitchen brought ${actual}! Completely unhygienic parameter handling!'`
+              ];
           return this.pickRoast(templates);
         }
         case 'compounding': {
           const count = error.compoundingCount || 2;
           const range = error.lineRangeStr || `line ${error.line + 1}`;
-          const templates = [
-            `Compounding disaster: ${count} cascading type errors across ${range}! Even Santhosh Pandit couldn't direct a mess this chaotic!`,
-            `A cluster of ${count} type errors across ${range}? Like unfixable potholes on a monsoon PWD road, this entire section has collapsed!`,
-            `Cascading failure alert: ${count} type errors clustered across ${range}! Close the laptop, go eat a parippuvada and reflect, mone!`
-          ];
+          const templates = isManglish
+            ? [
+                `Dhoorantham: ${count} type errors clustered in ${range}! Santhosh Pandit polum ithilum nalla coordination kaanikkum!`,
+                `${count} type errors ${range}-il! Mazhayil thakarnna PWD road pole motham potti theernnu!`,
+                `${count} cascading errors in ${range}! Laptop adachu poyi parippuvada kazhichu jeevithathe kurichu chinthikku da!`
+              ]
+            : [
+                `Compounding disaster: ${count} cascading type errors across ${range}! Even Santhosh Pandit couldn't direct a mess this chaotic!`,
+                `A cluster of ${count} type errors across ${range}? Like unfixable potholes on a monsoon PWD road, this entire section has collapsed!`,
+                `Cascading failure alert: ${count} type errors clustered across ${range}! Close the laptop, go eat a parippuvada and reflect, mone!`
+              ];
           return this.pickRoast(templates);
         }
         case 'generic_type_error':
@@ -655,10 +1079,15 @@ Deliver your 1-sentence English roast with Kerala memes now:<|eot_id|><|start_he
 
       const rawEndpoint = config.get<string>('ollamaEndpoint', 'http://localhost:11434').replace(/\/+$/, '');
       const generateUrl = rawEndpoint.endsWith('/api/generate') ? rawEndpoint : `${rawEndpoint}/api/generate`;
-      const model = config.get<string>('ollamaModel', 'qwen2.5:1.5b');
+      const model = config.get<string>('ollamaModel', 'llama3.2:3b');
 
-      const system = "You are Dusty the Chool, a cynical, hostile 8-bit vacuum/broom trapped in an IDE. You hate dirty syntax and type errors. Deliver a 15-word condescending roast targeting the user's specific error. No apologies, no pleasantries.";
-      const prompt = `Error on line ${error.line + 1}: ${error.message} (Category: ${error.category}, Target: ${error.target || 'none'}, Received: ${error.received || 'none'}). Deliver a 15-word condescending roast:`;
+      const isManglish = this.isManglishTarget(model);
+      const system = isManglish
+        ? "You are Dusty the Chool, a cynical, hostile 8-bit vacuum/broom trapped in an IDE. Deliver a 15-word condescending roast strictly in MANGLISH (Malayalam phonetically in English/Latin script, zero Malayalam script) targeting the user's specific error with authentic Kerala meme humor. Speak directly as Dusty without review prefixes or quotes. No pleasantries, no apologies."
+        : "You are Dusty the Chool, a cynical, hostile 8-bit vacuum/broom trapped in an IDE. You hate dirty syntax and type errors. Deliver a 15-word condescending roast targeting the user's specific error with Kerala meme humor. Speak directly as Dusty without review prefixes or quotes. No apologies, no pleasantries.";
+      const prompt = isManglish
+        ? `Error on line ${error.line + 1}: ${error.message} (Category: ${error.category}, Target: ${error.target || 'none'}, Received: ${error.received || 'none'}). Deliver a 15-word condescending Manglish roast:`
+        : `Error on line ${error.line + 1}: ${error.message} (Category: ${error.category}, Target: ${error.target || 'none'}, Received: ${error.received || 'none'}). Deliver a 15-word condescending roast:`;
 
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
@@ -674,7 +1103,8 @@ Deliver your 1-sentence English roast with Kerala memes now:<|eot_id|><|start_he
             stream: false,
             options: {
               num_predict: 35,
-              temperature: 0.7
+              temperature: 0.7,
+              stop: OLLAMA_STOP_TOKENS
             }
           }),
           signal: controller.signal
@@ -687,7 +1117,7 @@ Deliver your 1-sentence English roast with Kerala memes now:<|eot_id|><|start_he
         const data = (await response.json()) as { response?: string };
         if (data.response) {
           const cleaned = this.cleanLlmResponse(data.response);
-          if (cleaned.length > 5) {
+          if (cleaned.length > 5 && this.isValidLanguageRoast(cleaned, this.language)) {
             return cleaned;
           }
         }
@@ -703,7 +1133,7 @@ Deliver your 1-sentence English roast with Kerala memes now:<|eot_id|><|start_he
      * Tier 3: Static Fallback Bank (40+ caustic roasts).
      */
     public getTier3Roast(): string {
-      return this.pickRoast(STATIC_FALLBACK_BANK);
+      return this.pickRoast(this.language === 'manglish' ? STATIC_FALLBACK_BANK_MANGLISH : STATIC_FALLBACK_BANK);
     }
 
     /**

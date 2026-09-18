@@ -7,7 +7,7 @@ import { DustyStatusBar } from './statusBar';
 import { DustyCodeLensProvider } from './dustyCodeLensProvider';
 import { ChaosEngine } from './chaosEngine';
 import { registerCommands } from './commands';
-import { ChaosIntensity, WebviewToHostMessage } from './types';
+import { ChaosIntensity, WebviewToHostMessage, RoastLanguage } from './types';
 
 let stateStore: StateStore | undefined;
 let decorationManager: DecorationManager | undefined;
@@ -19,10 +19,16 @@ export function activate(context: vscode.ExtensionContext): void {
   const initialEnabled = config.get<boolean>('enabled', true);
   const initialIntensity = config.get<ChaosIntensity>('chaosIntensity', 'normal');
   const initialMuted = config.get<boolean>('muteAudio', false);
+  const initialLanguage = config.get<RoastLanguage>('language', 'english');
 
-  stateStore = new StateStore(initialMuted, initialIntensity, initialEnabled);
+  stateStore = new StateStore(initialMuted, initialIntensity, initialEnabled, initialLanguage);
   decorationManager = new DecorationManager();
   const roastService = new RoastService();
+  roastService.setLanguage(initialLanguage);
+
+  stateStore.onDidChangeState(snapshot => {
+    roastService.setLanguage(snapshot.language);
+  });
 
   // Create view provider with message handler
   const viewProvider = new VacuumViewProvider(
@@ -79,6 +85,14 @@ function handleWebviewMessage(msg: WebviewToHostMessage): void {
       break;
     case 'mute':
       void vscode.commands.executeCommand('dusty.muteAudio');
+      break;
+    case 'toggleLanguage':
+      void vscode.commands.executeCommand('dusty.toggleLanguage');
+      break;
+    case 'setLanguage':
+      if (msg.language && stateStore) {
+        stateStore.setLanguage(msg.language);
+      }
       break;
     case 'openProblems':
       void vscode.commands.executeCommand('workbench.actions.view.problems');

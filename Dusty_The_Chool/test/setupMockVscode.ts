@@ -5,6 +5,11 @@ import * as mock from './mockVscode';
 const Module = require('module');
 const originalLoad = Module._load;
 
+process.env.NODE_ENV = 'test';
+
+export const onDidSaveTextDocumentEmitter = new mock.EventEmitter<unknown>();
+export const onDidChangeActiveTextEditorEmitter = new mock.EventEmitter<unknown>();
+
 const mockVscode = {
   Uri: mock.Uri,
   Position: mock.Position,
@@ -23,6 +28,7 @@ const mockVscode = {
   },
   window: {
     activeTextEditor: undefined as unknown,
+    onDidChangeActiveTextEditor: onDidChangeActiveTextEditorEmitter.event,
     createStatusBarItem: (_id?: string, _align?: number, _prio?: number) => {
       return {
         text: '',
@@ -58,14 +64,21 @@ const mockVscode = {
   },
   workspace: {
     getConfiguration: (_section?: string) => ({
-      get: <T>(_key: string, defaultValue: T): T => defaultValue
+      get: <T>(_key: string, defaultValue: T): T => defaultValue,
+      update: async (_key: string, _value: unknown, _target?: unknown) => {}
     }),
     onDidChangeConfiguration: new mock.EventEmitter<unknown>().event,
-    onDidChangeTextDocument: new mock.EventEmitter<unknown>().event
+    onDidChangeTextDocument: new mock.EventEmitter<unknown>().event,
+    onDidSaveTextDocument: onDidSaveTextDocumentEmitter.event
   },
   StatusBarAlignment: {
     Left: 1,
     Right: 2
+  },
+  ConfigurationTarget: {
+    Global: 1,
+    Workspace: 2,
+    WorkspaceFolder: 3
   }
 };
 

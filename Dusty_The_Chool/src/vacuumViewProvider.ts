@@ -144,7 +144,7 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
       return false;
     }
     const type = (msg as { type?: unknown }).type;
-    const validTypes = ['toggleEngine', 'unclog', 'feed', 'insult', 'mute', 'openProblems', 'testSound', 'ready'];
+    const validTypes = ['toggleEngine', 'unclog', 'feed', 'insult', 'mute', 'openProblems', 'testSound', 'ready', 'toggleLanguage', 'setLanguage'];
     return typeof type === 'string' && validTypes.includes(type);
   }
 
@@ -177,6 +177,11 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
     const customSoundFiles = this.getCustomSoundFiles();
     const nonce = this.getNonce();
 
+    const isManglish = this.stateStore.getLanguage() === 'manglish';
+    const initialGreeting = isManglish
+      ? 'Chool ready aanu! Valla pottiya syntax-um undenkil kaani, ippo thanne thoothu-vaari kalayam!'
+      : 'Broom is ready! Show me some broken syntax and I\'ll sweep it into the dustpan!';
+
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -201,14 +206,14 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
     <!-- Speech Bubble / Roast Monitor -->
     <div class="bubble-wrap">
       <div class="speech-bubble" id="speechBubble" role="status" aria-live="polite">
-        "Chool ready aanu! Valla pottiya syntax-um undenkil kaani, ippo thanne thoothu-vaari kalayam!"
+        "${initialGreeting}"
       </div>
     </div>
 
     <!-- Dustpan / Bag Meter -->
     <div class="meter-section" role="region" aria-label="Dustpan capacity">
       <div class="meter-header">
-        <span class="meter-title">🧹 DUSTPAN / MURRAM</span>
+        <span class="meter-title" id="meterTitleBag">${isManglish ? '🧹 MURRAM' : '🧹 DUSTPAN'}</span>
         <span class="meter-value" id="bagValue">0 / 5</span>
       </div>
       <div class="progress-bar-track">
@@ -219,7 +224,7 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
     <!-- Rage Meter -->
     <div class="meter-section rage-section" role="region" aria-label="Dusty rage meter">
       <div class="meter-header">
-        <span class="meter-title">🔥 RAGE METER / KALIPPU</span>
+        <span class="meter-title" id="meterTitleRage">${isManglish ? '🔥 KALIPPU METER' : '🔥 RAGE METER'}</span>
         <span class="meter-value" id="rageValue">0%</span>
       </div>
       <div class="progress-bar-track">
@@ -229,7 +234,7 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
 
     <!-- Quick Target Indicator -->
     <div class="target-card" id="targetCard" style="display: none;">
-      <div class="target-title">🎯 ACTIVE TARGET</div>
+      <div class="target-title" id="targetTitle">${isManglish ? '🎯 THEETTA KURI' : '🎯 ACTIVE TARGET'}</div>
       <div class="target-desc" id="targetDesc">None</div>
     </div>
 
@@ -237,32 +242,37 @@ export class VacuumViewProvider implements vscode.WebviewViewProvider, vscode.Di
     <div class="controls-grid" role="group" aria-label="Dusty broom action controls">
       <button class="btn btn-primary" id="btnEngine" title="Start or Stop broom sweeping engine">
         <span class="btn-icon">🧹</span>
-        <span id="btnEngineText">SWEEP</span>
+        <span id="btnEngineText">${isManglish ? 'NIRTHU' : 'STOP'}</span>
       </button>
 
       <button class="btn btn-danger" id="btnUnclog" title="Empty the dustpan and clean the broom">
         <span class="btn-icon">🗑️</span>
-        <span>CLEAN DUSTPAN</span>
+        <span id="btnUnclogText">${isManglish ? 'MURRAM KAALIAAKKU' : 'CLEAN DUSTPAN'}</span>
       </button>
 
       <button class="btn btn-secondary" id="btnFeed" title="Feed active syntax error to Dusty">
         <span class="btn-icon">🍂</span>
-        <span>SWEEP ERROR</span>
+        <span id="btnFeedText">${isManglish ? 'THETTU THEETIKKU' : 'SWEEP ERROR'}</span>
       </button>
 
       <button class="btn btn-secondary" id="btnInsult" title="Ask Dusty to roast your code with Kerala memes">
         <span class="btn-icon">🔥</span>
-        <span>ROAST ME</span>
+        <span id="btnInsultText">${isManglish ? 'THARIPPAAKKU' : 'ROAST ME'}</span>
       </button>
 
       <button class="btn btn-secondary" id="btnMute" title="Mute or unmute synthesized broom sounds">
         <span class="btn-icon" id="muteIcon">🔊</span>
-        <span id="btnMuteText">AUDIO</span>
+        <span id="btnMuteText">${isManglish ? 'SABDAM OFF' : 'MUTE'}</span>
+      </button>
+
+      <button class="btn btn-secondary" id="btnLanguage" title="Switch language between English and Manglish">
+        <span class="btn-icon">🌐</span>
+        <span id="btnLanguageText">${isManglish ? 'ML' : 'EN'}</span>
       </button>
 
       <button class="btn btn-secondary" id="btnProblems" title="Focus the native VS Code Problems panel">
         <span class="btn-icon">⚠️</span>
-        <span>PROBLEMS</span>
+        <span id="btnProblemsText">${isManglish ? 'PRASHNANGAL' : 'PROBLEMS'}</span>
       </button>
     </div>
   </div>

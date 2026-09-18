@@ -59,6 +59,8 @@ export interface SerializableTarget {
   safeDisposableToken?: string;
 }
 
+export type RoastLanguage = 'english' | 'manglish';
+
 export interface DustyStateSnapshot {
   state: DustyState;
   bagCount: number;
@@ -67,6 +69,7 @@ export interface DustyStateSnapshot {
   enabled: boolean;
   muted: boolean;
   chaosIntensity: ChaosIntensity;
+  language: RoastLanguage;
   lastRoast?: string;
   currentTarget?: SerializableTarget;
 }
@@ -89,6 +92,8 @@ export type WebviewToHostMessage =
   | { type: 'feed' }
   | { type: 'insult' }
   | { type: 'mute' }
+  | { type: 'toggleLanguage' }
+  | { type: 'setLanguage'; language: RoastLanguage }
   | { type: 'openProblems' }
   | { type: 'testSound' }
   | { type: 'ready' };

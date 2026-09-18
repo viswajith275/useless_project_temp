@@ -23,13 +23,15 @@ When you write buggy code, Dusty doesn't offer gentle auto-complete. He marches 
 If you dare to type while he is sweeping, he aggressively deletes what you just typed to teach you keyboard discipline. If his dustpan fills with 5 syntax crumbs, he chokes and halts your editor until you manually unclog him. And if his Rage Meter hits 100%, he enters full "Crashout Mode", strobes your editor with an emergency apocalypse theme, and deletes random chunks of code out of pure vengeance while screaming with Kerala meme roasts.
 
 ### Key Chaotic Features
-- **Hunger & Mischief Engine**: Writing bug-free code for too long? Dusty gets bored and hungry! After a randomized 35–45s without any syntax errors, Dusty issues a menacing Kerala meme threat (*"I am starving! Give me food in 10 seconds or I will devour your favorite working function! Not a Threat, it's a promise!"*). If ignored for another 11–21s, Dusty commits petty sabotage, eating a working functional code line with a mischievous cackle!
+- **Hunger & Mischief Engine**: Writing bug-free code for too long? Dusty gets bored and hungry! After a randomized 35–45s without any syntax errors, Dusty issues a menacing Kerala meme threat (*"I am starving! Give me food in 10 seconds or I will devour your favorite working function! Not a Threat, it's a promise!"*). Saving the file (`Cmd+S` / `Ctrl+S`) does not stop his hunger—Dusty mocks your save attempts! If ignored for another 11–21s, Dusty commits petty sabotage, eating a working functional code line with a mischievous cackle!
 - **State-Reactive Side Panel Ambiance**: The side panel background, borders, and glows dynamically morph to match Dusty's emotional state—from gentle Kerala bamboo coir warmth (`IDLE`), to alert amber (`HUNTING`), fiery crimson (`EATING`), menacing dark pumpkin (`HUNGER`), villainous ultraviolet (`MISCHIEF`), choking dust purple (`CLOGGED`), and full neon red catastrophe (`CRASHOUT`).
+- **100% Rage & Crashout Apocalypse**: Overwhelming Dusty with edits or spamming the "Clean Dustpan" button 3+ times on an empty muram triggers full Crashout Mode—strobing your editor with an emergency apocalypse theme, deleting code out of pure vengeance, and explicitly explaining the crashout reason in the roast dialog and notification!
+- **Instant English / Manglish Language Switch**: Switch between English and Manglish with a single click or shortcut (`Cmd+Alt+D L`). The entire extension adapts dynamically—sidebar UI buttons, state badges, meter titles, CodeLens, status bar, local fallback roasts, and LLM prompt generation!
 - **Animated Kerala Bamboo Dustpan (Murram)**: A traditional woven bamboo dustpan beside the broom with authentic reed texture, dynamic dust crumb accumulation, and animated forward-tilting to catch fallen syntax crumbs.
-- **Local LLM Integration (⚠️ Hazardous Pairing Advisory)**: Connect a local Ollama instance for a personalized roasting experience that will make you rethink your life choices! We recommend `llama3.2:3b` as the recommended model (fast, punchy, savage), but any model is fine. Proceed only if your emotional stability has git backups!
+- **Local LLM Integration (⚠️ Hazardous Pairing Advisory)**: Connect a local Ollama instance for a personalized roasting experience that will make you rethink your life choices! We recommend `llama3.2:3b` as the recommended model (fast, punchy, savage), but any model is fine. Offline fallback is 100% self-contained.
 - **LRU Dialogue De-Duplication**: Integrated history ring buffer ensures roasts, rage baits, and threats never repeat consecutively.
-- **3-Tier Type Error Harvester**: Hooks into diagnostics to extract type mismatches (TS2322/TS2345), missing properties (TS2339), implicit any (TS7006), argument count mismatches, and cascading line clusters. Roasts them dynamically across three tiers: 0ms instant AST/regex slot-fillers, an async Ollama bridge (`qwen2.5:1.5b` or `llama3.2:3b` with 450ms resilient abort timeout), and a 40+ static fallback bank.
-- **Viral Kerala Meme Bank**: 60+ curated savage trolls referencing *Aaraattu Annan, Vazha, KSRTC Swift, KSEB power cuts, Moral policing uncles, Food vloggers, WhatsApp family groups, PSC coaching*, and *Santhosh Pandit*.
+- **3-Tier Type Error Harvester**: Hooks into diagnostics to extract type mismatches (TS2322/TS2345), missing properties (TS2339), implicit any (TS7006), argument count mismatches, and cascading line clusters. Roasts them dynamically across three tiers: 0ms instant AST/regex slot-fillers, an async Ollama bridge, and a 100+ static fallback bank.
+- **Viral Kerala Meme Bank**: 100+ curated savage trolls referencing *Aaraattu Annan, Vazha, KSRTC Swift, KSEB power cuts, Moral policing uncles, Food vloggers, WhatsApp family groups, PSC coaching*, and *Santhosh Pandit*.
 
 ## Technical Details
 ### Technologies/Components Used
@@ -78,15 +80,33 @@ ollama run llama3.2:3b
 ### Project Documentation
 For Software:
 
-# Screenshots
+# Screenshots & Emotional States Lifecycle
+
+Dusty shifts dynamically through six distinct emotional states based on diagnostics, dustpan capacity, hunger intervals, and rage accumulation:
+
+### 1. Idle State (Monitoring & Judging)
 ![Dusty Sidebar View](Dusty_The_Chool/media/icons/idle.png)
-*Dusty the Chool resting in the secondary sidebar with live state badge, speech bubble, dustpan capacity (murram), and rage meter.*
+*Dusty the Chool resting calmly in the secondary sidebar with live state badge, speech bubble, dustpan capacity (murram), and rage meter.*
 
+### 2. Ingesting & Eating State (Syntax Error Sweeper)
 ![Editor Gutter Sweep & CodeLens](Dusty_The_Chool/media/icons/eating.png)
-*Multi-frame pixel-art broom bristles marching down the editor gutter toward a syntax error with native 'Feed Dusty' CodeLens.*
+*Multi-frame pixel-art broom bristles marching down the editor gutter toward a syntax error to sweep stray crumbs into the bamboo murram.*
 
-![Crashout Apocalypse Mode](Dusty_The_Chool/media/icons/clogged.png)
-*Dusty reaching 100% Rage, triggering emergency strobes and entering full revenge code-deletion mode.*
+### 3. Hunger & Starving State (Clean Code Penalty)
+![Dusty Hunger State](Dusty_The_Chool/media/icons/hunger.png)
+*Writing error-free code for 35s–45s starves Dusty! He demands broken syntax crumbs, and saving files (`Cmd+S`) does not cancel his hunger timer.*
+
+### 4. Mischief State (Petty Sabotage Deletion)
+![Dusty Mischief State](Dusty_The_Chool/media/icons/mischief.png)
+*If hunger goes unfed for another 11s–21s, Dusty commits petty sabotage by devouring a working functional code line.*
+
+### 5. Clogged State (Murram Capacity Full)
+![Dusty Clogged State](Dusty_The_Chool/media/icons/clogged.png)
+*At 5/5 crumbs, the bamboo dustpan overflows and Dusty chokes, pausing auto-ingestion until manually emptied via `Cmd+Alt+U C` or the Clean Dustpan button.*
+
+### 6. Crashout Apocalypse State (100% Rage & Anti-Spam Trigger)
+![Crashout Apocalypse Mode](Dusty_The_Chool/media/icons/crashout.png)
+*Triggered at 100% Rage or after spamming "Clean Dustpan" 3 times on an empty muram—unleashing sirens, red screen strobe, and code purging with explicit crashout reasons.*
 
 ### Project Demo
 # Video

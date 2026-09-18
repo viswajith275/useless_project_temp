@@ -4,7 +4,8 @@ import {
   ChaosIntensity,
   DustyDiagnosticTarget,
   DustyStateSnapshot,
-  SerializableTarget
+  SerializableTarget,
+  RoastLanguage
 } from './types';
 
 export class StateStore implements vscode.Disposable {
@@ -14,6 +15,7 @@ export class StateStore implements vscode.Disposable {
   private enabled = true;
   private muted = false;
   private chaosIntensity: ChaosIntensity = 'normal';
+  private language: RoastLanguage = 'english';
   private rageMeter = 0;
   private lastRoast?: string;
   private activeTarget?: DustyDiagnosticTarget;
@@ -21,10 +23,16 @@ export class StateStore implements vscode.Disposable {
   private readonly _onDidChangeState = new vscode.EventEmitter<DustyStateSnapshot>();
   public readonly onDidChangeState = this._onDidChangeState.event;
 
-  constructor(initialMuted = false, initialIntensity: ChaosIntensity = 'normal', initialEnabled = true) {
+  constructor(
+    initialMuted = false,
+    initialIntensity: ChaosIntensity = 'normal',
+    initialEnabled = true,
+    initialLanguage: RoastLanguage = 'english'
+  ) {
     this.muted = initialMuted;
     this.chaosIntensity = initialIntensity;
     this.enabled = initialEnabled;
+    this.language = initialLanguage;
     this.state = initialEnabled ? 'idle' : 'disabled';
     this.syncContextKeys();
   }
@@ -51,6 +59,7 @@ export class StateStore implements vscode.Disposable {
       enabled: this.enabled,
       muted: this.muted,
       chaosIntensity: this.chaosIntensity,
+      language: this.language,
       lastRoast: this.lastRoast,
       currentTarget: serializableTarget
     };
@@ -185,6 +194,34 @@ export class StateStore implements vscode.Disposable {
     return this.muted;
   }
 
+  public getLanguage(): RoastLanguage {
+    return this.language;
+  }
+
+  public setLanguage(lang: RoastLanguage): void {
+    if (this.language !== lang) {
+      this.language = lang;
+      this.lastRoast = undefined;
+      this.syncContextKeys();
+      this._onDidChangeState.fire(this.getSnapshot());
+    }
+  }
+
+  public toggleLanguage(): RoastLanguage {
+    this.language = this.language === 'english' ? 'manglish' : 'english';
+    this.lastRoast = undefined;
+    try {
+      const config = vscode.workspace.getConfiguration('dusty');
+      const target = vscode.ConfigurationTarget ? vscode.ConfigurationTarget.Global : 1;
+      void config.update?.('language', this.language, target);
+    } catch {
+      // Safely ignore configuration update errors in headless or mock contexts
+    }
+    this.syncContextKeys();
+    this._onDidChangeState.fire(this.getSnapshot());
+    return this.language;
+  }
+
   public setChaosIntensity(intensity: ChaosIntensity): void {
     this.chaosIntensity = intensity;
     this._onDidChangeState.fire(this.getSnapshot());
@@ -201,6 +238,7 @@ export class StateStore implements vscode.Disposable {
     void vscode.commands.executeCommand('setContext', 'dusty.hasTarget', !!this.activeTarget);
     void vscode.commands.executeCommand('setContext', 'dusty.clogged', this.isClogged());
     void vscode.commands.executeCommand('setContext', 'dusty.muted', this.muted);
+    void vscode.commands.executeCommand('setContext', 'dusty.language', this.language);
   }
 
   public dispose(): void {

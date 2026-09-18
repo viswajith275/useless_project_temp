@@ -18,12 +18,21 @@
   const btnEngine = document.getElementById('btnEngine');
   const btnEngineText = document.getElementById('btnEngineText');
   const btnUnclog = document.getElementById('btnUnclog');
+  const btnUnclogText = document.getElementById('btnUnclogText');
   const btnFeed = document.getElementById('btnFeed');
+  const btnFeedText = document.getElementById('btnFeedText');
   const btnInsult = document.getElementById('btnInsult');
+  const btnInsultText = document.getElementById('btnInsultText');
   const btnMute = document.getElementById('btnMute');
   const btnMuteText = document.getElementById('btnMuteText');
   const muteIcon = document.getElementById('muteIcon');
+  const btnLanguage = document.getElementById('btnLanguage');
+  const btnLanguageText = document.getElementById('btnLanguageText');
   const btnProblems = document.getElementById('btnProblems');
+  const btnProblemsText = document.getElementById('btnProblemsText');
+  const meterTitleBag = document.getElementById('meterTitleBag');
+  const meterTitleRage = document.getElementById('meterTitleRage');
+  const targetTitle = document.getElementById('targetTitle');
 
   // Animation State
   let currentState = 'idle';
@@ -86,6 +95,13 @@
     vscode.postMessage({ type: 'mute' });
   });
 
+  if (btnLanguage) {
+    btnLanguage.addEventListener('click', () => {
+      unlockAudio();
+      vscode.postMessage({ type: 'toggleLanguage' });
+    });
+  }
+
   btnProblems.addEventListener('click', () => {
     vscode.postMessage({ type: 'openProblems' });
   });
@@ -147,9 +163,48 @@
     bagCount = stateSnapshot.bagCount;
     bagCapacity = stateSnapshot.bagCapacity;
     rageMeter = stateSnapshot.rageMeter || 0;
+    const lang = stateSnapshot.language || 'english';
+    const isManglish = lang === 'manglish';
+
+    // Update Language Button Text & Tooltip
+    if (btnLanguageText) {
+      btnLanguageText.textContent = isManglish ? 'ML' : 'EN';
+    }
+    if (btnLanguage) {
+      btnLanguage.title = isManglish ? 'Switch language to English' : 'Switch language to Manglish';
+    }
 
     // Update State Badge and Panel Ambiance
-    stateBadge.textContent = currentState.toUpperCase();
+    const stateLabels = {
+      english: {
+        idle: 'IDLE',
+        hunting: 'HUNTING',
+        locked: 'TARGET LOCKED',
+        ingesting: 'INGESTING',
+        clogged: 'CLOGGED',
+        roasting: 'ROASTING',
+        sleeping: 'SLEEPING',
+        taunting: 'TAUNTING',
+        hunger: 'STARVING',
+        mischief: 'MISCHIEF',
+        crashout: 'CRASHOUT'
+      },
+      manglish: {
+        idle: 'VERUTHE NIKKUNNU',
+        hunting: 'THIRAYUNNU',
+        locked: 'KANNUVETTU',
+        ingesting: 'THOOKKUNNU',
+        clogged: 'THADANGAL',
+        roasting: 'THARIPPAAKKAL',
+        sleeping: 'SHEENAM',
+        taunting: 'CHORIYAL',
+        hunger: 'VISHAPPU',
+        mischief: 'VIKRTHI',
+        crashout: 'KALIPPU'
+      }
+    };
+    const stateMap = stateLabels[lang] || stateLabels.english;
+    stateBadge.textContent = stateMap[currentState] || currentState.toUpperCase();
     stateBadge.className = 'state-badge ' + currentState;
     document.body.className = 'dusty-body state-' + currentState;
     if (appContainer) {
@@ -157,7 +212,11 @@
     }
 
     // Engine Button Text
-    btnEngineText.textContent = isEnabled ? 'STOP' : 'START';
+    if (isManglish) {
+      btnEngineText.textContent = isEnabled ? 'NIRTHU' : 'THUDANGU';
+    } else {
+      btnEngineText.textContent = isEnabled ? 'STOP' : 'START';
+    }
     if (!isEnabled) {
       btnEngine.className = 'btn btn-secondary';
     } else {
@@ -168,8 +227,35 @@
     if (window.vacuumAudio) {
       window.vacuumAudio.setMuted(isMuted);
     }
-    btnMuteText.textContent = isMuted ? 'UNMUTE' : 'MUTE';
+    if (isManglish) {
+      btnMuteText.textContent = isMuted ? 'SABDAM ON' : 'SABDAM OFF';
+    } else {
+      btnMuteText.textContent = isMuted ? 'UNMUTE' : 'MUTE';
+    }
     muteIcon.textContent = isMuted ? '🔇' : '🔊';
+
+    // Localize Action Buttons & Section Titles
+    if (btnUnclogText) {
+      btnUnclogText.textContent = isManglish ? 'MURRAM KAALIAAKKU' : 'CLEAN DUSTPAN';
+    }
+    if (btnFeedText) {
+      btnFeedText.textContent = isManglish ? 'THETTU THEETIKKU' : 'SWEEP ERROR';
+    }
+    if (btnInsultText) {
+      btnInsultText.textContent = isManglish ? 'THARIPPAAKKU' : 'ROAST ME';
+    }
+    if (btnProblemsText) {
+      btnProblemsText.textContent = isManglish ? 'PRASHNANGAL' : 'PROBLEMS';
+    }
+    if (meterTitleBag) {
+      meterTitleBag.textContent = isManglish ? '🧹 MURRAM' : '🧹 DUSTPAN';
+    }
+    if (meterTitleRage) {
+      meterTitleRage.textContent = isManglish ? '🔥 KALIPPU METER' : '🔥 RAGE METER';
+    }
+    if (targetTitle) {
+      targetTitle.textContent = isManglish ? '🎯 THETTU' : '🎯 ACTIVE TARGET';
+    }
 
     // Unclog Button State
     if (currentState === 'clogged') {
@@ -185,6 +271,10 @@
 
     if (stateSnapshot.lastRoast) {
       speechBubble.textContent = `"${stateSnapshot.lastRoast}"`;
+    } else {
+      speechBubble.textContent = isManglish
+        ? `"Chool ready aanu! Valla pottiya syntax-um undenkil kaani, ippo thanne thoothu-vaari kalayam!"`
+        : `"Broom is ready! Show me some broken syntax and I'll sweep it into the dustpan!"`;
     }
   }
 

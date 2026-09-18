@@ -13,12 +13,21 @@ export function registerCommands(
   context.subscriptions.push(
     vscode.commands.registerCommand('dusty.toggleEngine', () => {
       const nowEnabled = stateStore.toggleEngine();
+      const isM = stateStore.getLanguage() === 'manglish';
       if (nowEnabled) {
         viewProvider.playSound('suction');
-        void vscode.window.showInformationMessage('Dusty: Broom ready! Started sweeping away broken syntax.');
+        void vscode.window.showInformationMessage(
+          isM
+            ? 'Dusty: Chool ready! Pottiya syntax thoothuvaaraan thudangi.'
+            : 'Dusty: Broom ready! Started sweeping away broken syntax.'
+        );
         chaosEngine.scheduleDiagnosticCheck(100);
       } else {
-        void vscode.window.showInformationMessage('Dusty: Broom is taking rest. Go find some other work, man.');
+        void vscode.window.showInformationMessage(
+          isM
+            ? 'Dusty: Chool urakkathilaanu. Vere valla paniyum nokkeda.'
+            : 'Dusty: Broom is taking rest. Go find some other work, man.'
+        );
       }
     })
   );
@@ -48,7 +57,10 @@ export function registerCommands(
   context.subscriptions.push(
     vscode.commands.registerCommand('dusty.muteAudio', () => {
       const isMuted = stateStore.toggleMute();
-      const msg = isMuted ? 'Dusty: Sound muted. Silent sweeping mode active.' : 'Dusty: Sound unmuted. Volume up for loud broom chaos!';
+      const isM = stateStore.getLanguage() === 'manglish';
+      const msg = isM
+        ? (isMuted ? 'Dusty: Sabdam off aakki. Silent sweeping mode active.' : 'Dusty: Sabdam on aakki. Volume kootti choolinte bahalam kelkku!')
+        : (isMuted ? 'Dusty: Sound muted. Silent sweeping mode active.' : 'Dusty: Sound unmuted. Volume up for loud broom chaos!');
       void vscode.window.showInformationMessage(msg);
     })
   );
@@ -58,7 +70,10 @@ export function registerCommands(
     vscode.commands.registerCommand('dusty.resetBag', () => {
       stateStore.resetBag();
       viewProvider.playSound('victory');
-      void vscode.window.showInformationMessage('Dusty: Dustpan emptied 0/5.');
+      const isM = stateStore.getLanguage() === 'manglish';
+      void vscode.window.showInformationMessage(
+        isM ? 'Dusty: Murram kaaliyaakki 0/5.' : 'Dusty: Dustpan emptied 0/5.'
+      );
     })
   );
 
@@ -67,7 +82,10 @@ export function registerCommands(
     vscode.commands.registerCommand('dusty.testSound', () => {
       viewProvider.playSound('sweep');
       viewProvider.shake(1);
-      void vscode.window.showInformationMessage('Dusty: Testing broom sweep sound!');
+      const isM = stateStore.getLanguage() === 'manglish';
+      void vscode.window.showInformationMessage(
+        isM ? 'Dusty: Choolinte sweep sabdam test cheyyunnu!' : 'Dusty: Testing broom sweep sound!'
+      );
     })
   );
 
@@ -92,8 +110,23 @@ export function registerCommands(
       if (ed) {
         await chaosEngine.triggerCrashout(ed);
       } else {
-        void vscode.window.showWarningMessage('Dusty: Open an editor first, then I can crash out and smash code with 100% kalippu!');
+        const isManglish = stateStore.getLanguage() === 'manglish';
+        const msg = isManglish
+          ? 'Dusty: Editor onnum thurannittilla! Oru file thura, ennit kalippil crashout aavam!'
+          : 'Dusty: Open an editor first, then I can crash out and smash code with 100% kalippu!';
+        void vscode.window.showWarningMessage(msg);
       }
+    })
+  );
+
+  // 11. Toggle Language (English <-> Manglish)
+  context.subscriptions.push(
+    vscode.commands.registerCommand('dusty.toggleLanguage', () => {
+      const newLang = stateStore.toggleLanguage();
+      const msg = newLang === 'manglish'
+        ? '🌐 Dusty: Bhasha Manglish aakki! Ini kalippum roasdum pacha malayalam aksharathil!'
+        : '🌐 Dusty: Language switched to English with authentic Kerala memes!';
+      void vscode.window.showInformationMessage(msg);
     })
   );
 }

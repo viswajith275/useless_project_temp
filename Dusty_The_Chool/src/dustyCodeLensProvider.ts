@@ -47,12 +47,13 @@ export class DustyCodeLensProvider implements vscode.CodeLensProvider, vscode.Di
       processedLines.add(line);
 
       const lensRange = new vscode.Range(line, 0, line, 0);
+      const isManglish = this.stateStore.getLanguage() === 'manglish';
 
       // Primary action: Sweep with Dusty
       lenses.push(
         new vscode.CodeLens(lensRange, {
-          title: '🧹 Sweep Error',
-          tooltip: 'Sweep this syntax error into the dustpan with the broom',
+          title: isManglish ? '🧹 Thoothuvaaru' : '🧹 Sweep Error',
+          tooltip: isManglish ? 'Ee pottiya syntax murrathilekku adichuvaaru' : 'Sweep this syntax error into the dustpan with the broom',
           command: 'dusty.feedManually',
           arguments: [document.uri, error.range]
         })
@@ -61,8 +62,8 @@ export class DustyCodeLensProvider implements vscode.CodeLensProvider, vscode.Di
       // Secondary action: Dusty Roast/Explain
       lenses.push(
         new vscode.CodeLens(lensRange, {
-          title: '🔥 Roast Me',
-          tooltip: 'Hear Dusty roast you for this error with Kerala memes',
+          title: isManglish ? '🔥 Enne Tharippaakku' : '🔥 Roast Me',
+          tooltip: isManglish ? 'Ee thettinu Dusty-ude kalippan roast kelkku' : 'Hear Dusty roast you for this error with Kerala memes',
           command: 'dusty.explainDiagnostic',
           arguments: [error.message, line]
         })

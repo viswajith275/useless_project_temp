@@ -1,7 +1,7 @@
 {
   "name": "dusty-the-chool",
   "displayName": "Dusty the Chool",
-  "description": "A chaotic, delightfully useless Kerala pairing broom living in your sidebar that sweeps syntax errors, throws tantrums, and roasts you with Kerala memes in English.",
+  "description": "A chaotic, delightfully useless Kerala pairing broom living in your sidebar that sweeps syntax errors, throws tantrums, and roasts you with Kerala memes in English and Manglish.",
   "version": "0.1.0",
   "publisher": "viswajith",
   "repository": {
@@ -68,7 +68,7 @@
       },
       {
         "command": "dusty.unclog",
-        "title": "Unclog Dust Bag",
+        "title": "Clean Dustpan (Murram)",
         "category": "Dusty",
         "icon": "$(trash)"
       },
@@ -92,13 +92,13 @@
       },
       {
         "command": "dusty.resetBag",
-        "title": "Reset Dust Bag",
+        "title": "Reset Dustpan (Murram)",
         "category": "Dusty",
         "icon": "$(clear-all)"
       },
       {
         "command": "dusty.testSound",
-        "title": "Test Vacuum Sound",
+        "title": "Test Broom Sound",
         "category": "Dusty",
         "icon": "$(play)"
       },
@@ -113,6 +113,12 @@
         "title": "Trigger Crashout (Delete Code)",
         "category": "Dusty",
         "icon": "$(flame)"
+      },
+      {
+        "command": "dusty.toggleLanguage",
+        "title": "Toggle Language (English / Manglish)",
+        "category": "Dusty",
+        "icon": "$(globe)"
       },
       {
         "command": "dusty.explainDiagnostic",
@@ -136,6 +142,11 @@
           "command": "dusty.muteAudio",
           "when": "view == dusty.characterView",
           "group": "navigation@3"
+        },
+        {
+          "command": "dusty.toggleLanguage",
+          "when": "view == dusty.characterView",
+          "group": "navigation@4"
         }
       ]
     },
@@ -155,6 +166,11 @@
         "command": "dusty.toggleEngine",
         "key": "ctrl+alt+d t",
         "mac": "cmd+alt+d t"
+      },
+      {
+        "command": "dusty.toggleLanguage",
+        "key": "ctrl+alt+d l",
+        "mac": "cmd+alt+d l"
       }
     ],
     "configuration": {
@@ -165,6 +181,19 @@
           "default": true,
           "description": "Enable or disable Dusty the Chool."
         },
+        "dusty.language": {
+          "type": "string",
+          "enum": [
+            "english",
+            "manglish"
+          ],
+          "enumDescriptions": [
+            "English with authentic Kerala style and memes",
+            "Manglish: Malayalam phonetically written using the Latin/English script with viral Kerala memes"
+          ],
+          "default": "english",
+          "description": "Preferred roasting and UI language (English or Manglish)."
+        },
         "dusty.chaosIntensity": {
           "type": "string",
           "enum": [
@@ -174,7 +203,7 @@
           ],
           "enumDescriptions": [
             "Calm: mostly visual commentary and rare interruptions. Conservative.",
-            "Normal: balanced chaos and periodic comedic vacuum reactions.",
+            "Normal: balanced chaos and periodic comedic broom reactions.",
             "Feral: frequent animations, loud roasts, high chaos (never bypasses safety gates)."
           ],
           "default": "normal",
@@ -188,14 +217,14 @@
         "dusty.muteAudio": {
           "type": "boolean",
           "default": false,
-          "description": "Mute all vacuum audio effects."
+          "description": "Mute all broom and sweep audio effects."
         },
         "dusty.ingestDelayMs": {
           "type": "number",
           "default": 1200,
           "minimum": 0,
           "maximum": 5000,
-          "description": "Delay in milliseconds before vacuuming an identified syntax error while showing approach animation."
+          "description": "Delay in milliseconds before sweeping an identified syntax error while showing approach animation."
         },
         "dusty.diagnosticDelayMs": {
           "type": "number",
@@ -219,7 +248,7 @@
         "dusty.enableLLM": {
           "type": "boolean",
           "default": true,
-          "description": "Allow Dusty to query a local Ollama instance for personalized Kerala meme roasts in English. Falls back gracefully to local templates if offline."
+          "description": "Allow Dusty to query a local Ollama instance for personalized Kerala meme roasts in English or Manglish. Falls back gracefully to local templates if offline."
         },
         "dusty.ollamaEndpoint": {
           "type": "string",
@@ -229,7 +258,7 @@
         "dusty.ollamaModel": {
           "type": "string",
           "default": "llama3.2:3b",
-          "description": "Ollama 3B model (e.g. llama3.2:3b, llama3.2, phi3:mini, qwen2.5:3b) for personalized Kerala meme roasts in English."
+          "description": "Local Ollama model (e.g. llama3.2:3b, llama3.2, phi3:mini, qwen2.5:3b) for personalized Kerala meme roasts in English or Manglish."
         },
         "dusty.ollamaTimeoutMs": {
           "type": "number",
@@ -292,7 +321,7 @@
           },
           {
             "id": "step5",
-            "title": "Local Ollama 3B and Audio",
+            "title": "Local LLM (Ollama) and Audio",
             "description": "Connect local Ollama for custom Kerala meme roasts or customize audio files in media/sounds.\n[Open Settings](command:workbench.action.openSettings?\"dusty\")",
             "media": {
               "markdown": "media/walkthrough/step5.md"

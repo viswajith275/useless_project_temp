@@ -1,14 +1,17 @@
 :root {
-  --primary-color: #e74c3c;
+  --primary-color: #d35400;
+  --primary-color-hover: #e67e22;
   --secondary-color: #f39c12;
   --accent-color: #2ecc71;
+  --danger-color: #c0392b;
+  --danger-color-hover: #d63031;
   --dark-color: #2c3e50;
-  --bg-color: var(--vscode-editor-background, #1e1e1e);
-  --fg-color: var(--vscode-editor-foreground, #d4d4d4);
-  --btn-bg: var(--vscode-button-secondaryBackground, #3a3d41);
-  --btn-fg: var(--vscode-button-secondaryForeground, #ffffff);
-  --btn-hover: var(--vscode-button-secondaryHoverBackground, #45494e);
-  --border-color: var(--vscode-widget-border, #333333);
+  --bg-color: var(--vscode-sideBar-background, var(--vscode-editor-background, #1e1e1e));
+  --fg-color: var(--vscode-sideBar-foreground, var(--vscode-editor-foreground, #cccccc));
+  --btn-bg: var(--vscode-button-secondaryBackground, rgba(255, 255, 255, 0.08));
+  --btn-fg: var(--vscode-button-secondaryForeground, var(--vscode-foreground, #ffffff));
+  --btn-hover: var(--vscode-button-secondaryHoverBackground, rgba(255, 255, 255, 0.14));
+  --border-color: var(--vscode-sideBar-border, var(--vscode-widget-border, rgba(255, 255, 255, 0.12)));
   --font-family: var(--vscode-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
 }
 
@@ -18,8 +21,18 @@
   padding: 0;
 }
 
+html {
+  height: 100%;
+  min-height: 100%;
+}
+
 body.dusty-body {
+  height: 100%;
+  min-height: 100vh;
+  min-height: 100%;
   background-color: var(--bg-color);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: var(--fg-color);
   font-family: var(--font-family);
   font-size: 12px;
@@ -72,7 +85,8 @@ body.dusty-body {
 
 /* State-Reactive Panel Ambiance & Colors */
 body.dusty-body.state-idle {
-  background: radial-gradient(circle at 50% 12%, rgba(210, 166, 121, 0.08), transparent 70%), var(--bg-color);
+  background: radial-gradient(ellipse 130% 90% at 50% 0%, rgba(210, 166, 121, 0.12) 0%, rgba(210, 166, 121, 0.03) 55%, transparent 100%), var(--bg-color);
+  background-attachment: fixed;
 }
 body.dusty-body.state-idle .stage {
   border-color: rgba(210, 166, 121, 0.3);
@@ -80,7 +94,8 @@ body.dusty-body.state-idle .stage {
 }
 
 body.dusty-body.state-hunting {
-  background: radial-gradient(circle at 50% 12%, rgba(230, 126, 34, 0.15), transparent 70%), var(--bg-color);
+  background: radial-gradient(ellipse 130% 90% at 50% 0%, rgba(230, 126, 34, 0.18) 0%, rgba(230, 126, 34, 0.04) 55%, transparent 100%), var(--bg-color);
+  background-attachment: fixed;
 }
 body.dusty-body.state-hunting .stage {
   border-color: rgba(230, 126, 34, 0.6);
@@ -90,7 +105,8 @@ body.dusty-body.state-hunting .stage {
 
 body.dusty-body.state-approaching,
 body.dusty-body.state-eating {
-  background: radial-gradient(circle at 50% 12%, rgba(231, 76, 60, 0.2), transparent 70%), var(--bg-color);
+  background: radial-gradient(ellipse 130% 90% at 50% 0%, rgba(231, 76, 60, 0.22) 0%, rgba(231, 76, 60, 0.05) 55%, transparent 100%), var(--bg-color);
+  background-attachment: fixed;
 }
 body.dusty-body.state-approaching .stage,
 body.dusty-body.state-eating .stage {
@@ -100,7 +116,8 @@ body.dusty-body.state-eating .stage {
 }
 
 body.dusty-body.state-hunger {
-  background: radial-gradient(circle at 50% 15%, rgba(211, 84, 0, 0.25), rgba(44, 15, 0, 0.1) 60%, transparent 85%), var(--bg-color);
+  background: radial-gradient(ellipse 130% 95% at 50% 0%, rgba(211, 84, 0, 0.28) 0%, rgba(44, 15, 0, 0.12) 60%, transparent 100%), var(--bg-color);
+  background-attachment: fixed;
 }
 body.dusty-body.state-hunger .stage {
   border-color: #e67e22;
@@ -113,7 +130,8 @@ body.dusty-body.state-hunger .speech-bubble {
 }
 
 body.dusty-body.state-mischief {
-  background: radial-gradient(circle at 50% 15%, rgba(142, 68, 173, 0.26), rgba(30, 5, 45, 0.12) 60%, transparent 85%), var(--bg-color);
+  background: radial-gradient(ellipse 130% 95% at 50% 0%, rgba(142, 68, 173, 0.28) 0%, rgba(30, 5, 45, 0.12) 60%, transparent 100%), var(--bg-color);
+  background-attachment: fixed;
 }
 body.dusty-body.state-mischief .stage {
   border-color: #9b59b6;
@@ -126,7 +144,8 @@ body.dusty-body.state-mischief .speech-bubble {
 }
 
 body.dusty-body.state-clogged {
-  background: radial-gradient(circle at 50% 12%, rgba(142, 68, 173, 0.2), transparent 75%), var(--bg-color);
+  background: radial-gradient(ellipse 130% 90% at 50% 0%, rgba(142, 68, 173, 0.22) 0%, rgba(142, 68, 173, 0.04) 55%, transparent 100%), var(--bg-color);
+  background-attachment: fixed;
 }
 body.dusty-body.state-clogged .stage {
   border-color: #8e44ad;
@@ -134,7 +153,8 @@ body.dusty-body.state-clogged .stage {
 }
 
 body.dusty-body.state-tantrum {
-  background: radial-gradient(circle at 50% 12%, rgba(192, 57, 43, 0.25), transparent 75%), var(--bg-color);
+  background: radial-gradient(ellipse 130% 90% at 50% 0%, rgba(192, 57, 43, 0.26) 0%, rgba(192, 57, 43, 0.05) 55%, transparent 100%), var(--bg-color);
+  background-attachment: fixed;
 }
 body.dusty-body.state-tantrum .stage {
   border-color: #c0392b;
@@ -142,7 +162,8 @@ body.dusty-body.state-tantrum .stage {
 }
 
 body.dusty-body.state-crashout {
-  background: radial-gradient(circle at 50% 15%, rgba(255, 0, 85, 0.3), rgba(60, 0, 20, 0.18) 60%, transparent 85%), var(--bg-color);
+  background: radial-gradient(ellipse 130% 95% at 50% 0%, rgba(255, 0, 85, 0.32) 0%, rgba(60, 0, 20, 0.16) 60%, transparent 100%), var(--bg-color);
+  background-attachment: fixed;
 }
 body.dusty-body.state-crashout .stage {
   border-color: #ff0055;
@@ -354,6 +375,11 @@ body.dusty-body.state-disabled {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 6px;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 }
 
 .btn {
@@ -361,14 +387,14 @@ body.dusty-body.state-disabled {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 6px 8px;
+  padding: 7px 8px;
   border-radius: 4px;
   font-family: inherit;
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: background-color 0.15s ease, transform 0.05s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.05s ease, box-shadow 0.15s ease;
   outline: none;
   min-width: 0;
   white-space: nowrap;
@@ -385,29 +411,48 @@ body.dusty-body.state-disabled {
 }
 
 .btn:focus-visible {
-  outline: 2px solid var(--vscode-focusBorder, #007fd4);
+  outline: 2px solid var(--vscode-focusBorder, #f39c12);
   outline-offset: 1px;
 }
 
 .btn-primary {
-  background: var(--vscode-button-background, #0e639c);
+  background: var(--vscode-button-background, var(--primary-color, #d35400));
   color: var(--vscode-button-foreground, #ffffff);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.btn-primary:hover {
+  background: var(--vscode-button-hoverBackground, var(--primary-color-hover, #e67e22));
 }
 
 .btn-secondary {
   background: var(--btn-bg);
   color: var(--btn-fg);
-  border-color: var(--border-color);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background: var(--btn-hover);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .btn-danger {
-  background: #c0392b;
+  background: var(--danger-color, #c0392b);
   color: #ffffff;
+  border: 1px solid rgba(231, 76, 60, 0.5);
+}
+
+.btn-danger:hover {
+  background: var(--danger-color-hover, #d63031);
 }
 
 .btn-disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+#btnProblems {
+  grid-column: span 2;
 }
 
 /* Animations */

@@ -1,18 +1,24 @@
-import './setupMockVscode';
+import { mockVscode, onDidSaveTextDocumentEmitter } from './setupMockVscode';
 import * as assert from 'assert';
 import * as path from 'path';
 import * as mock from './mockVscode';
+import { ChaosEngine } from '../src/chaosEngine';
 import { analyzeDiagnosticSpan } from '../src/diagnosticParser';
 import {
   DiagnosticTargetSelector,
   createDiagnosticFingerprint
 } from '../src/diagnosticTarget';
 import { StateStore } from '../src/stateStore';
-import { RoastService, STATIC_FALLBACK_BANK } from '../src/roastService';
+import {
+  RoastService,
+  STATIC_FALLBACK_BANK,
+  STATIC_FALLBACK_BANK_MANGLISH,
+  OLLAMA_STOP_TOKENS
+} from '../src/roastService';
 import { DecorationManager } from '../src/decorationManager';
 import { classifyDiagnostic, harvestTypeErrors } from '../src/typeHarvester';
 
-describe('Dusty the Malicious Vacuum - Test Suite', () => {
+describe('Dusty the Chool - Test Suite', () => {
 
   // Test 1: Diagnostic targeting
   it('1. should select the highest priority Error diagnostic in the active editor', () => {
@@ -318,7 +324,7 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
   });
 
   // Test 17: Angry roast on typing while cleaning
-  it('17. should generate furious roasts when user types while vacuum is cleaning', async () => {
+  it('17. should generate furious roasts when user types while broom is sweeping', async () => {
     const roastService = new RoastService();
     const roast = await roastService.getRoast({ situation: 'typed_while_cleaning' });
     assert.ok(roast, 'Roast should be generated');
@@ -452,8 +458,8 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
     assert.ok(activityBarSvg.includes('viewBox="0 0 24 24"'));
   });
 
-  // Test 28: Ollama 3B Kerala meme prompt builder & response cleaning
-  it('28. should build rich contextual 3B English prompt with Kerala memes and clean LLM responses', () => {
+  // Test 28: Local LLM (Ollama) Kerala meme prompt builder & response cleaning
+  it('28. should build rich contextual English prompt with Kerala memes and clean LLM responses', () => {
     const roastService = new RoastService();
     const prompt = roastService.buildPrompt({
       fileName: '/workspace/src/authController.ts',
@@ -510,8 +516,8 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
     assert.match(mischiefRoast, /(NOM|working|swallowed|muram|Aaraattu Annan|KSRTC|KSEB|Threat|mischief|dustpan)/i);
   });
 
-  // Test 32: Llama 3.2: 3B few-shot prompt structure
-  it('32. should format Llama 3.2: 3B prompt with system header and few-shot examples', () => {
+  // Test 32: Llama 3.2 few-shot prompt structure
+  it('32. should format Llama 3.2 Ollama prompt with system header and few-shot examples', () => {
     const roastService = new RoastService();
     const prompt = roastService.buildPrompt({
       fileName: 'test.py',
@@ -689,4 +695,341 @@ describe('Dusty the Malicious Vacuum - Test Suite', () => {
     });
     assert.ok(finalRoast && finalRoast.length > 5, 'roastTypeError must return a valid roast via fallback');
   });
+
+  // Test 36: Language toggle (English <-> Manglish)
+  it('36. should support switching language between English and Manglish with tailored prompts, templates, and fallbacks', async () => {
+    // 1. StateStore language state and toggling
+    const store = new StateStore(false, 'normal', true, 'english');
+    assert.strictEqual(store.getLanguage(), 'english');
+    assert.strictEqual(store.getSnapshot().language, 'english');
+
+    const newLang = store.toggleLanguage();
+    assert.strictEqual(newLang, 'manglish');
+    assert.strictEqual(store.getLanguage(), 'manglish');
+    assert.strictEqual(store.getSnapshot().language, 'manglish');
+
+    store.setLanguage('english');
+    assert.strictEqual(store.getLanguage(), 'english');
+
+    // 2. RoastService language switching
+    const roastService = new RoastService();
+    assert.strictEqual(roastService.getLanguage(), 'english');
+
+    // Manglish fallback bank size
+    assert.ok(STATIC_FALLBACK_BANK_MANGLISH.length >= 40, `Manglish fallback bank must have at least 40 roasts (found ${STATIC_FALLBACK_BANK_MANGLISH.length})`);
+
+    // Switch to Manglish
+    roastService.setLanguage('manglish');
+    assert.strictEqual(roastService.getLanguage(), 'manglish');
+
+    const manglishTier3 = roastService.getTier3Roast();
+    assert.ok(STATIC_FALLBACK_BANK_MANGLISH.includes(manglishTier3), 'Tier 3 in Manglish mode must return a roast from the Manglish bank');
+
+    // Tier 1 in Manglish
+    const manglishMismatch = roastService.getTier1Roast({
+      category: 'type_mismatch',
+      message: "Type 'Cat' is not assignable to type 'Dog'.",
+      line: 2,
+      endLine: 2,
+      received: 'Cat',
+      target: 'Dog',
+      diagnostics: []
+    });
+    assert.ok(manglishMismatch.includes('Cat') && manglishMismatch.includes('Dog'));
+
+    // Manglish chat messages contain MANGLISH instructions
+    const manglishMessages = roastService.buildChatMessages({
+      fileName: 'main.py',
+      language: 'python',
+      line: 3,
+      message: 'IndentationError: unexpected indent',
+      situation: 'general'
+    });
+    assert.ok(manglishMessages[0].content.includes('MANGLISH'));
+
+    // Manglish prompt format
+    const manglishPrompt = roastService.buildPrompt({
+      fileName: 'main.py',
+      language: 'python',
+      line: 3,
+      message: 'IndentationError: unexpected indent',
+      situation: 'general'
+    });
+    assert.ok(manglishPrompt.includes('MANGLISH'));
+
+    // Switch back to English
+    roastService.setLanguage('english');
+    const englishMessages = roastService.buildChatMessages({
+      fileName: 'main.py',
+      language: 'python',
+      line: 3,
+      message: 'IndentationError: unexpected indent',
+      situation: 'general'
+    });
+    assert.ok(englishMessages[0].content.includes('ENGLISH'));
+    const englishPrompt = roastService.buildPrompt({
+      fileName: 'main.py',
+      language: 'python',
+      line: 3,
+      message: 'IndentationError: unexpected indent',
+      situation: 'general'
+    });
+    assert.ok(englishPrompt.includes('ENGLISH'));
+  });
+
+  // Test 37: Strict language target decider and ChatML end-token / review prefix cleaning
+  it('37. should clean leaked ChatML tokens, strip formulaic review prefixes, and enforce selected language as absolute authority', () => {
+    const roastService = new RoastService();
+
+    // 1. Language preference is the absolute authority over model names
+    const ftModel = 'hf.co/AlexGostroot/malayalam-llama3-manglish:Q4_K_M';
+    roastService.setLanguage('english');
+    assert.strictEqual(roastService.isManglishTarget(ftModel), false, 'English mode must strictly return false even if fine-tune model is Manglish');
+    assert.strictEqual(roastService.isManglishTarget('llama3.2:3b'), false);
+
+    roastService.setLanguage('manglish');
+    assert.strictEqual(roastService.isManglishTarget(ftModel), true, 'Manglish mode must return true');
+    assert.strictEqual(roastService.isManglishTarget('llama3.2:3b'), true, 'Manglish mode must return true even for generic models');
+    roastService.setLanguage('english');
+
+    // 2. ChatML & Ollama stop tokens
+    assert.ok(OLLAMA_STOP_TOKENS.includes('<|im_end|>'), 'Stop tokens must include <|im_end|>');
+    assert.ok(OLLAMA_STOP_TOKENS.includes('<|eot_id|>'), 'Stop tokens must include <|eot_id|>');
+
+    // 3. User reported exact response cleaning:
+    // "Santhosh Pandit review of your code: 'What is this man?!' Just what is it, you're simply doing nonsense, right?!<|im_end|>"
+    const rawDefectiveOutput = `"Santhosh Pandit review of your code: 'What is this man?!' Just what is it, you're simply doing nonsense, right?!<|im_end|>`;
+    const cleaned = roastService.cleanLlmResponse(rawDefectiveOutput);
+
+    assert.strictEqual(cleaned.includes('<|im_end|>'), false, 'Leaked end token <|im_end|> must be stripped');
+    assert.strictEqual(/^Santhosh Pandit review/i.test(cleaned), false, 'Formulaic review prefix must be stripped');
+    assert.strictEqual(cleaned.startsWith('"') || cleaned.startsWith("'"), false, 'Outer quotes must be stripped');
+    assert.strictEqual(cleaned, "What is this man?! Just what is it, you're simply doing nonsense, right?!");
+  });
+
+  // Test 38: Cross-language validation and StateStore lastRoast reset
+  it('38. should validate roast language strictly to prevent cross-language leakage and reset stale roast on language switch', () => {
+    const roastService = new RoastService();
+
+    // 1. English mode validation
+    // Valid English with Kerala flavor
+    assert.strictEqual(
+      roastService.isValidLanguageRoast("Eda mone, Aaraattu Annan would call this code an utter disaster!", 'english'),
+      true
+    );
+    assert.strictEqual(
+      roastService.isValidLanguageRoast("Did you honestly expect a string to fit inside a number, mone?", 'english'),
+      true
+    );
+    // Invalid in English mode: pure Manglish sentences
+    assert.strictEqual(
+      roastService.isValidLanguageRoast("Ninte code kandittu karachil varunnu, poyi vere pani nokkeda, ithu dhoorantham aanu", 'english'),
+      false
+    );
+    // Invalid in English mode: Malayalam script
+    assert.strictEqual(
+      roastService.isValidLanguageRoast("നല്ല കോഡ് എഴുത് മോനെ", 'english'),
+      false
+    );
+
+    // 2. Manglish mode validation
+    // Valid Manglish
+    assert.strictEqual(
+      roastService.isValidLanguageRoast("Eda mone! Rendamathe semicolon eduthu murrathilekku adichu ketti, anthasillaatha tholvi code!", 'manglish'),
+      true
+    );
+    assert.strictEqual(
+      roastService.isValidLanguageRoast("Python indentation defeated you — ninakku pakaram oru vazha vechaal 100 times upakaaram undaavumaayirunnu!", 'manglish'),
+      true
+    );
+    // Invalid in Manglish mode: pure English with zero Manglish markers
+    assert.strictEqual(
+      roastService.isValidLanguageRoast("You forgot a semicolon on line 42, please fix your code.", 'manglish'),
+      false
+    );
+    assert.strictEqual(
+      roastService.isValidLanguageRoast("The function has an invalid return type.", 'manglish'),
+      false
+    );
+
+    // 3. StateStore clears lastRoast on language change so stale roasts do not leak
+    const store = new StateStore(false, 'normal', true, 'english');
+    store.setRoast("English roast about banana tree");
+    assert.strictEqual(store.getSnapshot().lastRoast, "English roast about banana tree");
+
+    store.toggleLanguage(); // Switched to Manglish
+    assert.strictEqual(store.getLanguage(), 'manglish');
+    assert.strictEqual(store.getSnapshot().lastRoast, undefined, 'lastRoast must be cleared on language toggle');
+
+    store.setRoast("Manglish roast: anthasillaatha tholvi");
+    assert.strictEqual(store.getSnapshot().lastRoast, "Manglish roast: anthasillaatha tholvi");
+
+    store.setLanguage('english'); // Switched to English
+    assert.strictEqual(store.getLanguage(), 'english');
+    assert.strictEqual(store.getSnapshot().lastRoast, undefined, 'lastRoast must be cleared on setLanguage');
+  });
+
+  // Test 39: Hunger & mischief state retention on document save and clean diagnostic checks
+  it('39. should retain hunger and mischief mode on file save or clean diagnostics, and deliver starvation taunt on save', async () => {
+    const store = new StateStore(false, 'normal', true, 'english');
+    const roastService = new RoastService();
+    const mockViewProvider = {
+      playSound: () => {},
+      shake: () => {},
+      postMessage: () => {},
+      dispose: () => {}
+    } as any;
+    const mockDecorationManager = {
+      clear: () => {},
+      triggerApocalypseEffect: () => {},
+      animateApproach: () => {},
+      showDissolve: () => {},
+      dispose: () => {}
+    } as any;
+
+    const engine = new ChaosEngine(store, mockDecorationManager, roastService, mockViewProvider);
+
+    try {
+      // 1. Enter hunger state
+      store.transition('hunger');
+      assert.strictEqual(store.getState(), 'hunger');
+
+      // 2. Trigger onDidSaveTextDocument in English mode
+      onDidSaveTextDocumentEmitter.fire({});
+      assert.strictEqual(store.getState(), 'hunger', 'Hunger mode must not be reset to idle on save');
+      assert.strictEqual(
+        store.getSnapshot().lastRoast,
+        "Saving the file won't satisfy my hunger, mone! Give me some broken syntax to eat!",
+        'Must deliver English hunger taunt on save'
+      );
+
+      // Wait for diagnostic check to run (debounce 0)
+      await new Promise(r => setTimeout(r, 50));
+      assert.strictEqual(store.getState(), 'hunger', 'State must remain hunger after clean diagnostic check');
+
+      // 3. Switch to Manglish and test save taunt
+      store.setLanguage('manglish');
+      store.transition('hunger');
+      onDidSaveTextDocumentEmitter.fire({});
+      assert.strictEqual(store.getState(), 'hunger', 'Hunger mode must remain hunger in Manglish');
+      assert.strictEqual(
+        store.getSnapshot().lastRoast,
+        "File save cheythaal ente vishappu maarilla mone! Valla syntax thettum tha!",
+        'Must deliver Manglish hunger taunt on save'
+      );
+
+      // 4. Enter mischief state and verify it also is retained across clean checks
+      store.transition('mischief');
+      assert.strictEqual(store.getState(), 'mischief');
+      engine.scheduleDiagnosticCheck(0);
+      await new Promise(r => setTimeout(r, 50));
+      assert.strictEqual(store.getState(), 'mischief', 'Mischief mode must not be reset to idle when code has no errors');
+    } finally {
+      engine.dispose();
+    }
+  });
+
+  // Test 40: Clean dustpan spam crashout with explicit reason in roast dialogue
+  it('40. should trigger dustpan spam crashout with explicit reason in roast dialogue after repeated unclogs', async () => {
+    const store = new StateStore(false, 'normal', true, 'english');
+    const roastService = new RoastService();
+    const mockViewProvider = {
+      playSound: () => {},
+      shake: () => {},
+      postMessage: () => {},
+      dispose: () => {}
+    } as any;
+    const mockDecorationManager = {
+      clear: () => {},
+      triggerApocalypseEffect: () => {},
+      animateApproach: () => {},
+      showDissolve: () => {},
+      dispose: () => {}
+    } as any;
+
+    const uri = mock.Uri.file('/test/workspace/app.ts');
+    const doc = mock.createMockDocument([
+      'function testFunction() {',
+      '  console.log("clean code line 1");',
+      '  console.log("clean code line 2");',
+      '  console.log("clean code line 3");',
+      '  console.log("clean code line 4");',
+      '}'
+    ], uri, 1);
+
+    const mockEditor = {
+      document: doc as any,
+      visibleRanges: [new mock.Range(0, 0, 5, 0)],
+      setDecorations: () => {},
+      edit: async (callback: (builder: any) => void) => {
+        callback({ delete: () => {} });
+        return true;
+      }
+    } as any;
+
+    mockVscode.window.activeTextEditor = mockEditor;
+
+    const engine = new ChaosEngine(store, mockDecorationManager, roastService, mockViewProvider);
+
+    try {
+      // 1. Verify crashout_dustpan_spam templates in English
+      roastService.setLanguage('english');
+      const englishDustpanRoast = await roastService.getRoast({
+        situation: 'crashout_dustpan_spam',
+        fileName: 'app.ts',
+        language: 'typescript'
+      });
+      assert.ok(
+        englishDustpanRoast.toLowerCase().includes('dustpan') ||
+        englishDustpanRoast.toLowerCase().includes('muram') ||
+        englishDustpanRoast.toLowerCase().includes('unclog') ||
+        englishDustpanRoast.toLowerCase().includes('clean'),
+        `English dustpan roast should mention dustpan/clean: "${englishDustpanRoast}"`
+      );
+
+      // 2. Direct triggerCrashout with 'dustpan_spam' in English
+      await engine.triggerCrashout(mockEditor, 'dustpan_spam');
+      assert.strictEqual(store.getState(), 'crashout');
+      const lastRoastEng = store.getSnapshot().lastRoast || '';
+      assert.ok(
+        lastRoastEng.startsWith('Reason: You repeatedly spammed the "Clean Dustpan" button on an already empty dustpan!'),
+        `English roast must contain dustpan spam reason prefix: "${lastRoastEng}"`
+      );
+
+      // 3. Direct triggerCrashout with 'dustpan_spam' in Manglish
+      store.setLanguage('manglish');
+      roastService.setLanguage('manglish');
+      await engine.triggerCrashout(mockEditor, 'dustpan_spam');
+      assert.strictEqual(store.getState(), 'crashout');
+      const lastRoastM = store.getSnapshot().lastRoast || '';
+      assert.ok(
+        lastRoastM.startsWith('Kaaranam: Kaaliyaaya murrathil veendum veendum "Clean Dustpan" click cheythu choolinte control poyi!'),
+        `Manglish roast must contain dustpan spam reason prefix: "${lastRoastM}"`
+      );
+
+      // 4. Repeated unclog calls trigger crashout automatically on 3rd churn
+      store.setLanguage('english');
+      roastService.setLanguage('english');
+      store.transition('idle');
+
+      engine.unclog(); // churnCount = 1
+      assert.strictEqual(store.getState(), 'idle');
+
+      engine.unclog(); // churnCount = 2
+      assert.strictEqual(store.getState(), 'idle');
+
+      engine.unclog(); // churnCount = 3 -> triggers crashout with 'dustpan_spam'
+      await new Promise(r => setTimeout(r, 50));
+      assert.strictEqual(store.getState(), 'crashout');
+      const unclogCrashoutRoast = store.getSnapshot().lastRoast || '';
+      assert.ok(
+        unclogCrashoutRoast.includes('Reason: You repeatedly spammed the "Clean Dustpan" button'),
+        `Crashout from unclog spam must include reason in lastRoast: "${unclogCrashoutRoast}"`
+      );
+    } finally {
+      mockVscode.window.activeTextEditor = undefined as any;
+      engine.dispose();
+    }
+  });
 });
+
