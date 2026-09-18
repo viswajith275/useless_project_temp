@@ -110,7 +110,7 @@ Dusty shifts dynamically through six distinct emotional states based on diagnost
 
 ### Project Demo
 # Video
-[Watch Dusty in Action (Demo Video)](https://github.com/viswajith275/useless_project_temp/releases/download/v0.1.0/dusty_demo.mp4)
+[Watch Dusty in Action (Demo Video)](https://github.com/viswajith275/useless_project_temp/releases/download/v0.1.0/dusty_demo.mov)
 
 *Demonstration video showing Dusty detecting syntax typos, sweeping code into his dustpan, choking on errors, and unleashing full 100% rage crashout mode with custom Kerala meme roasts.*
 
