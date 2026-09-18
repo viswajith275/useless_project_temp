@@ -43,6 +43,103 @@ Dusty dynamically shifts through six distinct emotional states based on diagnost
 
 ---
 
+## 📐 Architecture & Workflow Diagram
+
+Dusty operates as a decoupled, multi-tier system inside VS Code that continuously samples compiler diagnostics, orchestrates safe atomic editor modifications, syncs runtime state with an animated sidebar webview, and triggers localized Kerala meme roasts via a 3-tier intelligence pipeline:
+
+```mermaid
+flowchart TD
+    subgraph VSCode["VS Code Host & Editor Environment"]
+        Editor["Active Text Editor<br/>(User typing & file edits)"]
+        Diagnostics["Language Server Diagnostics<br/>(TypeScript / JavaScript / Python / etc.)"]
+        Gutter["Editor Gutter & CodeLens<br/>(Animated bristles & lenses)"]
+        StatusBar["VS Code Status Bar<br/>(State indicator & Rage %)"]
+    end
+
+    subgraph Perception["1. Perception & Diagnostic Harvesting"]
+        DiagParser["Diagnostic Parser<br/>(src/diagnosticParser.ts)<br/>Classifies range & token safety"]
+        TypeHarvester["Type Harvester<br/>(src/typeHarvester.ts)<br/>Detects TS2322, TS2339, TS7006"]
+        TargetSelector["Diagnostic Target Selector<br/>(src/diagnosticTarget.ts)<br/>Viewport ranking & suppression"]
+    end
+
+    subgraph CoreEngine["2. Chaos Engine & State Store"]
+        ChaosEngine["Chaos Engine<br/>(src/chaosEngine.ts)<br/>Orchestration, debouncing & timers"]
+        StateStore["State Store<br/>(src/stateStore.ts)<br/>State: IDLE, EATING, HUNGER,<br/>MISCHIEF, CLOGGED, CRASHOUT"]
+        SafetyGate{"Pre-Edit Safety Gate<br/>• Version unchanged?<br/>• Diagnostic active?<br/>• Token &le; 5 chars?<br/>• Safe syntax crumb?"}
+    end
+
+    subgraph Roasting["3. 3-Tier Roast Engine (src/roastService.ts)"]
+        LangCheck{"Language Preference<br/>(English vs Manglish)"}
+        Tier1["Tier 1: Instant AST Slot Filler<br/>(0ms regex & variable mapping)"]
+        Tier2["Tier 2: Local Ollama LLM<br/>(llama3.2:3b / custom fine-tunes)"]
+        Tier3["Tier 3: 100+ Static Kerala Meme Vault<br/>(Deterministic offline fallback)"]
+    end
+
+    subgraph Sidebar["4. Secondary Sidebar Webview (media/)"]
+        Webview["Dusty Character Panel<br/>(src/vacuumViewProvider.ts)"]
+        CanvasAnim["60FPS Pixel-Art Canvas<br/>(Chool & Murram sprite animations)"]
+        AudioSynth["Procedural Web Audio<br/>(media/audio.js synth & custom WAVs)"]
+        SpeechBubble["Roast Speech Bubble<br/>(Live Kerala meme dialogue)"]
+    end
+
+    %% Flow connections
+    Editor -->|Keystrokes & edits| ChaosEngine
+    Diagnostics -->|Diagnostics events| DiagParser
+    Diagnostics -->|Type error events| TypeHarvester
+    DiagParser --> TargetSelector
+    TypeHarvester --> TargetSelector
+    TargetSelector --> ChaosEngine
+
+    ChaosEngine --> StateStore
+    ChaosEngine --> SafetyGate
+
+    SafetyGate -->|PASSED: High Confidence| AtomicEdit["Atomic Editor Edit<br/>(Safely delete syntax crumb)"]
+    SafetyGate -->|FAILED: Low Confidence| Abort["Abort cleanly & clear decorations"]
+
+    AtomicEdit -->|Success| Gutter
+    AtomicEdit -->|Murram crumb +1| StateStore
+
+    StateStore -->|State & Rage update| Webview
+    StateStore -->|Status update| StatusBar
+
+    ChaosEngine -->|Trigger roast event| LangCheck
+    LangCheck --> Tier1
+    LangCheck --> Tier2
+    Tier2 -.->|Timeout / offline fallback| Tier3
+    Tier1 --> SpeechBubble
+    Tier2 --> SpeechBubble
+    Tier3 --> SpeechBubble
+
+    Webview --> CanvasAnim
+    Webview --> AudioSynth
+    Webview --> SpeechBubble
+```
+
+### Architectural Subsystems
+
+1. **Perception & Diagnostic Harvesting (`src/diagnosticParser.ts`, `src/typeHarvester.ts`, `src/diagnosticTarget.ts`)**:
+   - Continuously listens to `vscode.languages.onDidChangeDiagnostics`.
+   - Distinguishes between safely disposable syntax artifacts (stray semicolons `;;`, unclosed braces) and semantic/type errors.
+   - Restricts auto-ingestion strictly to tokens &le; 5 characters.
+   - Extracts type mismatches (`TS2322`/`TS2345`), missing properties (`TS2339`), and implicit any (`TS7006`) for contextual roasting.
+
+2. **Chaos Engine & Safety Gate (`src/chaosEngine.ts`, `src/stateStore.ts`)**:
+   - Debounces typing events (default 2500ms) to allow developer typing before judging.
+   - Enforces the **Non-Negotiable Safety Gate**: re-checks that `document.version` has not changed, diagnostic is still active in the language server, and the file is writable immediately prior to `editor.edit()`.
+   - Manages the **Hunger & Mischief timers**: if no syntax errors are seen for 35–45s, triggers a hunger warning. Saving the file (`Cmd+S`) does not deactivate hunger—Dusty taunts the save attempt and proceeds to mischief line deletion if ignored for another 11–21s.
+   - Synchronizes state across VS Code context keys (`dusty.state`, `dusty.clogged`, `dusty.rage`).
+
+3. **3-Tier Roast Engine (`src/roastService.ts`)**:
+   - **Tier 1 (Instant Slot-Filler)**: 0ms AST/regex template replacer injecting actual variable names and type identifiers into custom meme templates.
+   - **Tier 2 (Local LLM Bridge)**: Communicates with local Ollama (`llama3.2:3b` recommended) over HTTP with strict system prompt conditioning and selected language authority (English vs Manglish).
+   - **Tier 3 (Static Kerala Meme Vault)**: 100+ curated viral roasts with LRU ring-buffer history de-duplication to prevent repetitive jokes.
+
+4. **Secondary Sidebar Webview & Audio Pipeline (`src/vacuumViewProvider.ts`, `media/`)**:
+   - Hosts a responsive pixel-art canvas rendering Dusty's coconut bristles, animated Murram dustpan, CRT scanline overlay, and live speech bubble.
+   - Powered by a zero-asset Web Audio synthesizer (`media/audio.js`) generating procedural 8-bit sounds alongside preloaded authentic Kerala meme audio clips.
+
+---
+
 ## ⚡ Key Features
 
 - 🧹 **Error Sweeper & Safe Ingestion**: Safely targets and sweeps small, disposable syntax errors (stray duplicate semicolons, trailing brackets) into his dustpan with animated pixel-art gutter bristles.
